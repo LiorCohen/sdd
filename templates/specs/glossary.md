@@ -1,0 +1,16 @@
+# Domain Glossary
+
+Canonical terminology for {{PROJECT_NAME}}.
+
+## Terms
+
+| Term | Definition |
+|------|------------|
+| User | A registered account in the system |
+| | |
+
+## Conventions
+
+- Use singular nouns for entities (User, not Users)
+- Use past tense for events (UserCreated, not CreateUser)
+- Be consistent with terminology across all specs

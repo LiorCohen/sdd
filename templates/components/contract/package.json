@@ -1,0 +1,15 @@
+{
+  "name": "@{{PROJECT_NAME}}/contract",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "generate:types": "npm run generate:server && npm run generate:client",
+    "generate:server": "openapi-typescript openapi.yaml -o ../server/src/types/generated.ts",
+    "generate:client": "openapi-typescript openapi.yaml -o ../webapp/src/types/generated.ts",
+    "validate": "spectral lint openapi.yaml"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^6.7.0",
+    "@stoplight/spectral-cli": "^6.11.0"
+  }
+}

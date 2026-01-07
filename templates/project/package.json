@@ -1,0 +1,19 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "components/contract",
+    "components/server",
+    "components/webapp"
+  ],
+  "scripts": {
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  }
+}
