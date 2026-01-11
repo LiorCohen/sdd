@@ -15,12 +15,19 @@ Implement a specification.
 
 ## Flow
 
-### 1. Load Spec and Plan
+### 1. Load Spec and Plan (REQUIRED FIRST STEP)
 
-- Read the SPEC.md
-- Find associated PLAN.md in `specs/plans/`
-- Verify all prerequisites are met
-- Display summary of work to be done
+**CRITICAL**: Before starting ANY implementation work, you MUST:
+
+- Read the ENTIRE SPEC.md from start to finish
+- Find and read the ENTIRE PLAN.md in `specs/plans/`
+- Understand ALL requirements and acceptance criteria
+- Verify all prerequisites are met (dependencies, environment, etc.)
+- Create a mental model of the complete implementation
+- Display comprehensive summary of ALL work to be done
+- Identify any missing information or ambiguities
+
+**DO NOT proceed to Phase 2 until you fully understand the complete scope.**
 
 ### 2. Execute Phases
 
@@ -53,9 +60,13 @@ For each phase in the plan:
 
 #### Phase: Testing
 - Invoke `tester` agent
+- Create unit tests for all new code
 - Create integration tests
 - Create E2E tests
-- Verify all acceptance criteria covered
+- Verify all acceptance criteria covered by tests
+- **RUN all tests and ensure 100% pass**
+- If tests fail, fix the implementation or tests until they pass
+- Do NOT proceed to Review phase until all tests pass
 
 #### Phase: Review
 - Invoke `reviewer` agent
@@ -69,11 +80,49 @@ For each phase in the plan:
 - Report any blockers or issues
 - Update PLAN.md with actual progress
 
-### 4. Final Verification
+### 4. Final Verification (MANDATORY - DO NOT SKIP)
 
-- Run all tests
-- Verify all acceptance criteria pass
-- Generate implementation summary
+Before declaring implementation complete, you MUST:
+
+1. **Full Spec Review**
+   - Re-read the entire SPEC.md
+   - Re-read the entire PLAN.md
+   - Verify every requirement is addressed
+   - Check all acceptance criteria are implemented
+
+2. **Comprehensive Testing**
+   - Run ALL unit tests (`npm test` or equivalent)
+   - Run ALL integration tests (via Testkube or locally)
+   - Run ALL E2E tests
+   - Ensure 100% of tests pass
+   - If ANY test fails, fix it before proceeding
+
+3. **Functionality Verification**
+   - Verify each acceptance criterion manually if needed
+   - Confirm all API endpoints work as specified
+   - Validate frontend components match requirements
+   - Check database schema matches design
+   - Test error handling paths
+
+4. **Code Review**
+   - Re-invoke `reviewer` agent for final check
+   - If database changes: invoke `db-advisor` agent
+   - Address ALL findings before completion
+   - Ensure no spec violations
+
+5. **Documentation Check**
+   - Verify all code is properly documented
+   - Ensure telemetry is properly configured
+   - Check that all required log fields are present
+   - Validate OpenTelemetry spans are correct
+
+6. **Final Report**
+   - Generate implementation summary
+   - List all files created/modified
+   - Confirm all acceptance criteria met
+   - Note any deviations from plan (with justification)
+
+**CRITICAL**: Do NOT declare implementation complete until ALL of the above steps are finished and ALL tests pass. If you encounter ANY issues, resolve them before finishing.
 
 ## Example
 
