@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.3.0] - 2026-01-11
+
+### Enhanced
+
+- **/project:init-project command**: Completely redesigned with approval-based workflow
+  - **Phase 1: Gather Information** - Prompts for project details before any file creation
+    - Project name and description
+    - Primary business domain
+    - Tech stack confirmation
+    - Component selection (Server, Webapp, Helm, Testing, CI/CD)
+  - **Phase 2: Show Configuration Summary** - Displays complete plan with directory structure
+  - **Phase 3: User Approval** - Explicitly asks for confirmation before creating any files
+  - **Phase 4: Project Creation** - Only executes after user approval
+  - Customizable component selection (choose which parts to include)
+  - Template variable substitution for project name, description, and domain
+  - Conditional directory/file creation based on selected components
+  - More predictable and transparent initialization process
+
+### Impact
+
+This update transforms /project:init-project from an automatic file generator into an interactive, approval-based tool:
+- No files created until user explicitly approves
+- Users can customize which components to include
+- Clear visibility into what will be created before it happens
+- Follows same approval pattern as spec-writer and planner agents
+- Better user experience with informed decision-making
+
 ## [1.2.0] - 2026-01-11
 
 ### Added
