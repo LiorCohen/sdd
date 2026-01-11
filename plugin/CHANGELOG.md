@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.1.1] - 2026-01-11
+
+### Enhanced
+
+- **/project:implement-spec command**: Added comprehensive verification requirements
+  - Mandatory full spec and plan review before starting implementation
+  - Explicit requirement to read ENTIRE spec and plan documents
+  - Create complete mental model before proceeding to implementation
+  - Enhanced testing phase with mandatory test execution and pass requirements
+  - 6-step final verification process (spec review, testing, functionality, code review, documentation, final report)
+  - Clear directive to NOT declare implementation complete until all tests pass and all verification steps are finished
+  - Prevents incomplete implementations and ensures thorough validation
+
+### Added
+
+- `.gitignore` file to exclude macOS `.DS_Store` files
+
+This ensures the implement-spec command follows a rigorous, complete workflow that validates all requirements before declaring success.
+
+## [1.1.0] - 2026-01-11
+
+### Added
+
+- **Version management system**: Automatic version bumping across plugin files
+  - Updates both `plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`
+  - Added to CLAUDE.md instructions for consistency
+
+### Enhanced
+
+- **spec-writer agent**: Added explicit user approval requirements
+  - Must get user approval before creating/modifying specifications
+  - Prevents unwanted spec changes
+- **planner agent**: Added explicit user approval requirements
+  - Must get user approval before creating/modifying implementation plans
+  - Ensures alignment before planning work
+
 ## [1.0.2] - 2026-01-07
 
 ### Enhanced
