@@ -1,5 +1,40 @@
 # Changelog
 
+## [1.5.1] - 2026-01-11
+
+### Enhanced
+
+- **/project:new-feature command**: Added git branch check and feature branch suggestion
+  - **Step 0: Check Git Branch** - New mandatory first step before collecting any information
+  - Automatically detects if user is on `main` or `master` branch
+  - Suggests creating a feature branch with naming pattern `feature/<feature-name>`
+  - Allows user to:
+    - Accept suggested branch name (creates branch automatically)
+    - Provide custom branch name
+    - Decline and proceed on main/master (with warning and confirmation)
+  - If already on a feature branch, proceeds without interruption
+  - Follows git workflow best practices while maintaining user control
+
+### Updated Files
+
+- **new-feature command**:
+  - Added Step 0: Check Git Branch (runs before collecting feature information)
+  - Renumbered existing steps (Collect Info → 1, Create Spec → 2, Create Plan → 3, Review → 4)
+  - Added "Important Notes" section explaining branch check behavior
+  - Added three example interactions showing different scenarios:
+    - Example 1: On main branch (creates feature branch)
+    - Example 2: Already on feature branch (proceeds normally)
+    - Example 3: On main branch (user declines, sees warning)
+
+### Impact
+
+This enhancement encourages proper git workflow:
+- Prevents accidental feature creation directly on main/master
+- Suggests consistent branch naming convention (`feature/<name>`)
+- Educates users about best practices
+- Maintains flexibility for users who need to work on main/master
+- Reduces risk of merge conflicts and improves code review process
+
 ## [1.5.0] - 2026-01-11
 
 ### Changed
