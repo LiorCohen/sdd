@@ -37,7 +37,7 @@ All projects must use these TypeScript compiler options:
 
 ```typescript
 // ✅ GOOD: Readonly everything
-readonly interface User {
+interface User {
   readonly id: string;
   readonly email: string;
   readonly createdAt: Date;

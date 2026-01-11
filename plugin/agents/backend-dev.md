@@ -51,7 +51,7 @@ Config → [All layers] → Dependencies (injected by Controller)
 HTTP lifecycle, middleware, routes, graceful shutdown.
 
 ```typescript
-readonly interface ServerDependencies {
+interface ServerDependencies {
   readonly config: Config;
   readonly controller: Controller;
 }
@@ -77,7 +77,7 @@ import dotenv from 'dotenv';
 // Load .env file FIRST (before accessing any env vars)
 dotenv.config();
 
-readonly interface Config {
+interface Config {
   readonly server: Readonly<{
     readonly port: number;
     readonly host: string;
@@ -210,7 +210,7 @@ export type { CreateUserArgs, CreateUserResult };
 Data access, queries, mapping DB ↔ domain objects.
 
 ```typescript
-readonly interface DAL {
+interface DAL {
   readonly findUserById: (id: string) => Promise<User | null>;
   readonly insertUser: (user: UserData) => Promise<User>;
 }
@@ -292,7 +292,7 @@ export const withTraceContext = <T extends Record<string, unknown>>(
 **Config example for logging:**
 ```typescript
 // In src/config/index.ts
-readonly interface Config {
+interface Config {
   readonly logging: Readonly<{
     readonly level: 'debug' | 'info' | 'warn' | 'error';
   }>;

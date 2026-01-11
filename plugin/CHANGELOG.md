@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.6.2] - 2026-01-11
+
+### Fixed
+
+- **TypeScript standards compliance**: Corrected invalid `readonly interface` syntax across all plugin files
+  - **typescript-standards skill**: Removed `readonly` keyword from interface declaration (line 40)
+    - Changed from `readonly interface User {` (invalid TypeScript)
+    - Changed to `interface User {` (correct - readonly applies to properties, not interface)
+  - **backend-dev agent**: Fixed all 4 instances of `readonly interface`:
+    - Line 54: `ServerDependencies` interface
+    - Line 80: `Config` interface (in main Config layer example)
+    - Line 213: `DAL` interface
+    - Line 295: `Config` interface (in logging example)
+  - **Validation**: Confirmed no other TypeScript standards violations (arrow functions, immutability, native JS)
+
+### Updated Files
+
+- `skills/typescript-standards.md`: Fixed interface syntax in immutability example
+- `agents/backend-dev.md`: Fixed 4 instances of incorrect interface syntax
+- Version bumped to 1.6.2 in plugin.json and marketplace.json
+
+### Impact
+
+This fix ensures all code examples in the plugin demonstrate correct TypeScript syntax:
+- **Standards compliance**: All examples now follow valid TypeScript syntax
+- **Educational accuracy**: Developers using the plugin will learn correct patterns
+- **Code generation**: Agents will generate syntactically correct TypeScript code
+- **Type checking**: Examples will pass TypeScript compiler validation
+
+**Technical note**: TypeScript does not support `readonly` as a modifier for interface declarations. The `readonly` keyword only applies to interface properties, type properties, and array/object types (e.g., `ReadonlyArray<T>`, `Readonly<T>`).
+
 ## [1.6.1] - 2026-01-11
 
 ### Enhanced
