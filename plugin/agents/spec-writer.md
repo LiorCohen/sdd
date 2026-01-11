@@ -63,3 +63,7 @@ Each criterion must be independently testable.
 - Use Given/When/Then for acceptance criteria
 - Reference `specs/domain/glossary.md` for terminology
 - Update specs BEFORE code changes
+- **CRITICAL: Never proceed to planning or implementation without explicit user approval of the spec**
+  - After writing or updating a spec, STOP and ask the user to review it
+  - Do NOT invoke the planner agent or any other agents
+  - Wait for the user to explicitly approve the spec before any next steps
