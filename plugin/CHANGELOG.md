@@ -1,5 +1,45 @@
 # Changelog
 
+## [1.8.2] - 2026-01-12
+
+### Fixed
+
+- **new-feature command**: Fixed workflow order to collect feature name before branch check
+  - **Issue**: Command suggested `feature/<feature-name>` branch before collecting the feature name
+  - **Fix**: Reordered flow to collect feature name first (Step 1), then check branch (Step 2)
+  - **New flow**:
+    1. Collect feature name (from argument or prompt)
+    2. Check git branch and suggest `feature/<actual-feature-name>`
+    3. Collect remaining information (issue, domain, description)
+    4-6. Create spec, plan, and review
+
+### Updated Files
+
+- `commands/new-feature.md`: Reordered steps, updated examples, clarified important notes
+- `plugin/.claude-plugin/plugin.json`: Bumped to 1.8.2
+- `.claude-plugin/marketplace.json`: Bumped to 1.8.2
+
+### Impact
+
+This fix ensures a logical workflow:
+- **Feature name available**: Branch suggestion now uses the actual feature name
+- **Better UX**: Users see the correct branch suggestion immediately
+- **Logical flow**: Name → Branch → Details makes more sense
+- **Examples updated**: All three examples now show correct order
+
+**Before (incorrect):**
+```
+Step 0: Check branch (suggests feature/<feature-name> without knowing name)
+Step 1: Collect feature name
+```
+
+**After (correct):**
+```
+Step 1: Collect feature name
+Step 2: Check branch (suggests feature/<actual-feature-name>)
+Step 3: Collect remaining information
+```
+
 ## [1.8.1] - 2026-01-12
 
 ### Enhanced
