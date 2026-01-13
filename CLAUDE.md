@@ -4,222 +4,142 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a **Claude Code plugin** for spec-driven development methodology. It provides specialized agents, commands, and templates for full-stack TypeScript/React development with strict architectural patterns.
+This is a **Claude Code plugin marketplace** that contains a collection of plugins for spec-driven development and full-stack engineering workflows. The marketplace organizes and distributes Claude Code plugins.
 
-## Project Structure
-
-```
-sdd/
-├── full-stack-spec-driven-dev/
-│   ├── agents/          # 10 specialized agents (spec-writer, backend-dev, etc.)
-│   ├── commands/        # 5 slash commands (/sdd-init, /sdd-new-feature, etc.)
-│   ├── skills/          # 4 reusable skills
-│   ├── templates/       # Project scaffolding (contract, server, webapp, helm)
-│   ├── scripts/         # Python validation utilities
-│   ├── plugin.json      # Plugin configuration
-│   ├── README.md        # Plugin documentation
-│   └── QUICKSTART.md    # Getting started guide
-```
-
-## Core Methodology
-
-This plugin implements a **specification-driven workflow**:
-
-1. **Specifications are truth** - Every feature lives in a SPEC.md before implementation
-2. **Issue tracking required** - Every spec must reference a tracking issue (JIRA, GitHub, etc.)
-3. **Git as state machine** - PR = draft spec, merged to main = active spec
-4. **Contract-first API** - OpenAPI specs generate TypeScript types for both frontend and backend
-5. **5-layer backend architecture** - Strict separation: Server → Controller → Model → Dependencies → DAL
-6. **Immutability enforced** - `readonly` everywhere, no mutations, native JavaScript only
-7. **OpenTelemetry by default** - All services emit structured logs, metrics, and traces
-
-## Key Components
-
-### Agents (`full-stack-spec-driven-dev/agents/`)
-
-10 specialized agents, each with specific roles and model assignments:
-
-| Agent | Model | Purpose |
-|-------|-------|---------|
-| `spec-writer` | opus | Create/maintain specifications |
-| `planner` | opus | Break specs into implementation phases |
-| `api-designer` | sonnet | Design OpenAPI contracts |
-| `frontend-dev` | sonnet | React components (consumes generated types) |
-| `backend-dev` | sonnet | 5-layer Node.js backend |
-| `db-advisor` | opus | Database performance review |
-| `devops` | sonnet | Kubernetes, Helm, Testkube |
-| `ci-dev` | sonnet | CI/CD pipelines |
-| `tester` | sonnet | Test automation via Testkube |
-| `reviewer` | opus | Code review and spec compliance |
-
-### Commands (`full-stack-spec-driven-dev/commands/`)
-
-5 slash commands for project lifecycle:
-
-- `/sdd-init [name]` - Initialize new project structure
-- `/sdd-new-feature [name]` - Create spec and plan for new feature
-- `/sdd-implement-plan [path]` - Orchestrate implementation across agents
-- `/sdd-verify-spec [path]` - Verify implementation matches spec
-- `/sdd-generate-snapshot` - Regenerate product state snapshot
-
-### Validation Scripts (`full-stack-spec-driven-dev/scripts/`)
-
-Python utilities for spec management:
-
-```bash
-# Validate single spec
-python scripts/validate-spec.py specs/features/2026/01/11/my-feature/SPEC.md
-
-# Validate all specs
-python scripts/validate-spec.py --all --specs-dir specs/
-
-# Generate specs index
-python scripts/generate-index.py --specs-dir specs/
-
-# Generate product snapshot
-python scripts/generate-snapshot.py --specs-dir specs/
-```
-
-## Backend Architecture (5 Layers)
-
-The `backend-dev` agent enforces strict architectural separation:
+## Marketplace Structure
 
 ```
-Server → Controller → Model Use Cases
-   ↓         ↓            ↑
-Config → [All layers] → Dependencies (injected)
-                           ↓
-                         DAL
+claude-code-plugins/
+├── .claude-plugin/
+│   └── marketplace.json           # Marketplace manifest
+├── full-stack-spec-driven-dev/    # SDD plugin (v1.9.0)
+│   ├── .claude-plugin/
+│   │   └── plugin.json            # Plugin manifest
+│   ├── agents/                    # 10 specialized agents
+│   ├── commands/                  # 5 slash commands
+│   ├── skills/                    # 4 reusable skills
+│   ├── templates/                 # Project scaffolding
+│   ├── scripts/                   # Python validation utilities
+│   ├── README.md                  # Plugin documentation
+│   ├── QUICKSTART.md             # Getting started guide
+│   └── CHANGELOG.md              # Version history
+├── README.md                      # Marketplace overview
+└── CLAUDE.md                      # This file
 ```
 
-**Key principles:**
-- **Server layer**: HTTP lifecycle, middleware, routes, graceful shutdown
-- **Config layer**: Environment parsing, validation, type-safe config objects
-- **Controller layer**: Request/response handling, creates Dependencies for Model
-- **Model layer**: Business logic (definitions + use-cases), never imports from outside
-- **DAL layer**: Data access, queries, DB ↔ domain object mapping
+## What is a Marketplace?
 
-**Immutability rules:**
-- All interfaces use `readonly` properties
-- Use `ReadonlyArray<T>`, `Readonly<T>`, `ReadonlyMap<K,V>`, `ReadonlySet<T>`
-- Arrow functions only (no `function` keyword)
-- Native JavaScript only (no lodash, ramda, immer)
-- Spread operators for updates (never mutation)
+A Claude Code marketplace is a directory structure that:
+- Contains multiple plugins organized in subdirectories
+- Has a `marketplace.json` manifest listing all plugins
+- Allows Claude Code to discover and load plugins automatically
+- Provides a centralized location for related plugins
 
-**Use case pattern (mandatory):**
-```typescript
-// One use-case per file in src/model/use-cases/
-const createUser = async (
-  deps: Dependencies,
-  args: CreateUserArgs
-): Promise<CreateUserResult> => {
-  // Business logic using only injected dependencies
-};
-```
+## Available Plugins
 
-## Frontend Architecture
+### Spec-Driven Development (SDD) - v1.9.0
+**Directory:** `full-stack-spec-driven-dev/`
+**Description:** Comprehensive plugin for spec-driven development with React, Node.js, and TypeScript
 
-The `frontend-dev` agent enforces:
+**For detailed information about this plugin, see:**
+- [Plugin README](./full-stack-spec-driven-dev/README.md) - Complete documentation
+- [Plugin QUICKSTART](./full-stack-spec-driven-dev/QUICKSTART.md) - Getting started
+- [Plugin CHANGELOG](./full-stack-spec-driven-dev/CHANGELOG.md) - Version history
 
-- **No implicit global code** - All code must be explicitly invoked
-- **Type consumption only** - Never hand-write API types, consume from `components/contract/`
-- **React Query** for server state
-- **Zustand or Context** for client state
-- **TypeScript strict mode** - No `any`, prefer `readonly` for props
+## Working with This Marketplace
 
-## Telemetry Requirements
+### Adding a New Plugin
 
-All backend services must include:
+When adding a new plugin to this marketplace:
 
-1. **Structured logging** with Pino + OpenTelemetry context injection
-2. **Required log fields**: `level`, `time`, `component`, `msg`, `traceId`, `spanId`
-3. **Standard metrics**: HTTP request duration/count, DB operation duration, business operation count
-4. **Custom spans** for business operations with semantic attributes
-5. **Initialize first** - Import telemetry before any other code
+1. **Create plugin directory** under root:
+   ```
+   mkdir your-plugin-name
+   ```
 
-## Spec File Format
+2. **Create plugin structure**:
+   ```
+   your-plugin-name/
+   ├── .claude-plugin/
+   │   └── plugin.json       # Required manifest
+   ├── agents/               # Optional: agent definitions
+   ├── commands/             # Optional: slash commands
+   ├── skills/               # Optional: reusable patterns
+   ├── README.md            # Required: plugin documentation
+   └── CHANGELOG.md         # Required: version history
+   ```
 
-All specs in `specs/` must include frontmatter:
+3. **Update marketplace.json**:
+   ```json
+   {
+     "name": "lior-cohen-cc-plugins",
+     "owner": {
+       "name": "Lior Cohen"
+     },
+     "plugins": [
+       {
+         "name": "existing-plugin",
+         "source": "./full-stack-spec-driven-dev",
+         "description": "...",
+         "version": "1.9.0"
+       },
+       {
+         "name": "your-plugin-name",
+         "source": "./your-plugin-name",
+         "description": "Brief description",
+         "version": "1.0.0"
+       }
+     ]
+   }
+   ```
 
-```yaml
----
-title: Feature Name
-status: active | deprecated | superseded | archived
-domain: Identity | Billing | Core | ...
-issue: PROJ-1234                    # Required: tracking issue
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
----
-```
+4. **Update root README.md** to list the new plugin
 
-**Acceptance criteria** must use Given/When/Then format:
+5. **Commit all changes together**
 
-```markdown
-- [ ] **AC1:** Given [precondition], when [action], then [result]
-```
+### Plugin Version Management
 
-## Tech Stack
+Each plugin manages its own version independently:
+- Plugin version is stored in its `plugin.json` and the marketplace `marketplace.json`
+- Each plugin should maintain its own `CHANGELOG.md`
+- Version bumps should include corresponding changelog entries
 
-- **API Contract**: OpenAPI 3.x
-- **Backend**: Node.js 20, TypeScript 5, Express
-- **Frontend**: React 18, TypeScript 5, Vite
-- **Database**: PostgreSQL 15
-- **Testing**: Vitest (unit), Testkube (integration/E2E)
-- **Deployment**: Kubernetes, Helm
-- **Observability**: OpenTelemetry
+**Important:** Root marketplace files (like this CLAUDE.md) should NOT contain plugin-specific implementation details. Those belong in the plugin's own directory.
 
-## Development Workflow
+### File Organization Rules
 
-1. Create spec with `spec-writer` agent (requires issue reference)
-2. Generate plan with `planner` agent
-3. Design API contract with `api-designer` agent (OpenAPI)
-4. Generate TypeScript types from OpenAPI spec
-5. Implement backend with `backend-dev` agent (5-layer architecture)
-6. Implement frontend with `frontend-dev` agent (consume generated types)
-7. Add tests with `tester` agent (Testkube)
-8. Review with `reviewer` and `db-advisor` agents
-9. Validate spec compliance with `/sdd-verify-spec`
+**Root Level (Marketplace):**
+- `README.md` - Marketplace overview, plugin listing
+- `CLAUDE.md` - This file, marketplace structure guidance
+- `.claude-plugin/marketplace.json` - Marketplace manifest
+- Plugin directories (one per plugin)
 
-## Important Files
-
-When using this plugin to initialize projects:
-
-| File/Directory | Purpose |
-|----------------|---------|
-| `specs/INDEX.md` | Registry of all specifications |
-| `specs/SNAPSHOT.md` | Current product state snapshot |
-| `specs/domain/glossary.md` | Domain terminology definitions |
-| `specs/features/YYYY/MM/DD/<feature-name>/` | Feature specifications and plans (date-organized) |
-| `components/contract/openapi.yaml` | API contract (source of truth for types) |
+**Plugin Level:**
+- Each plugin directory contains all plugin-specific files
+- Plugin README.md contains comprehensive plugin documentation
+- Plugin CHANGELOG.md tracks plugin version history
+- Plugin CLAUDE.md (optional) can provide plugin-specific guidance
 
 ## Notes for Claude Code
 
-- This is a **plugin repository**, not a project using the plugin
-- The plugin files define agents, commands, and templates
-- To use the plugin: Install it in Claude Code, then run `/sdd-init` in a new directory
-- All agent definitions enforce strict patterns (immutability, 5-layer architecture, type safety)
-- Specs are validated by Python scripts that check for required frontmatter fields
+- This repository contains a **marketplace**, not individual plugins
+- When referencing a specific plugin, always look in its directory
+- Each plugin is independent and self-contained
+- Marketplace-level files should remain generic and not contain plugin implementation details
+- Plugin-specific documentation lives in plugin directories
 
-### Version Management (CRITICAL)
+## Resources
 
-When making changes to the plugin, you MUST follow this exact sequence:
+- [Claude Code Documentation](https://docs.anthropic.com/claude/docs/claude-code)
+- [Plugin Development Guide](https://docs.anthropic.com/claude/docs/claude-code-plugins)
+- [Claude Agent SDK](https://github.com/anthropics/anthropic-sdk-typescript)
 
-1. **Make your code changes** to agents, commands, skills, templates, etc.
-2. **Bump the version** in both:
-   - `full-stack-spec-driven-dev/.claude-plugin/plugin.json`
-   - `.claude-plugin/marketplace.json`
-3. **Update CHANGELOG.md** with a new version entry that includes:
-   - Version number and date
-   - Clear description of what changed
-   - Category (Added, Enhanced, Fixed, Removed, etc.)
-4. **Commit all changes together** (code changes + version bump + CHANGELOG update)
+## Contributing
 
-**NEVER commit a version bump without a corresponding CHANGELOG entry.**
-
-Example workflow:
-```
-1. Edit full-stack-spec-driven-dev/agents/backend-dev.md (add new feature)
-2. Update version 1.1.0 → 1.1.1 in both plugin.json files
-3. Add [1.1.1] entry to full-stack-spec-driven-dev/CHANGELOG.md describing the feature
-4. git commit -am "Add feature X, bump to 1.1.1"
-```
+When contributing to this marketplace:
+1. Follow the "Adding a New Plugin" section above
+2. Ensure plugin-specific content stays in plugin directories
+3. Keep root files focused on marketplace organization
+4. Update all relevant documentation (marketplace + plugin)
+5. Test plugin discovery and loading
+6. Submit pull request with clear description
