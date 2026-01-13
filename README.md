@@ -10,7 +10,7 @@ A collection of Claude Code plugins for spec-driven development and full-stack e
 
 ### [Spec-Driven Development (SDD)](./full-stack-spec-driven-dev/)
 
-**Version:** 1.9.0
+**Version:** 1.9.2
 
 A comprehensive plugin for spec-driven development with React, Node.js, and TypeScript.
 

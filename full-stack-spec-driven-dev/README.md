@@ -1,6 +1,6 @@
 # Spec-Driven Development (SDD) Plugin
 
-**Version:** 1.9.0
+**Version:** 1.9.2
 
 A comprehensive Claude Code plugin for spec-driven development methodology designed for full-stack TypeScript/React teams.
 
