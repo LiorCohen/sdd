@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.9.2] - 2026-01-13
+
+### Enhanced
+
+- **External spec handling in sdd-init command**: Improved external spec integration
+  - External specs are now copied to `specs/external/<original-filename>` for permanent reference
+  - Feature specs reference the external source via `external_source` frontmatter field
+  - Added "External Source" section to feature specs with reference to original file
+  - INDEX.md now includes an "External Specifications" section listing all imported specs
+  - Directory structure includes `specs/external/` for preserving original source documents
+  - Completion messages show the location of both the original and integrated specs
+  - This provides better traceability between the original requirements and the SDD feature specs
+
+### Rationale
+
+Copying external specs to `specs/external/` and referencing them provides:
+- **Traceability**: Clear link between original requirements and feature specs
+- **Version control**: Original specs are preserved in git alongside the project
+- **Auditability**: Easy to compare original requirements with implementation
+- **Documentation**: Keeps all relevant documentation in one repository
+
 ## [1.9.1] - 2026-01-13
 
 ### Enhanced

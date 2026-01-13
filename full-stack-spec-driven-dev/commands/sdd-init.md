@@ -10,7 +10,7 @@ Initialize a new spec-driven project, optionally from an existing external speci
 ## Usage
 
 ```
-/project:init [project-name] [--spec <path-to-external-spec>]
+/sdd-init [project-name] [--spec <path-to-external-spec>]
 ```
 
 **Arguments:**
@@ -20,13 +20,13 @@ Initialize a new spec-driven project, optionally from an existing external speci
 **Examples:**
 ```bash
 # Standard initialization with prompts
-/project:init my-app
+/sdd-init my-app
 
 # Initialize from existing spec
-/project:init my-app --spec /path/to/existing-spec.md
+/sdd-init my-app --spec /path/to/existing-spec.md
 
 # Initialize from external spec (will prompt for project name)
-/project:init --spec /path/to/product-requirements.md
+/sdd-init --spec /path/to/product-requirements.md
 ```
 
 ## Workflow
@@ -124,6 +124,7 @@ Display a summary of what will be created:
 ├── specs/
 │   ├── INDEX.md
 │   ├── SNAPSHOT.md
+│   ├── external/           # Original external specs (if imported)
 │   ├── domain/
 │   │   ├── glossary.md (with <domain> as primary domain)
 │   │   └── entities/
@@ -175,7 +176,7 @@ Create directories based on selected components:
 
 **Always create:**
 ```bash
-mkdir -p <project-name>/specs/{domain/entities,architecture,features}
+mkdir -p <project-name>/specs/{domain/entities,architecture,features,external}
 mkdir -p <project-name>/components/contract
 ```
 
@@ -287,7 +288,13 @@ Copy template files with variable substitution using gathered information.
 
 If an external spec was provided via `--spec` argument:
 
-1. **Create initial feature spec from external spec:**
+1. **Copy external spec to specs/external/:**
+   - Determine the original filename from the external spec path
+   - Copy external spec to: `specs/external/<original-filename>`
+   - This preserves the original external spec in the repository for reference
+   - Display: "✓ Copied external spec to: specs/external/<original-filename>"
+
+2. **Create initial feature spec from external spec:**
    - Generate today's date path: `YYYY/MM/DD`
    - Create feature directory: `specs/features/YYYY/MM/DD/initial-spec/`
    - Copy external spec to: `specs/features/YYYY/MM/DD/initial-spec/SPEC.md`
@@ -300,41 +307,57 @@ If an external spec was provided via `--spec` argument:
      issue: TBD
      created: YYYY-MM-DD
      updated: YYYY-MM-DD
-     source: {{EXTERNAL_SPEC_PATH}}
+     external_source: ../../external/<original-filename>
      ---
      ```
-   - Preserve all original content from external spec below frontmatter
+   - Add a reference section at the top of the spec content:
+     ```markdown
+     ## External Source
 
-2. **Update INDEX.md:**
+     This specification was imported from an external document: `../../external/<original-filename>`
+
+     Original path: `{{EXTERNAL_SPEC_PATH}}`
+     Imported on: YYYY-MM-DD
+     ```
+   - Preserve all original content from external spec below the reference section
+
+3. **Update INDEX.md:**
    - Add entry for the initial spec:
      ```markdown
      ## Active Specifications
 
      - [Initial Specification](features/YYYY/MM/DD/initial-spec/SPEC.md) - Imported from external source
      ```
+   - Add entry for the external spec:
+     ```markdown
+     ## External Specifications
 
-3. **Update SNAPSHOT.md:**
+     - [<original-filename>](external/<original-filename>) - Original external specification imported on YYYY-MM-DD
+     ```
+
+4. **Update SNAPSHOT.md:**
    - Add initial feature summary based on external spec content
    - Extract key capabilities and list them
 
-4. **Update domain glossary:**
+5. **Update domain glossary:**
    - Extract key terms from external spec
    - Add them to `specs/domain/glossary.md` with definitions
 
-5. **Create initial plan:**
+6. **Create initial plan:**
    - Generate `specs/features/YYYY/MM/DD/initial-spec/PLAN.md`
    - Break down external spec requirements into implementation phases
    - Use the `planner` agent pattern for structure
 
-6. **Display confirmation:**
+7. **Display confirmation:**
    ```
+   ✓ External spec copied to: specs/external/<original-filename>
    ✓ External spec integrated as initial feature specification
    ✓ Location: specs/features/YYYY/MM/DD/initial-spec/SPEC.md
    ✓ Generated initial plan: specs/features/YYYY/MM/DD/initial-spec/PLAN.md
    ✓ Updated INDEX.md and SNAPSHOT.md
    ✓ Extracted domain terms to glossary
 
-   Next step: Review the generated plan and run /project:implement-plan specs/features/YYYY/MM/DD/initial-spec/PLAN.md
+   Next step: Review the generated plan and run /sdd-implement-plan specs/features/YYYY/MM/DD/initial-spec/PLAN.md
    ```
 
 ### Step 4: Initialize git repository
@@ -360,17 +383,19 @@ After ALL steps are done:
    ✓ Description: <project-description>
    ✓ Primary Domain: <primary-domain>
    ✓ Components created: <list of selected components>
+   ✓ External spec copied to: specs/external/<original-filename>
    ✓ External spec integrated: specs/features/YYYY/MM/DD/initial-spec/SPEC.md
 
    Next steps:
    1. cd <project-name>
    2. npm install --workspaces
    3. Review the imported spec and generated plan:
-      - specs/features/YYYY/MM/DD/initial-spec/SPEC.md (imported from external source)
+      - specs/external/<original-filename> (original external spec, preserved for reference)
+      - specs/features/YYYY/MM/DD/initial-spec/SPEC.md (imported with SDD frontmatter)
       - specs/features/YYYY/MM/DD/initial-spec/PLAN.md (generated implementation plan)
       - specs/domain/glossary.md (extracted domain terms)
    4. When ready to implement:
-      /project:implement-plan specs/features/YYYY/MM/DD/initial-spec/PLAN.md
+      /sdd-implement-plan specs/features/YYYY/MM/DD/initial-spec/PLAN.md
    ```
 
    **If standard initialization (no external spec):**
@@ -387,7 +412,7 @@ After ALL steps are done:
    4. Review and customize:
       - specs/domain/glossary.md (add your domain terms)
       - components/contract/openapi.yaml (define your first API)
-   5. Create your first feature: /project:new-feature <feature-name>
+   5. Create your first feature: /sdd-new-feature <feature-name>
    ```
 
 **DO NOT STOP until you have completed every single step above and verified the structure.**
@@ -399,11 +424,13 @@ After ALL steps are done:
 - All template variables are populated from user-provided information
 - Project structure is created atomically (all or nothing)
 - **External spec support**: When `--spec` is provided, the external spec is:
+  - Copied to `specs/external/<original-filename>` for permanent reference
   - Parsed to extract defaults for project setup
-  - Integrated as the initial feature specification
+  - Integrated as the initial feature specification in `specs/features/YYYY/MM/DD/initial-spec/SPEC.md`
+  - Referenced in the feature spec via `external_source` frontmatter field
   - Used to generate an implementation plan
   - Processed to extract domain terms for the glossary
-  - This allows seamless initialization from existing product requirements, design documents, or specifications
+  - This allows seamless initialization from existing product requirements, design documents, or specifications while preserving the original source
 
 ## Template Sources
 
