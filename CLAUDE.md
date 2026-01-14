@@ -12,7 +12,7 @@ This is a **Claude Code plugin marketplace** that contains a collection of plugi
 claude-code-plugins/
 ├── .claude-plugin/
 │   └── marketplace.json           # Marketplace manifest
-├── full-stack-spec-driven-dev/    # SDD plugin (v1.9.0)
+├── full-stack-spec-driven-dev/    # SDD plugin
 ├── README.md                      # Marketplace overview
 └── CLAUDE.md                      # This file
 ```
@@ -27,7 +27,7 @@ A Claude Code marketplace is a directory structure that:
 
 ## Available Plugins
 
-### Spec-Driven Development (SDD) - v1.9.0
+### Spec-Driven Development (SDD)
 **Directory:** `full-stack-spec-driven-dev/`
 **Description:** Comprehensive plugin for spec-driven development with React, Node.js, and TypeScript
 
@@ -71,13 +71,13 @@ When adding a new plugin to this marketplace:
          "name": "existing-plugin",
          "source": "./full-stack-spec-driven-dev",
          "description": "...",
-         "version": "1.9.0"
+         "version": "x.y.z"
        },
        {
          "name": "your-plugin-name",
          "source": "./your-plugin-name",
          "description": "Brief description",
-         "version": "1.0.0"
+         "version": "x.y.z"
        }
      ]
    }
