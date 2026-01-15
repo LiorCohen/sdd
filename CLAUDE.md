@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Skills
 
-Use the `commit-standards` skill for ALL commits. See `skills/commit-standards.md`.
+Use the `commit-standards` skill for ALL commits.
 
 ## Repository Overview
 
@@ -14,10 +14,11 @@ This is a **Claude Code plugin marketplace** that contains a collection of plugi
 
 ```
 claude-code-plugins/
+├── .claude/
+│   └── skills/
+│       └── commit-standards.md    # MANDATORY commit guidelines
 ├── .claude-plugin/
 │   └── marketplace.json           # Marketplace manifest
-├── skills/
-│   └── commit-standards.md        # MANDATORY commit guidelines
 ├── full-stack-spec-driven-dev/    # SDD plugin
 ├── README.md                      # Marketplace overview
 └── CLAUDE.md                      # This file
@@ -132,7 +133,7 @@ This skill ensures:
 Plugin file changed? → Bump version → Update CHANGELOG → Stage all → Commit
 ```
 
-See [skills/commit-standards.md](./skills/commit-standards.md) for the complete workflow.
+See `commit-standards` skill for the complete workflow.
 
 ## Notes for Claude Code
 
@@ -141,7 +142,7 @@ See [skills/commit-standards.md](./skills/commit-standards.md) for the complete 
 - Each plugin is independent and self-contained
 - Marketplace-level files should remain generic and not contain plugin implementation details
 - Plugin-specific documentation lives in plugin directories
-- **ALWAYS follow `skills/commit-standards.md` when committing**
+- **ALWAYS follow `commit-standards` skill when committing**
 
 ## Resources
 
