@@ -46,7 +46,7 @@ superseded_by: [optional, path to new spec]
 Run `scripts/validate-spec.py <path>` to check:
 - Required frontmatter fields present (including `issue`)
 - Acceptance criteria in Given/When/Then format
-- All referenced entities exist in domain glossary
+- All referenced definitions exist in domain glossary
 
 ## Spec Locations
 
@@ -54,7 +54,7 @@ Run `scripts/validate-spec.py <path>` to check:
 |------|----------|
 | Feature specs | `specs/features/YYYY/MM/DD/<feature-name>/SPEC.md` |
 | Implementation plans | `specs/features/YYYY/MM/DD/<feature-name>/PLAN.md` |
-| Domain entities | `specs/domain/entities/<entity-name>.md` |
+| Domain definitions | `specs/domain/definitions/<definition-name>.md` |
 | API contracts | `specs/architecture/api-contracts.md` |
 
 **Date-based organization:**
@@ -92,8 +92,8 @@ updated: YYYY-MM-DD
 
 ## Domain Concepts
 
-**Entities:**
-- [Entity](../../domain/entities/entity.md) - how it's used here
+**Definitions:**
+- [Definition](../../domain/definitions/definition.md) - how it's used here
 
 **New concepts introduced:**
 - [Concept]: [Definition]
@@ -149,11 +149,11 @@ updated: YYYY-MM-DD
 
 ---
 
-## Template: Domain Entity
+## Template: Domain Definition
 
 ```markdown
 ---
-title: [Entity Name]
+title: [Definition Name]
 status: active
 domain: [Domain]
 issue: [PROJ-XXX]
@@ -161,11 +161,11 @@ created: YYYY-MM-DD
 updated: YYYY-MM-DD
 ---
 
-# Entity: [Entity Name]
+# Definition: [Definition Name]
 
-## Definition
+## Description
 
-[What this entity represents in the domain]
+[What this definition represents in the domain]
 
 ## Properties
 
@@ -177,14 +177,14 @@ updated: YYYY-MM-DD
 
 ## Relationships
 
-- **[Related Entity]**: [Relationship description]
+- **[Related Definition]**: [Relationship description]
 
 ## Business Rules
 
-1. [Rule about this entity]
+1. [Rule about this definition]
 2. [Another rule]
 
 ## Lifecycle
 
-[States this entity can be in and transitions between them]
+[States this definition can be in and transitions between them]
 ```

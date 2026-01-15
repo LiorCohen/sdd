@@ -11,6 +11,6 @@ Canonical terminology for {{PROJECT_NAME}}.
 
 ## Conventions
 
-- Use singular nouns for entities (User, not Users)
+- Use singular nouns for definitions (User, not Users)
 - Use past tense for events (UserCreated, not CreateUser)
 - Be consistent with terminology across all specs

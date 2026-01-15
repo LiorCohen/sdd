@@ -40,17 +40,17 @@ Example:
 
 1. **Glossary Updates** (`specs/domain/glossary.md`):
    - Read the spec's "Domain Concepts" section
-   - Identify any new terms, entities, or concepts introduced
+   - Identify any new terms, definitions, or concepts introduced
    - Add or update definitions in the glossary
    - Ensure all domain-specific terminology is properly documented
    - If no new concepts: explicitly note "No glossary updates needed"
 
-2. **Entity Documentation** (`specs/domain/entities/`):
-   - Identify new entities introduced by the feature
-   - Create entity spec files for new domain entities (e.g., `specs/domain/entities/user.md`)
-   - Update existing entity specs if properties/relationships change
-   - Document entity properties, relationships, business rules, and lifecycle
-   - If no entity changes: explicitly note "No entity updates needed"
+2. **Definition Documentation** (`specs/domain/definitions/`):
+   - Identify new definitions introduced by the feature
+   - Create definition spec files for new domain definitions (e.g., `specs/domain/definitions/user.md`)
+   - Update existing definition specs if properties/relationships change
+   - Document definition properties, relationships, business rules, and lifecycle
+   - If no definition changes: explicitly note "No definition updates needed"
 
 3. **Architecture Documentation** (`specs/architecture/`):
    - Review if the feature introduces new architectural patterns
@@ -62,7 +62,7 @@ Example:
 **Verification checklist:**
 - [ ] Read spec's "Domain Concepts" section
 - [ ] Updated `specs/domain/glossary.md` with new terms
-- [ ] Created/updated entity specs in `specs/domain/entities/`
+- [ ] Created/updated definition specs in `specs/domain/definitions/`
 - [ ] Updated architecture docs if needed
 - [ ] Confirmed all domain changes from spec are documented
 
@@ -165,9 +165,9 @@ Before declaring implementation complete, you MUST:
 
 ## Important Notes
 
-- **Domain docs first**: Domain documentation (glossary, entities, architecture) MUST be updated before writing any code
+- **Domain docs first**: Domain documentation (glossary, definitions, architecture) MUST be updated before writing any code
 - **Mandatory step**: Phase 2 (Update Domain Documentation) cannot be skipped, even if changes seem minor
-- **Verification required**: Explicitly confirm each documentation area (glossary, entities, architecture) is updated or doesn't need updates
+- **Verification required**: Explicitly confirm each documentation area (glossary, definitions, architecture) is updated or doesn't need updates
 - **Traceability**: Domain documentation serves as the bridge between specs and implementation
 - **Single source of truth**: Ensures domain knowledge is centralized and accessible to all team members
 
@@ -191,10 +191,10 @@ Agent: - Added "Session" definition
 Agent: - Added "AuthToken" definition
 Agent: ✓ Glossary updated
 Agent:
-Agent: Creating entity specs:
-Agent: - Created specs/domain/entities/user.md
-Agent: - Created specs/domain/entities/session.md
-Agent: ✓ Entity specs created
+Agent: Creating definition specs:
+Agent: - Created specs/domain/definitions/user.md
+Agent: - Created specs/domain/definitions/session.md
+Agent: ✓ Definition specs created
 Agent:
 Agent: Reviewing architecture impact:
 Agent: - Feature adds new authentication service
@@ -204,7 +204,7 @@ Agent:
 Agent: Domain documentation verification:
 Agent: ✓ Read spec's "Domain Concepts" section
 Agent: ✓ Updated specs/domain/glossary.md with new terms
-Agent: ✓ Created entity specs in specs/domain/entities/
+Agent: ✓ Created definition specs in specs/domain/definitions/
 Agent: ✓ Updated architecture docs
 Agent: ✓ All domain changes from spec are documented
 Agent:

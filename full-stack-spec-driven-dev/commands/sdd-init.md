@@ -46,7 +46,7 @@ Initialize a new spec-driven project, optionally from an existing external speci
      - **Project Name**: Look for title/project name in spec
      - **Description**: Look for description or summary
      - **Domain**: Identify primary business domain from content
-     - **Key Entities**: Extract main entities/concepts mentioned
+     - **Key Definitions**: Extract main definitions/concepts mentioned
      - **Requirements**: Parse functional and non-functional requirements
    - Store this information for use in later phases
    - Display: "✓ Loaded external spec from: <path>"
@@ -138,7 +138,7 @@ Display a summary of what will be created:
 │   ├── external/           # Original external specs (if imported)
 │   ├── domain/
 │   │   ├── glossary.md (with <domain> as primary domain)
-│   │   ├── entities/
+│   │   ├── definitions/
 │   │   └── use-cases/
 │   ├── architecture/
 │   └── features/
@@ -199,7 +199,7 @@ Create directories based on selected components:
 
 **Always create:**
 ```bash
-mkdir -p ${TARGET_DIR}/specs/{domain/{entities,use-cases},architecture,features,external}
+mkdir -p ${TARGET_DIR}/specs/{domain/{definitions,use-cases},architecture,features,external}
 mkdir -p ${TARGET_DIR}/components/contract
 ```
 

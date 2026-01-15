@@ -47,7 +47,7 @@ testkube run testsuite e2e-tests --watch
 - Check that OpenAPI spec matches spec requirements
 - Verify backend endpoints exist and return correct types
 - Verify frontend components exist and consume correct types
-- Check database schema matches domain entities
+- Check database schema matches domain definitions
 
 ### 5. Report
 

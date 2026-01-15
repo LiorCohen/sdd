@@ -47,7 +47,7 @@ created: YYYY-MM-DD
 
 Tasks:
 - [ ] Update `components/contract/openapi.yaml`
-- [ ] Add schemas for [entities]
+- [ ] Add schemas for [definitions]
 - [ ] Generate types
 
 Deliverables:

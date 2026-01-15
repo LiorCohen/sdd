@@ -31,7 +31,7 @@ Specs → Plans → Implementation → Tests → Validation
 | `INDEX.md` | Registry of all specifications - automatically updated when specs are created/modified |
 | `SNAPSHOT.md` | Current state of the product - living document that describes all active features and capabilities |
 | `domain/glossary.md` | Domain terminology dictionary - single source of truth for business terms |
-| `domain/entities/` | Domain entity definitions - core business objects |
+| `domain/definitions/` | Domain definitions - core business objects |
 | `domain/use-cases/` | Business use case definitions - key workflows and scenarios |
 | `architecture/` | Architecture decision records and overviews |
 | `features/YYYY/MM/DD/<name>/` | Feature specifications organized by date |
@@ -135,7 +135,7 @@ your-project/
 │   ├── SNAPSHOT.md                # Current product state
 │   ├── domain/
 │   │   ├── glossary.md           # Domain terminology definitions
-│   │   └── entities/             # Entity specifications
+│   │   └── definitions/          # Domain definitions
 │   ├── architecture/             # Architecture documentation
 │   └── features/                 # Feature specifications
 │       └── YYYY/MM/DD/<feature-name>/
