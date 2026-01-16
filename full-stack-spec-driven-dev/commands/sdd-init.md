@@ -283,7 +283,7 @@ Copy template files with variable substitution using gathered information.
   ```
 - Create `${TARGET_DIR}/components/server/src/index.ts` with minimal entry point:
   ```typescript
-  // src/index.ts - THE ONLY FILE WITH SIDE EFFECTS
+  // src/index.ts - THE ONLY FILE WITH SIDE EFFECTS (exception to index.ts rule for entry points)
   import { createServer } from './server';
   import { loadConfig } from './config';
 
@@ -298,40 +298,44 @@ Copy template files with variable substitution using gathered information.
     process.exit(1);
   });
   ```
-- Create `${TARGET_DIR}/components/server/src/config/index.ts` with config loader:
+- Create `${TARGET_DIR}/components/server/src/config/load_config.ts` with config loader:
   ```typescript
   import dotenv from 'dotenv';
 
-  dotenv.config();
-
-  interface Config {
+  export type Config = Readonly<{
     readonly port: number;
     readonly nodeEnv: string;
     readonly logLevel: string;
-  }
+  }>;
 
   export const loadConfig = (): Config => {
+    // Load .env file when config is requested (not on module import)
+    dotenv.config();
+
     const port = parseInt(process.env.PORT ?? '3000', 10);
     const nodeEnv = process.env.NODE_ENV ?? 'development';
     const logLevel = process.env.LOG_LEVEL ?? 'info';
 
     return { port, nodeEnv, logLevel };
   };
-
-  export type { Config };
   ```
-- Create `${TARGET_DIR}/components/server/src/server/index.ts` with server factory:
+- Create `${TARGET_DIR}/components/server/src/config/index.ts` with exports only:
+  ```typescript
+  export { loadConfig } from './load_config';
+  export type { Config } from './load_config';
+  ```
+- Create `${TARGET_DIR}/components/server/src/server/create_server.ts` with server factory:
   ```typescript
   import type { Config } from '../config';
 
-  interface ServerDependencies {
+  type ServerDependencies = Readonly<{
     readonly config: Config;
-  }
+  }>;
 
-  interface Server {
+  type Server = Readonly<{
     readonly start: () => Promise<void>;
     readonly stop: () => Promise<void>;
-  }
+  }>;
 
   export const createServer = (deps: ServerDependencies): Server => {
     const { config } = deps;
@@ -348,6 +352,10 @@ Copy template files with variable substitution using gathered information.
 
     return { start, stop };
   };
+  ```
+- Create `${TARGET_DIR}/components/server/src/server/index.ts` with exports only:
+  ```typescript
+  export { createServer } from './create_server';
   ```
 
 **Webapp component (if selected):**

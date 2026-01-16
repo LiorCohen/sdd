@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.10.12] - 2026-01-17
+
+### Fixed
+
+- **Moved `dotenv.config()` inside `loadConfig()` function**: Fixed side effect on import
+  - `dotenv.config()` is now called inside `loadConfig()`, not at module level
+  - Config module has no side effects when imported
+  - Only `src/index.ts` has side effects (application entry point)
+  - Updated both `backend-dev` agent and `sdd-init` command
+
+- **Changed `interface` to `type` in code templates**: Consistency with typescript-standards
+  - Config and Server types now use `type` with `Readonly<>` wrapper
+  - Follows the pattern shown in typescript-standards examples
+
+- **Clarified entry point exception**: `src/index.ts` is allowed to have side effects as application entry point
+  - This is an explicit exception to the "index.ts exports only" rule
+  - Application entry points need to run code on import
+
+- **Moved logic out of module index.ts files**: All index.ts files now contain only exports
+  - `src/config/load_config.ts` contains the `loadConfig` function and `Config` type
+  - `src/config/index.ts` re-exports from `load_config.ts`
+  - `src/server/create_server.ts` contains the `createServer` function
+  - `src/server/index.ts` re-exports from `create_server.ts`
+  - Updated both `backend-dev` agent and `sdd-init` command
+
+### Rationale
+
+These fixes ensure all code templates follow the established standards:
+- **Testability**: Modules can be imported in tests without triggering side effects (except entry point)
+- **Standards compliance**: All `index.ts` files contain only exports (except application entry point)
+
 ## [1.10.11] - 2026-01-17
 
 ### Removed

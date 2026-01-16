@@ -51,7 +51,7 @@ Config → [All layers] → Dependencies (injected by Controller)
 **CRITICAL:** The root `src/index.ts` is the ONLY file with side effects. It must be minimal:
 
 ```typescript
-// src/index.ts - THE ONLY FILE WITH SIDE EFFECTS
+// src/index.ts - THE ONLY FILE WITH SIDE EFFECTS (exception to index.ts rule for entry points)
 import { createServer } from './server';
 import { loadConfig } from './config';
 
@@ -68,7 +68,7 @@ main().catch((error) => {
 ```
 
 **Rules:**
-- `src/index.ts` is the ONLY file that runs code on import
+- `src/index.ts` is the ONLY file that runs code on import (exception to the "index.ts exports only" rule for application entry points)
 - All other files export functions/types with NO side effects when imported
 - NO logic in `src/index.ts` beyond importing and starting the server
 - NO configuration loading, validation, or setup logic in `src/index.ts`
@@ -98,13 +98,10 @@ Environment parsing, validation, type-safe config objects.
 **CRITICAL: Use dotenv for ALL environment variable access.** Direct `process.env` access is FORBIDDEN outside the Config layer.
 
 ```typescript
-// src/config/index.ts
+// src/config/load_config.ts
 import dotenv from 'dotenv';
 
-// Load .env file FIRST (before accessing any env vars)
-dotenv.config();
-
-interface Config {
+export type Config = Readonly<{
   readonly server: Readonly<{
     readonly port: number;
     readonly host: string;
@@ -112,9 +109,12 @@ interface Config {
   readonly database: Readonly<{
     readonly url: string;
   }>;
-}
+}>;
 
-const loadConfig = (): Config => {
+export const loadConfig = (): Config => {
+  // Load .env file when config is requested (not on module import)
+  dotenv.config();
+
   // Read from process.env ONLY in this layer
   const port = parseInt(process.env.PORT ?? '3000', 10);
   const host = process.env.HOST ?? 'localhost';
@@ -129,13 +129,16 @@ const loadConfig = (): Config => {
     database: { url: databaseUrl },
   };
 };
+```
 
-export { loadConfig };
-export type { Config };
+```typescript
+// src/config/index.ts - exports only
+export { loadConfig } from './load_config';
+export type { Config } from './load_config';
 ```
 
 **Environment Variable Rules:**
-1. **dotenv is mandatory**: Always use `dotenv.config()` at the top of config/index.ts
+1. **dotenv is mandatory**: Always use `dotenv.config()` inside `loadConfig()` (not at module level)
 2. **Config layer ONLY**: `process.env` access is ONLY allowed in src/config/
 3. **Type-safe access**: All other layers receive typed Config object
 4. **Validation required**: Validate required vars and throw if missing
@@ -642,7 +645,7 @@ When implementing a feature:
 
 - Spec is truth—implement exactly what's specified
 - Follow all `typescript-standards` skill requirements (immutability, arrow functions, native JS, index.ts rules)
-- **src/index.ts is the ONLY file with side effects**: All other files must be pure exports with no side effects on import
+- **src/index.ts is the ONLY file with side effects**: Exception to index.ts rule for application entry points
 - Separation of concerns is absolute
 - Model never imports from outside its module
 - All external needs provided through Dependencies
