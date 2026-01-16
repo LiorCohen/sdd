@@ -10,20 +10,20 @@ Initialize a new spec-driven project, optionally from an existing external speci
 ## Usage
 
 ```
-/sdd-init [project-name] [--spec <path-to-external-spec>]
+/sdd-init [--name project-name] [--spec <path-to-external-spec>]
 ```
 
 **Arguments:**
-- `project-name` (optional): Name of the project directory to create
+- `--name <project-name>` (optional): Name of the project directory to create
 - `--spec <path>` (optional): Path to an external specification file to use as the initial spec
 
 **Examples:**
 ```bash
 # Standard initialization with prompts
-/sdd-init my-app
+/sdd-init --name my-app
 
 # Initialize from existing spec
-/sdd-init my-app --spec /path/to/existing-spec.md
+/sdd-init --name my-app --spec /path/to/existing-spec.md
 
 # Initialize from external spec (will prompt for project name)
 /sdd-init --spec /path/to/product-requirements.md

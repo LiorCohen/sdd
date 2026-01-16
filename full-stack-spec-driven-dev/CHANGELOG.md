@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.10.10] - 2026-01-17
+
+### Changed
+
+- **sdd-init command**: Changed argument syntax from positional to named
+  - Project name now uses `--name <project-name>` instead of positional argument
+  - Examples updated: `/sdd-init --name my-app` instead of `/sdd-init my-app`
+  - Consistent with `--spec` argument style
+
+### Rationale
+
+Named arguments provide:
+- **Clarity**: Explicit intent when specifying project name
+- **Consistency**: Both arguments now use `--` prefix style
+- **Flexibility**: Arguments can be provided in any order
+
 ## [1.10.9] - 2026-01-16
 
 ### Enhanced
