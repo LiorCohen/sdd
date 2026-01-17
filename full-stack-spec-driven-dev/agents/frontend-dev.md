@@ -33,16 +33,18 @@ This project follows strict MVVM architecture for frontend development:
 
 ```
 src/
-├── pages/                    # Page components (Views)
+├── pages/                    # Page components (Views + ViewModels + Models)
 │   ├── home_page/
 │   │   ├── index.ts         # Exports only
 │   │   ├── home_page.tsx     # View component
 │   │   ├── use_home_view_model.ts  # ViewModel hook
+│   │   ├── home_model.ts     # Page-specific model (business logic)
 │   │   └── home_page.test.tsx
 │   ├── user_profile/
 │   │   ├── index.ts
 │   │   ├── user_profile.tsx
 │   │   ├── use_user_profile_view_model.ts
+│   │   ├── user_profile_model.ts  # Page-specific model
 │   │   └── user_profile.test.tsx
 │   └── ...
 ├── components/              # Shared presentational components
@@ -54,10 +56,6 @@ src/
 ├── viewmodels/             # Shared ViewModel hooks
 │   ├── use_auth.ts
 │   ├── use_user_data.ts
-│   └── ...
-├── models/                 # Domain logic (the "M" in MVVM)
-│   ├── user.ts
-│   ├── auth.ts
 │   └── ...
 ├── services/              # API clients and external services
 │   ├── api/
@@ -75,10 +73,11 @@ src/
 
 ### MVVM Layer Responsibilities
 
-**Model Layer** (`src/models/`, `src/services/`):
-- Business logic and domain rules
+**Model Layer** (page-specific `*_model.ts`, `src/services/`):
+- Page-specific models live inside each page directory (e.g., `user_profile_model.ts`)
+- Business logic and domain rules specific to that page
 - Data transformation and validation
-- API communication
+- Services (`src/services/`) handle API communication (shared across pages)
 - No UI concerns, no React dependencies
 
 **ViewModel Layer** (`src/viewmodels/`, page-specific `use_*_view_model.ts`):
@@ -105,6 +104,17 @@ Every page MUST follow this structure:
 // src/pages/user_profile/index.ts
 export { UserProfile } from './user_profile';
 
+// src/pages/user_profile/user_profile_model.ts (Model - page-specific business logic)
+import type { User } from '../../types/generated';
+
+export const formatUserDisplayName = (user: User): string => {
+  return user.name || user.email.split('@')[0];
+};
+
+export const canEditProfile = (currentUserId: string, profileUserId: string): boolean => {
+  return currentUserId === profileUserId;
+};
+
 // src/pages/user_profile/user_profile.tsx (View)
 import { useUserProfileViewModel } from './use_user_profile_view_model';
 
@@ -113,7 +123,7 @@ interface UserProfileProps {
 }
 
 export const UserProfile = ({ userId }: UserProfileProps) => {
-  const { user, isLoading, error, handleEdit } = useUserProfileViewModel(userId);
+  const { user, displayName, isLoading, error, canEdit, handleEdit } = useUserProfileViewModel(userId);
 
   if (isLoading) return <div className="flex items-center justify-center">Loading...</div>;
   if (error) return <div className="text-red-600">Error: {error.message}</div>;
@@ -121,14 +131,16 @@ export const UserProfile = ({ userId }: UserProfileProps) => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{user.name}</h1>
+      <h1 className="text-2xl font-bold mb-4">{displayName}</h1>
       <p className="text-gray-600">{user.email}</p>
-      <button
-        onClick={handleEdit}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Edit Profile
-      </button>
+      {canEdit && (
+        <button
+          onClick={handleEdit}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Edit Profile
+        </button>
+      )}
     </div>
   );
 };
@@ -138,21 +150,29 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import type { User } from '../../types/generated';
 import { fetchUser } from '../../services/api/users';
+import { formatUserDisplayName, canEditProfile } from './user_profile_model';
+import { useAuthStore } from '../../stores/auth_store';
 
 interface UserProfileViewModel {
   readonly user: User | undefined;
+  readonly displayName: string;
   readonly isLoading: boolean;
   readonly error: Error | null;
+  readonly canEdit: boolean;
   readonly handleEdit: () => void;
 }
 
 export const useUserProfileViewModel = (userId: string): UserProfileViewModel => {
   const navigate = useNavigate();
+  const currentUser = useAuthStore((state) => state.user);
 
   const { data: user, isLoading, error } = useQuery<User>({
     queryKey: ['user', userId],
     queryFn: () => fetchUser(userId),
   });
+
+  const displayName = user ? formatUserDisplayName(user) : '';
+  const canEdit = currentUser ? canEditProfile(currentUser.id, userId) : false;
 
   const handleEdit = () => {
     navigate({ to: '/users/$userId/edit', params: { userId } });
@@ -160,8 +180,10 @@ export const useUserProfileViewModel = (userId: string): UserProfileViewModel =>
 
   return {
     user,
+    displayName,
     isLoading,
     error,
+    canEdit,
     handleEdit,
   };
 };
@@ -450,7 +472,8 @@ export const useAuthStore = create<AuthState>((set) => ({
 - **Strict MVVM** - Views never contain business logic
 - **Page-based organization** - Every page in `src/pages/<page_name>/`
 - **ViewModels as hooks** - One `use_*_view_model.ts` per page
-- **Model layer separation** - Business logic in `src/models/`, API calls in `src/services/`
+- **Page-specific models** - Business logic in `<page_name>_model.ts` inside each page directory
+- **Shared services** - API calls in `src/services/` (shared across pages)
 
 **TanStack Ecosystem:**
 - **TanStack Router** for all routing and navigation

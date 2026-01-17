@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.10.19] - 2026-01-17
+
+### Changed
+
+- **Refactored MVVM architecture**: Moved models from root-level directory to page-specific files
+  - Removed `src/models/` directory from frontend structure
+  - Each page now contains its own model file (e.g., `user_profile_model.ts`)
+  - Models contain page-specific business logic (data transformation, validation, domain rules)
+  - Services (`src/services/`) remain shared for API communication
+  - Updated Page Structure example to show model file usage with ViewModel integration
+
+### Rationale
+
+Page-specific models provide:
+- **Colocation**: Business logic lives alongside its View and ViewModel
+- **Clarity**: Each page's model contains only relevant logic
+- **Simplicity**: No need for a shared models directory with unclear ownership
+- **Consistency**: Follows the same pattern as page-specific ViewModels
+
 ## [1.10.18] - 2026-01-17
 
 ### Changed
