@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.10.22] - 2026-01-18
+
+### Changed
+
+- **Consolidated backend-dev.md**: Reduced from 663 to 142 lines by removing redundancies
+  - Merged Templates table and Layer Overview into single Architecture table
+  - Replaced inline code examples with template file references
+  - Removed redundant TypeScript Standards section (now references `typescript-standards` skill)
+  - Consolidated duplicate environment variable rules
+  - Simplified Telemetry section with table format
+
 ## [1.10.21] - 2026-01-18
 
 ### Added
