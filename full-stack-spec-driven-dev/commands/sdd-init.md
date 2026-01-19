@@ -91,13 +91,46 @@ When invoked, prompt the user for the following information (use extracted value
    - Example: "Task Management" or "E-commerce" or "Healthcare"
 
 4. **Initial Components**
-   - Ask which components to include:
-     - [ ] Contract (OpenAPI spec) - Always included
-     - [ ] Server (Node.js backend) - Recommended
-     - [ ] Webapp (React frontend) - Recommended
-     - [ ] Helm (Kubernetes deployment) - Optional
-     - [ ] Testing (Testkube setup) - Recommended
-     - [ ] CI/CD (GitHub Actions) - Optional
+   - Ask which project type to create:
+
+   **Option A: Full-Stack Application** (Recommended)
+   - Contract (OpenAPI spec)
+   - Server (Node.js backend)
+   - Webapp (React frontend)
+   - Config (YAML configuration)
+   - Testing (Testkube setup)
+   - CI/CD (GitHub Actions)
+
+   **Option B: Backend API Only**
+   - Contract (OpenAPI spec)
+   - Server (Node.js backend)
+   - Config (YAML configuration)
+   - Testing (Testkube setup)
+   - CI/CD (GitHub Actions)
+
+   **Option C: Frontend Only** (requires external API)
+   - Webapp (React frontend)
+   - Testing (Testkube setup)
+   - CI/CD (GitHub Actions)
+
+   **Option D: Custom** (manual selection with dependency validation)
+
+   **Component Dependencies:**
+   | Component | Requires | Notes |
+   |-----------|----------|-------|
+   | Contract | Server | OpenAPI spec needs a backend to implement it |
+   | Server | Contract, Config | Backend requires API contract and configuration |
+   | Webapp | - | Can work standalone with external API |
+   | Config | Server or Webapp | Configuration needs an application to configure |
+   | Helm | Server or Webapp | Kubernetes deployment needs an application |
+   | Testing | Server or Webapp | Tests need something to test |
+   | CI/CD | Server or Webapp | Workflows need something to build/test |
+
+   **Validation Rules:**
+   - If Server is selected, Contract and Config are auto-included
+   - If Helm is selected, at least Server or Webapp must be included
+   - If Contract is selected without Server, warn and ask for confirmation
+   - Config requires at least one application component (Server or Webapp)
 
 ### Phase 2: Show Configuration Summary
 
@@ -111,11 +144,14 @@ Display a summary of what will be created:
 **Description:** <description>
 **Primary Domain:** <domain>
 
+**Project Type:** <Full-Stack | Backend API | Frontend | Custom>
+
 **Components to create:**
 - ✓ Contract (OpenAPI spec)
 - ✓ Server (Node.js backend)
 - ✓ Webapp (React frontend)
-- ✓ Helm charts
+- ✓ Config (YAML configuration)
+- ✓ Helm charts (if selected)
 - ✓ Testing setup
 - ✓ CI/CD workflows
 
@@ -137,9 +173,10 @@ Display a summary of what will be created:
 │           ├── SPEC.md
 │           └── PLAN.md
 ├── components/
-│   ├── contract/          # OpenAPI specs
+│   ├── contract/          # OpenAPI specs (if selected)
 │   ├── server/            # Node.js backend (if selected)
 │   ├── webapp/            # React frontend (if selected)
+│   ├── config/            # YAML configuration (if selected)
 │   ├── helm/              # Kubernetes deployment (if selected)
 │   └── testing/           # Testkube tests (if selected)
 └── .github/               # CI/CD workflows (if selected)
@@ -191,6 +228,10 @@ Create directories based on selected components:
 **Always create:**
 ```bash
 mkdir -p ${TARGET_DIR}/specs/{domain/{definitions,use-cases},architecture,features,external}
+```
+
+**If Contract selected:**
+```bash
 mkdir -p ${TARGET_DIR}/components/contract
 ```
 
@@ -202,6 +243,11 @@ mkdir -p ${TARGET_DIR}/components/server/src/{app,config,controller,model/{defin
 **If Webapp selected:**
 ```bash
 mkdir -p ${TARGET_DIR}/components/webapp/src
+```
+
+**If Config selected:**
+```bash
+mkdir -p ${TARGET_DIR}/components/config/schemas
 ```
 
 **If Helm selected:**
@@ -257,7 +303,7 @@ Copy template files with variable substitution using gathered information.
   [List selected components and their purposes]
   ```
 
-**Contract component (always create):**
+**Contract component (if selected):**
 - Copy `templates/components/contract/package.json` → `${TARGET_DIR}/components/contract/package.json`
   - Replace `{{PROJECT_NAME}}`
 - Copy `templates/components/contract/openapi.yaml` → `${TARGET_DIR}/components/contract/openapi.yaml`
@@ -301,6 +347,19 @@ Copy template files with variable substitution using gathered information.
 - Create `${TARGET_DIR}/components/webapp/index.html` with basic HTML template
 - Create `${TARGET_DIR}/components/webapp/vite.config.ts` with basic Vite config
 - Create `${TARGET_DIR}/components/webapp/tailwind.config.js` with Tailwind config
+
+**Config component (if selected):**
+- Copy `templates/components/config/schemas/schema.json` → `${TARGET_DIR}/components/config/schemas/schema.json`
+- Copy `templates/components/config/schemas/ops-schema.json` → `${TARGET_DIR}/components/config/schemas/ops-schema.json`
+- Copy `templates/components/config/schemas/app-schema.json` → `${TARGET_DIR}/components/config/schemas/app-schema.json`
+- Copy `templates/components/config/config.yaml` → `${TARGET_DIR}/components/config/config.yaml`
+  - Replace `{{PROJECT_NAME}}`
+- Copy `templates/components/config/config-local.yaml` → `${TARGET_DIR}/components/config/config-local.yaml`
+  - Replace `{{PROJECT_NAME}}`
+- Copy `templates/components/config/config-testing.yaml` → `${TARGET_DIR}/components/config/config-testing.yaml`
+  - Replace `{{PROJECT_NAME}}`
+- Copy `templates/components/config/config-production.yaml` → `${TARGET_DIR}/components/config/config-production.yaml`
+  - Replace `{{PROJECT_NAME}}`
 
 **Helm charts (if selected):**
 - Create basic Helm chart structure in `${TARGET_DIR}/components/helm/`

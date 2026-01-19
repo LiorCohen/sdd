@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.0.3] - 2026-01-19
+
+### Changed
+
+- **sdd-init component selection with dependencies**
+  - Replaced flat component list with project type options:
+    - **Full-Stack Application**: Contract, Server, Webapp, Config, Testing, CI/CD
+    - **Backend API Only**: Contract, Server, Config, Testing, CI/CD
+    - **Frontend Only**: Webapp, Testing, CI/CD
+    - **Custom**: Manual selection with dependency validation
+  - Added component dependency table (e.g., Contract requires Server, Helm requires Server or Webapp)
+  - Added validation rules to prevent invalid combinations
+  - Contract is no longer "always included" - only with Server
+  - Integrated Config component into sdd-init workflow
+
 ## [2.0.2] - 2026-01-19
 
 ### Added
