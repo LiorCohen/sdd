@@ -40,10 +40,13 @@ domain: Identity | Billing | Core | ...
 issue: PROJ-1234                    # Required: tracking issue
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
+sdd_version: X.Y.Z                  # Required: SDD plugin version
 ---
 ```
 
-**The `issue` field is required** — every spec must reference a tracking issue (JIRA, GitHub, etc.).
+**Required fields:**
+- `issue` — every spec must reference a tracking issue (JIRA, GitHub, etc.)
+- `sdd_version` — read from this plugin's `.claude-plugin/plugin.json`
 
 ## Lifecycle (Git as State Machine)
 

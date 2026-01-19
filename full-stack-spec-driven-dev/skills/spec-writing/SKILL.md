@@ -29,6 +29,7 @@ domain: Identity | Billing | Core | ...
 issue: PROJ-1234                    # Required: JIRA/GitHub issue
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
+sdd_version: X.Y.Z                  # Required: SDD plugin version used
 supersedes: [optional, path to old spec]
 superseded_by: [optional, path to new spec]
 ---
@@ -41,6 +42,7 @@ superseded_by: [optional, path to new spec]
 - `issue` ← Must reference a tracking issue
 - `created`
 - `updated`
+- `sdd_version` ← Plugin version used to generate this spec
 
 ## Validation
 
@@ -83,6 +85,7 @@ domain: [Domain Name]
 issue: [PROJ-XXX or GitHub issue URL]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
+sdd_version: [X.Y.Z]
 ---
 
 # Feature: [Feature Name]
@@ -160,6 +163,7 @@ domain: [Domain]
 issue: [PROJ-XXX]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
+sdd_version: [X.Y.Z]
 ---
 
 # Definition: [Definition Name]

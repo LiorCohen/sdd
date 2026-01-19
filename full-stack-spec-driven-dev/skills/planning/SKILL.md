@@ -30,6 +30,7 @@ title: Implementation Plan: [Feature Name]
 spec: ./SPEC.md
 issue: [PROJ-XXX]
 created: YYYY-MM-DD
+sdd_version: [X.Y.Z]
 ---
 
 # Implementation Plan: [Feature Name]

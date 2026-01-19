@@ -76,6 +76,7 @@ This is a 5-component monorepo:
 - Assign each phase to specific agent
 - Contract changes come first (types needed by both server and webapp)
 - Never write implementation code
+- **Include `sdd_version` in frontmatter**: Read version from plugin's `.claude-plugin/plugin.json`
 - **CRITICAL: Never proceed to implementation without explicit user approval of the plan**
   - After creating or updating a plan, STOP and ask the user to review it
   - Do NOT invoke implementation agents (api-designer, backend-dev, frontend-dev, etc.)

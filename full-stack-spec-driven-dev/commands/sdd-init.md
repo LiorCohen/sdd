@@ -334,9 +334,11 @@ If an external spec was provided via `--spec` argument:
      issue: TBD
      created: YYYY-MM-DD
      updated: YYYY-MM-DD
+     sdd_version: {{SDD_VERSION}}
      external_source: ../../external/<original-filename>
      ---
      ```
+   - Note: `{{SDD_VERSION}}` is read from this plugin's `.claude-plugin/plugin.json`
    - Add a reference section at the top of the spec content:
      ```markdown
      ## External Source

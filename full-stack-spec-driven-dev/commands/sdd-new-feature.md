@@ -55,16 +55,20 @@ Start a new feature.
 ### 4. Create Spec (`spec-writer` agent)
 
 - Get current date in YYYY/MM/DD format
+- Read SDD plugin version from `full-stack-spec-driven-dev/.claude-plugin/plugin.json`
 - Create `specs/features/YYYY/MM/DD/<feature-name>/SPEC.md` using template
 - Fill in skeleton with user input
 - Set `created` frontmatter field to current date
+- Set `sdd_version` frontmatter field to current plugin version
 - Present for review and confirmation
 
 ### 5. Create Plan (`planner` agent)
 
 - Analyze the spec
 - Determine components affected (contract, server, webapp, helm, testing)
+- Read SDD plugin version from `full-stack-spec-driven-dev/.claude-plugin/plugin.json`
 - Create `specs/features/YYYY/MM/DD/<feature-name>/PLAN.md` (same directory as spec)
+- Set `sdd_version` frontmatter field to current plugin version
 - Break down into phases with agent assignments
 - Estimate effort for each phase
 - Present plan for approval

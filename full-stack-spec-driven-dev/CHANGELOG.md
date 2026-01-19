@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.0.2] - 2026-01-19
+
+### Added
+
+- **`sdd_version` field required in all specs and plans**
+  - Added to frontmatter requirements in `spec-writing` skill
+  - Added to plan template in `planning` skill
+  - Updated `spec-writer` agent to include version requirement
+  - Updated `planner` agent to include version in generated plans
+  - Updated `sdd-new-feature` command to read and inject plugin version
+  - Updated `sdd-init` command to include version in imported specs
+
+### Rationale
+
+Tracking the SDD plugin version in specs and plans enables:
+- **Compatibility tracking**: Know which plugin version generated a spec
+- **Migration support**: Identify specs that may need updating after plugin changes
+- **Debugging**: Trace issues to specific plugin versions
+
 ## [2.0.1] - 2026-01-19
 
 ### Added
