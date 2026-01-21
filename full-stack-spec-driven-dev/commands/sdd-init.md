@@ -218,79 +218,152 @@ Once approved, use the `scaffold` skill to create the project structure.
 
 If an external spec was provided via `--spec` argument:
 
-1. **Copy external spec to specs/external/:**
-   - Determine the original filename from the external spec path
-   - Copy external spec to: `specs/external/<original-filename>`
-   - This preserves the original external spec in the repository for reference
-   - Display: "✓ Copied external spec to: specs/external/<original-filename>"
+#### Step 5.1: Copy external spec to archive
 
-2. **Create initial feature spec from external spec:**
-   - Generate today's date path: `YYYY/MM/DD`
-   - Create feature directory: `specs/features/YYYY/MM/DD/initial-spec/`
-   - Copy external spec to: `specs/features/YYYY/MM/DD/initial-spec/SPEC.md`
-   - Add frontmatter to the spec if not present:
-     ```yaml
-     ---
-     title: Initial Specification (from external source)
-     status: active
-     domain: {{PRIMARY_DOMAIN}}
-     issue: TBD
-     created: YYYY-MM-DD
-     updated: YYYY-MM-DD
-     sdd_version: {{SDD_VERSION}}
-     external_source: ../../external/<original-filename>
-     ---
-     ```
-   - Note: `{{SDD_VERSION}}` is read from this plugin's `.claude-plugin/plugin.json`
-   - Add a reference section at the top of the spec content:
-     ```markdown
-     ## External Source
+1. Determine the original filename from the external spec path
+2. Copy external spec to: `specs/external/<original-filename>`
+3. This preserves the original external spec in the repository for reference
+4. Display: "✓ Copied external spec to: specs/external/<original-filename>"
 
-     This specification was imported from an external document: `../../external/<original-filename>`
+#### Step 5.2: Analyze spec for feature decomposition
 
-     Original path: `{{EXTERNAL_SPEC_PATH}}`
-     Imported on: YYYY-MM-DD
-     ```
-   - Preserve all original content from external spec below the reference section
+Use the `spec-decomposer` skill to analyze the external spec:
 
-3. **Update INDEX.md:**
-   - Add entry for the initial spec:
-     ```markdown
-     ## Active Specifications
+```
+Input:
+  spec_content: <content of the external spec>
+  spec_path: <original path to external spec>
+  default_domain: {{PRIMARY_DOMAIN}}
+```
 
-     - [Initial Specification](features/YYYY/MM/DD/initial-spec/SPEC.md) - Imported from external source
-     ```
-   - Add entry for the external spec:
-     ```markdown
-     ## External Specifications
+The skill returns a `DecompositionResult` with:
+- `is_decomposable`: whether the spec can be split into multiple features
+- `features`: list of identified features with their metadata
+- `shared_concepts`: domain concepts used across features
+- `suggested_order`: recommended implementation sequence
+- `warnings`: any issues detected (circular deps, large features, etc.)
 
-     - [<original-filename>](external/<original-filename>) - Original external specification imported on YYYY-MM-DD
-     ```
+See `skills/spec-decomposer/SKILL.md` for the full algorithm and data structures.
 
-4. **Update SNAPSHOT.md:**
-   - Add initial feature summary based on external spec content
-   - Extract key capabilities and list them
+**If `is_decomposable` is false:**
+- Display any warnings from the result
+- Display: "This spec will be implemented as a single feature."
+- Skip to Step 5.4 with single feature from the result
 
-5. **Update domain glossary:**
-   - Extract key terms from external spec
-   - Add them to `specs/domain/glossary.md` with definitions
+#### Step 5.3: Present decomposition and get user approval
 
-6. **Create initial plan:**
-   - Generate `specs/features/YYYY/MM/DD/initial-spec/PLAN.md`
-   - Break down external spec requirements into implementation phases
-   - Use the `planner` agent pattern for structure
+**If `is_decomposable` is true**, present the decomposition result to the user:
 
-7. **Display confirmation:**
+1. **Display any warnings** from the result (circular dependencies, large features, etc.)
+
+2. **Display the proposed feature breakdown** using data from the result:
+
+```
+I've identified N features in this specification:
+
+[f1] feature-slug (Domain) - COMPLEXITY
+     Brief description (1 line)
+     Sections: "Section A", "Section B"
+     Endpoints: METHOD /path, METHOD /path
+     Dependencies: none
+
+[f2] another-feature (Domain) - COMPLEXITY
+     Brief description
+     Sections: "Section C"
+     Endpoints: METHOD /path
+     Dependencies: f1
+
+...
+
+Shared concepts (will be added to domain glossary):
+  - Concept1, Concept2, Concept3
+
+Suggested implementation order: f1 → f2 → f3 → ...
+
+Options:
+  [A] Accept this breakdown
+  [M] Merge features (e.g., "merge f2 f3")
+  [S] Split a feature (e.g., "split f4")
+  [R] Rename a feature (e.g., "rename f1 new-name")
+  [K] Keep as single spec (skip decomposition)
+  [C] Cancel
+```
+
+3. **Handle user adjustments in a loop:**
+
+- **[A] Accept**: Proceed to Step 5.4 with the accepted features
+- **[M] Merge**: Use the merge operation from spec-decomposer skill, re-display result
+- **[S] Split**: Ask for split criteria, use split operation from skill, re-display result
+- **[R] Rename**: Use rename operation from skill, re-display result
+- **[K] Keep as single**: Proceed to Step 5.4 with single feature containing all content
+- **[C] Cancel**: Display "Initialization cancelled." and exit
+
+Continue the adjustment loop until user accepts or cancels.
+
+#### Step 5.4: Create feature specifications
+
+Use the `feature-creation` skill to create each feature. For each accepted feature (or single feature if [K] was chosen), invoke the skill with:
+
+```
+feature_name: <feature-slug>
+title: <Feature Title>
+description: <extracted description>
+domain: {{PRIMARY_DOMAIN}} or detected domain
+issue: TBD
+user_stories: <extracted user stories for this feature>
+acceptance_criteria: <extracted ACs for this feature>
+api_endpoints: <extracted endpoints for this feature>
+external_source: ../../external/<original-filename>
+decomposition_id: <uuid> (only if multi-feature decomposition)
+prerequisites: <list of prerequisite feature names> (if feature has dependencies)
+```
+
+The `feature-creation` skill will:
+1. Create feature directory: `specs/features/YYYY/MM/DD/<feature-name>/`
+2. Create SPEC.md with proper frontmatter and extracted content
+3. Create PLAN.md with 6-phase structure and prerequisites section
+4. Update INDEX.md with the new feature entry
+
+See `skills/feature-creation/SKILL.md` for detailed specification.
+
+#### Step 5.5: Update shared files
+
+Note: INDEX.md is updated by the `feature-creation` skill for each feature. This step handles additional updates.
+
+1. **Add External Specifications table to INDEX.md:**
+   ```markdown
+   ## External Specifications
+
+   | Source | Imported | Features |
+   |--------|----------|----------|
+   | [<filename>](external/<filename>) | YYYY-MM-DD | feature-1, feature-2, ... |
    ```
-   ✓ External spec copied to: specs/external/<original-filename>
-   ✓ External spec integrated as initial feature specification
-   ✓ Location: specs/features/YYYY/MM/DD/initial-spec/SPEC.md
-   ✓ Generated initial plan: specs/features/YYYY/MM/DD/initial-spec/PLAN.md
-   ✓ Updated INDEX.md and SNAPSHOT.md
-   ✓ Extracted domain terms to glossary
 
-   Next step: Review the generated plan and run /sdd-implement-plan specs/features/YYYY/MM/DD/initial-spec/PLAN.md
-   ```
+2. **Update SNAPSHOT.md:**
+   - Add summary for each feature
+   - Extract key capabilities from each
+
+3. **Update domain glossary:**
+   - Add shared concepts extracted during decomposition
+   - Add feature-specific terms with definitions
+
+#### Step 5.6: Display completion summary
+
+```
+✓ External spec copied to: specs/external/<original-filename>
+✓ Created N feature specifications:
+  - specs/features/YYYY/MM/DD/feature-1/SPEC.md
+  - specs/features/YYYY/MM/DD/feature-1/PLAN.md
+  - specs/features/YYYY/MM/DD/feature-2/SPEC.md
+  - specs/features/YYYY/MM/DD/feature-2/PLAN.md
+  ...
+✓ Updated INDEX.md, SNAPSHOT.md, and domain glossary
+
+Suggested implementation order: feature-1 → feature-2 → ...
+
+Next step: Start with the first feature:
+  /sdd-implement-plan specs/features/YYYY/MM/DD/feature-1/PLAN.md
+```
 
 ### Step 6: Initialize git repository
 
@@ -315,7 +388,7 @@ After ALL steps are done:
 
 2. Display completion message with customized next steps:
 
-   **If external spec was provided:**
+   **If external spec was provided (multi-feature decomposition):**
    ```
    ✓ Project initialized: <project-name>
    ✓ Location: <absolute-path-to-target-dir>
@@ -323,7 +396,12 @@ After ALL steps are done:
    ✓ Primary Domain: <primary-domain>
    ✓ Components created: <list of selected components>
    ✓ External spec copied to: specs/external/<original-filename>
-   ✓ External spec integrated: specs/features/YYYY/MM/DD/initial-spec/SPEC.md
+   ✓ Created N feature specifications from external spec
+
+   Features created (in suggested implementation order):
+     1. feature-1: Brief description
+     2. feature-2: Brief description
+     ...
 
    Next steps:
    [If TARGET_DIR is not current directory]
@@ -331,13 +409,13 @@ After ALL steps are done:
    2. npm install --workspaces
    [If TARGET_DIR is current directory]
    1. npm install --workspaces
-   3. Review the imported spec and generated plan:
-      - specs/external/<original-filename> (original external spec, preserved for reference)
-      - specs/features/YYYY/MM/DD/initial-spec/SPEC.md (imported with SDD frontmatter)
-      - specs/features/YYYY/MM/DD/initial-spec/PLAN.md (generated implementation plan)
+   3. Review the decomposed features:
+      - specs/external/<original-filename> (original external spec)
+      - specs/INDEX.md (lists all features with links)
       - specs/domain/glossary.md (extracted domain terms)
-   4. When ready to implement:
-      /sdd-implement-plan specs/features/YYYY/MM/DD/initial-spec/PLAN.md
+   4. Start implementing the first feature:
+      /sdd-implement-plan specs/features/YYYY/MM/DD/<first-feature>/PLAN.md
+   5. After completing each feature, proceed to the next in order.
    ```
 
    **If standard initialization (no external spec):**
@@ -372,11 +450,15 @@ After ALL steps are done:
 - **External spec support**: When `--spec` is provided, the external spec is:
   - Copied to `specs/external/<original-filename>` for permanent reference
   - Parsed to extract defaults for project setup
-  - Integrated as the initial feature specification in `specs/features/YYYY/MM/DD/initial-spec/SPEC.md`
-  - Referenced in the feature spec via `external_source` frontmatter field
-  - Used to generate an implementation plan
-  - Processed to extract domain terms for the glossary
-  - This allows seamless initialization from existing product requirements, design documents, or specifications while preserving the original source
+  - **Analyzed for multi-feature decomposition** using the `spec-decomposer` skill
+  - Decomposed into multiple independent features (user confirms breakdown)
+  - Each feature gets its own `specs/features/YYYY/MM/DD/<feature-name>/` directory
+  - Features include SPEC.md and PLAN.md with proper frontmatter
+  - Dependencies between features are tracked and suggested implementation order provided
+  - User can merge, split, or rename features before creation
+  - User can choose [K] to keep as single spec (legacy behavior)
+  - Shared domain concepts extracted to glossary
+  - This allows incremental implementation of large product requirements
 
 ## Template Sources
 

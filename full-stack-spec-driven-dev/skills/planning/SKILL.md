@@ -14,11 +14,11 @@ Plans are stored alongside their specs:
 
 This keeps all feature documentation (spec + plan) together in one location.
 
-## Phase Sizing
+## Phase Structure
 
-- 1-2 days of work per phase
-- Each phase independently deployable
+- Each phase is independently reviewable
 - Contract changes come first
+- Phases build on each other sequentially
 
 ---
 
@@ -39,13 +39,11 @@ sdd_version: [X.Y.Z]
 
 **Spec:** [link to spec]
 **Issue:** [link to issue]
-**Estimated Duration:** [X days]
 
 ## Phases
 
 ### Phase 0: Domain Documentation (Prerequisite)
 **Agent:** `spec-writer`
-**Duration:** [X hours]
 
 **CRITICAL:** This phase MUST be completed before any code implementation begins.
 
@@ -67,7 +65,6 @@ Deliverables:
 
 ### Phase 1: API Contract
 **Agent:** `api-designer`
-**Duration:** [X hours/days]
 
 Tasks:
 - [ ] Update `components/contract/openapi.yaml`
@@ -80,7 +77,6 @@ Deliverables:
 
 ### Phase 2: Backend Implementation
 **Agent:** `backend-dev`
-**Duration:** [X hours/days]
 
 Tasks:
 - [ ] Add domain definitions to `model/definitions/`
@@ -93,7 +89,6 @@ Deliverables:
 
 ### Phase 3: Frontend Implementation
 **Agent:** `frontend-dev`
-**Duration:** [X hours/days]
 
 Tasks:
 - [ ] Create components
@@ -105,7 +100,6 @@ Deliverables:
 
 ### Phase 4: Testing
 **Agent:** `tester`
-**Duration:** [X hours/days]
 
 Tasks:
 - [ ] Integration tests
@@ -116,7 +110,6 @@ Deliverables:
 
 ### Phase 5: Review
 **Agent:** `reviewer`, `db-advisor`
-**Duration:** [X hours]
 
 Tasks:
 - [ ] Spec compliance review

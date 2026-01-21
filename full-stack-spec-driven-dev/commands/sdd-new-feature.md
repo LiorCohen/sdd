@@ -52,32 +52,31 @@ Start a new feature.
   - Domain
   - Brief description
 
-### 4. Create Spec (`spec-writer` agent)
+### 4. Create Feature Spec and Plan
 
-- Get current date in YYYY/MM/DD format
-- Read SDD plugin version from `full-stack-spec-driven-dev/.claude-plugin/plugin.json`
-- Create `specs/features/YYYY/MM/DD/<feature-name>/SPEC.md` using template
-- Fill in skeleton with user input
-- Set `created` frontmatter field to current date
-- Set `sdd_version` frontmatter field to current plugin version
-- Present for review and confirmation
+Use the `feature-creation` skill to create the feature. Invoke the skill with:
 
-### 5. Create Plan (`planner` agent)
+```
+feature_name: <collected feature name>
+title: <feature name formatted as title>
+description: <collected description>
+domain: <collected domain>
+issue: <collected issue reference>
+```
 
-- Analyze the spec
-- Determine components affected (contract, server, webapp, helm, testing)
-- Read SDD plugin version from `full-stack-spec-driven-dev/.claude-plugin/plugin.json`
-- Create `specs/features/YYYY/MM/DD/<feature-name>/PLAN.md` (same directory as spec)
-- Set `sdd_version` frontmatter field to current plugin version
-- Break down into phases with agent assignments
-- Estimate effort for each phase
-- Present plan for approval
+The `feature-creation` skill will:
+1. Create feature directory: `specs/features/YYYY/MM/DD/<feature-name>/`
+2. Create SPEC.md with proper frontmatter (includes sdd_version from plugin.json)
+3. Create PLAN.md with 6-phase structure
+4. Update INDEX.md with the new feature entry
 
-### 6. Review
+See `skills/feature-creation/SKILL.md` for detailed specification.
+
+### 5. Review
 
 - Show both spec and plan to user
 - Wait for confirmation before proceeding
-- If approved, update INDEX.md
+- If user requests changes, edit the files accordingly
 
 ## Important Notes
 

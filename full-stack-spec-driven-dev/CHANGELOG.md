@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.3.0] - 2026-01-21
+
+### Added
+
+- **Multi-feature decomposition for external specs**
+  - `skills/spec-decomposer/SKILL.md`: Pure analysis skill that takes spec content and returns structured decomposition result
+  - Identifies features based on: section headers, API namespaces, user story clusters, domain entities
+  - Detects dependencies between features and suggests implementation order
+  - Returns `DecompositionResult` with features, shared concepts, warnings, and suggested order
+  - Supports merge/split/rename operations on the result
+  - When `sdd-init --spec` is used:
+    - Calls spec-decomposer skill to analyze the spec
+    - Presents results to user for approval (merge, split, rename, accept, or keep as single)
+    - Creates feature directories using feature-creation skill
+  - Each feature gets its own `specs/features/YYYY/MM/DD/<feature-name>/` directory with SPEC.md and PLAN.md
+  - INDEX.md tracks all features with External Specifications table
+
+- **Feature creation skill for reusable feature scaffolding**
+  - `skills/feature-creation/SKILL.md`: Centralized logic for creating feature specs and plans
+  - Creates feature directory, SPEC.md, PLAN.md, and updates INDEX.md
+  - Supports optional parameters: external_source, decomposition_id, prerequisites
+  - Used by both `/sdd-init --spec` and `/sdd-new-feature`
+
+### Changed
+
+- **sdd-init Step 5 restructured**: Now has substeps 5.1-5.6 for decomposition workflow
+- **sdd-new-feature simplified**: Steps 4-6 now reference the `feature-creation` skill
+
 ## [2.2.2] - 2026-01-21
 
 ### Changed

@@ -65,10 +65,10 @@ This is a 5-component monorepo:
    - Spec compliance
    - Database review if applicable
 
-## Phase Sizing
+## Phase Structure
 
-- 1-2 days of work per phase
-- Each phase independently deployable
+- Each phase is independently reviewable
+- Phases build on each other sequentially
 
 ## Rules
 
