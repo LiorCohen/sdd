@@ -198,178 +198,57 @@ If the user says no, ask what they'd like to change and return to Phase 1.
 
 ### Phase 4: Project Creation (Only After Approval)
 
-Once approved, execute ALL steps below. Do not stop until every single step is finished.
+Once approved, use the `scaffold` skill to create the project structure quickly.
 
-### Step 1: Determine target directory
+**IMPORTANT:** Use the Python scaffold script instead of creating files one by one. This reduces creation time from ~5 minutes to ~5 seconds.
 
-Based on the directory check in Phase 1:
-- If initializing in current directory: `TARGET_DIR="."`
-- If creating subdirectory: `TARGET_DIR="<project-name>"`
+### Step 1: Determine paths
 
-If `TARGET_DIR` is not current directory (`.`):
+1. **Find the plugin directory:**
+   - The plugin is loaded via `--add-dir`, so look for the `templates/` directory
+   - Use: `PLUGIN_DIR=$(dirname $(find . -path "*sdd*/templates" -type d 2>/dev/null | head -1) 2>/dev/null || echo "")`
+   - If not found locally, check common plugin locations or use the Glob tool to find `**/full-stack-spec-driven-dev/templates`
+
+2. **Determine target directory:**
+   - If initializing in current directory: `TARGET_DIR="$(pwd)"`
+   - If creating subdirectory: `TARGET_DIR="$(pwd)/<project-name>"`
+
+### Step 2: Map components to scaffold format
+
+Convert the selected project type to component list:
+
+| Project Type | Components |
+|--------------|------------|
+| Full-Stack Application | `["contract", "server", "webapp", "config", "testing", "cicd"]` |
+| Backend API Only | `["contract", "server", "config", "testing", "cicd"]` |
+| Frontend Only | `["webapp", "config", "testing", "cicd"]` |
+| Custom | User's selection + "config" (always included) |
+
+### Step 3: Run the scaffold script
+
 ```bash
-mkdir <project-name>
+# Create config file
+cat > /tmp/sdd-scaffold-config.json << 'EOF'
+{
+    "project_name": "<PROJECT_NAME>",
+    "project_description": "<PROJECT_DESCRIPTION>",
+    "primary_domain": "<PRIMARY_DOMAIN>",
+    "target_dir": "<TARGET_DIR>",
+    "components": [<COMPONENT_LIST>],
+    "template_dir": "<PLUGIN_DIR>/templates"
+}
+EOF
+
+# Run scaffold
+python3 <PLUGIN_DIR>/skills/scaffold/scaffold.py --config /tmp/sdd-scaffold-config.json
+
+# Clean up
+rm /tmp/sdd-scaffold-config.json
 ```
 
-### Step 2: Create root .gitignore first
+Replace the placeholders with actual values from Phase 1.
 
-Create `${TARGET_DIR}/.gitignore`:
-```
-node_modules/
-.env
-.DS_Store
-dist/
-*.log
-```
-
-### Step 3: Create the complete directory structure
-
-Create directories based on selected components:
-
-**Always create:**
-```bash
-mkdir -p ${TARGET_DIR}/specs/{domain/{definitions,use-cases},architecture,features,external}
-mkdir -p ${TARGET_DIR}/components/config/schemas
-```
-
-**If Contract selected:**
-```bash
-mkdir -p ${TARGET_DIR}/components/contract
-```
-
-**If Server selected:**
-```bash
-mkdir -p ${TARGET_DIR}/components/server/src/{app,config,controller,model/{definitions,use-cases},dal,telemetry}
-```
-
-**If Webapp selected:**
-```bash
-mkdir -p ${TARGET_DIR}/components/webapp/src
-```
-
-**If Helm selected:**
-```bash
-mkdir -p ${TARGET_DIR}/components/helm
-```
-
-**If Testing selected:**
-```bash
-mkdir -p ${TARGET_DIR}/components/testing/{tests/{integration,component,e2e},testsuites}
-```
-
-**If CI/CD workflows selected:**
-```bash
-mkdir -p ${TARGET_DIR}/.github/workflows
-```
-
-### Step 4: Copy template files with customization
-
-Copy template files with variable substitution using gathered information.
-
-**CRITICAL:** All generated code MUST follow the standards defined in:
-- `typescript-standards` skill - For all TypeScript code (strict typing, immutability, arrow functions, no classes)
-- `backend-dev` agent - For server component (5-layer architecture, entry point rules, dotenv)
-- `frontend-dev` agent - For webapp component (MVVM, TanStack ecosystem, TailwindCSS)
-
-**Variables to replace:**
-- `{{PROJECT_NAME}}` → User-provided project name
-- `{{PROJECT_DESCRIPTION}}` → User-provided description
-- `{{PRIMARY_DOMAIN}}` → User-provided primary domain
-
-**Root files (always create):**
-- Copy `templates/project/README.md` → `${TARGET_DIR}/README.md`
-  - Replace `{{PROJECT_NAME}}` and `{{PROJECT_DESCRIPTION}}`
-- Copy `templates/project/CLAUDE.md` → `${TARGET_DIR}/CLAUDE.md`
-  - Replace `{{PROJECT_NAME}}`
-- Copy `templates/project/package.json` → `${TARGET_DIR}/package.json`
-  - Replace `{{PROJECT_NAME}}` and `{{PROJECT_DESCRIPTION}}`
-
-**Spec files (always create):**
-- Copy `templates/specs/INDEX.md` → `${TARGET_DIR}/specs/INDEX.md`
-- Copy `templates/specs/SNAPSHOT.md` → `${TARGET_DIR}/specs/SNAPSHOT.md`
-- Copy `templates/specs/glossary.md` → `${TARGET_DIR}/specs/domain/glossary.md`
-  - Add `{{PRIMARY_DOMAIN}}` as the first domain entry
-- Create `${TARGET_DIR}/specs/architecture/overview.md` with:
-  ```markdown
-  # Architecture Overview
-
-  This document describes the architecture of {{PROJECT_NAME}}.
-
-  ## Components
-
-  [List selected components and their purposes]
-  ```
-
-**Contract component (if selected):**
-- Copy `templates/components/contract/package.json` → `${TARGET_DIR}/components/contract/package.json`
-  - Replace `{{PROJECT_NAME}}`
-- Copy `templates/components/contract/openapi.yaml` → `${TARGET_DIR}/components/contract/openapi.yaml`
-  - Replace `{{PROJECT_NAME}}` and `{{PROJECT_DESCRIPTION}}`
-- Create `${TARGET_DIR}/components/contract/.gitignore`:
-  ```
-  node_modules/
-  generated/
-  ```
-
-**Server component (if selected):**
-
-**CRITICAL:** Follow the `backend-dev` agent and `typescript-standards` skill when creating server files.
-
-- Copy `templates/components/server/package.json` → `${TARGET_DIR}/components/server/package.json`
-  - Replace `{{PROJECT_NAME}}`
-- Copy `templates/components/server/tsconfig.json` → `${TARGET_DIR}/components/server/tsconfig.json`
-- Copy `templates/components/server/.gitignore` → `${TARGET_DIR}/components/server/.gitignore`
-- Copy `templates/components/server/src/index.ts` → `${TARGET_DIR}/components/server/src/index.ts`
-- Copy `templates/components/server/src/config/load_config.ts` → `${TARGET_DIR}/components/server/src/config/load_config.ts`
-- Copy `templates/components/server/src/config/index.ts` → `${TARGET_DIR}/components/server/src/config/index.ts`
-- Copy `templates/components/server/src/app/create_app.ts` → `${TARGET_DIR}/components/server/src/app/create_app.ts`
-- Copy `templates/components/server/src/app/index.ts` → `${TARGET_DIR}/components/server/src/app/index.ts`
-
-**Webapp component (if selected):**
-
-**CRITICAL:** Follow the `frontend-dev` agent and `typescript-standards` skill when creating webapp files.
-
-- Copy `templates/components/webapp/package.json` → `${TARGET_DIR}/components/webapp/package.json`
-  - Replace `{{PROJECT_NAME}}`
-- Copy `templates/components/webapp/tsconfig.json` → `${TARGET_DIR}/components/webapp/tsconfig.json`
-- Copy `templates/components/webapp/.gitignore` → `${TARGET_DIR}/components/webapp/.gitignore`
-- Create MVVM directory structure:
-  ```bash
-  mkdir -p ${TARGET_DIR}/components/webapp/src/{pages,components,viewmodels,models,services,stores,types,utils}
-  ```
-- Copy `templates/components/webapp/src/main.tsx` → `${TARGET_DIR}/components/webapp/src/main.tsx`
-- Copy `templates/components/webapp/src/app.tsx` → `${TARGET_DIR}/components/webapp/src/app.tsx`
-  - Replace `{{PROJECT_NAME}}`
-- Copy `templates/components/webapp/src/index.css` → `${TARGET_DIR}/components/webapp/src/index.css`
-- Copy `templates/components/webapp/index.html` → `${TARGET_DIR}/components/webapp/index.html`
-  - Replace `{{PROJECT_NAME}}`
-- Copy `templates/components/webapp/vite.config.ts` → `${TARGET_DIR}/components/webapp/vite.config.ts`
-- Copy `templates/components/webapp/tailwind.config.js` → `${TARGET_DIR}/components/webapp/tailwind.config.js`
-- Copy `templates/components/webapp/postcss.config.js` → `${TARGET_DIR}/components/webapp/postcss.config.js`
-
-**Config component (always created):**
-- Copy `templates/components/config/schemas/schema.json` → `${TARGET_DIR}/components/config/schemas/schema.json`
-- Copy `templates/components/config/schemas/ops-schema.json` → `${TARGET_DIR}/components/config/schemas/ops-schema.json`
-- Copy `templates/components/config/schemas/app-schema.json` → `${TARGET_DIR}/components/config/schemas/app-schema.json`
-- Copy `templates/components/config/config.yaml` → `${TARGET_DIR}/components/config/config.yaml`
-  - Replace `{{PROJECT_NAME}}`
-- Copy `templates/components/config/config-local.yaml` → `${TARGET_DIR}/components/config/config-local.yaml`
-  - Replace `{{PROJECT_NAME}}`
-- Copy `templates/components/config/config-testing.yaml` → `${TARGET_DIR}/components/config/config-testing.yaml`
-  - Replace `{{PROJECT_NAME}}`
-- Copy `templates/components/config/config-production.yaml` → `${TARGET_DIR}/components/config/config-production.yaml`
-  - Replace `{{PROJECT_NAME}}`
-
-**Helm charts (if selected):**
-- Create basic Helm chart structure in `${TARGET_DIR}/components/helm/`
-
-**Testing setup (if selected):**
-- Create example Testkube test definitions in `${TARGET_DIR}/components/testing/`
-
-**CI/CD workflows (if selected):**
-- Create basic GitHub Actions workflow in `${TARGET_DIR}/.github/workflows/ci.yaml`
-
-**External spec integration (if provided):**
+### Step 4: External spec integration (if provided)
 
 If an external spec was provided via `--spec` argument:
 

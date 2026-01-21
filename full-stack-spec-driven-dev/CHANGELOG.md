@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.2.0] - 2026-01-21
+
+### Added
+
+- **Scaffold skill for fast project creation**
+  - `skills/scaffold/scaffold.py`: Python script that creates project structure in seconds
+  - `skills/scaffold/scaffold.md`: Skill documentation
+  - Reduces /sdd-init scaffolding time from ~5 minutes to ~5 seconds
+  - Creates 30 directories and 54 files with variable substitution
+
+### Changed
+
+- **sdd-init now uses scaffold skill**: Phase 4 calls Python script instead of file-by-file creation
+
 ## [2.1.0] - 2026-01-21
 
 ### Added
