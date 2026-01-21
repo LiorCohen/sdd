@@ -110,6 +110,7 @@ When invoked, prompt the user for the following information (use extracted value
 
    **Option C: Frontend Only** (requires external API)
    - Webapp (React frontend)
+   - Config (YAML configuration)
    - Testing (Testkube setup)
    - CI/CD (GitHub Actions)
 
@@ -119,18 +120,18 @@ When invoked, prompt the user for the following information (use extracted value
    | Component | Requires | Notes |
    |-----------|----------|-------|
    | Contract | Server | OpenAPI spec needs a backend to implement it |
-   | Server | Contract, Config | Backend requires API contract and configuration |
+   | Server | Contract | Backend requires API contract |
    | Webapp | - | Can work standalone with external API |
-   | Config | Server | Configuration is for backend services |
+   | Config | - | Always required for all project types |
    | Helm | Server | Kubernetes deployment is for backend services |
    | Testing | Server or Webapp | Tests need something to test |
    | CI/CD | Server or Webapp | Workflows need something to build/test |
 
    **Validation Rules:**
-   - If Server is selected, Contract and Config are auto-included
+   - Config is always auto-included (required for all project types)
+   - If Server is selected, Contract is auto-included
    - If Helm is selected, Server must be included (Helm is for backend deployment)
    - If Contract is selected without Server, warn and ask for confirmation
-   - Config requires Server (frontend config is handled differently)
 
 ### Phase 2: Show Configuration Summary
 
@@ -228,6 +229,7 @@ Create directories based on selected components:
 **Always create:**
 ```bash
 mkdir -p ${TARGET_DIR}/specs/{domain/{definitions,use-cases},architecture,features,external}
+mkdir -p ${TARGET_DIR}/components/config/schemas
 ```
 
 **If Contract selected:**
@@ -243,11 +245,6 @@ mkdir -p ${TARGET_DIR}/components/server/src/{app,config,controller,model/{defin
 **If Webapp selected:**
 ```bash
 mkdir -p ${TARGET_DIR}/components/webapp/src
-```
-
-**If Config selected:**
-```bash
-mkdir -p ${TARGET_DIR}/components/config/schemas
 ```
 
 **If Helm selected:**
@@ -348,7 +345,7 @@ Copy template files with variable substitution using gathered information.
 - Create `${TARGET_DIR}/components/webapp/vite.config.ts` with basic Vite config
 - Create `${TARGET_DIR}/components/webapp/tailwind.config.js` with Tailwind config
 
-**Config component (if selected):**
+**Config component (always created):**
 - Copy `templates/components/config/schemas/schema.json` → `${TARGET_DIR}/components/config/schemas/schema.json`
 - Copy `templates/components/config/schemas/ops-schema.json` → `${TARGET_DIR}/components/config/schemas/ops-schema.json`
 - Copy `templates/components/config/schemas/app-schema.json` → `${TARGET_DIR}/components/config/schemas/app-schema.json`

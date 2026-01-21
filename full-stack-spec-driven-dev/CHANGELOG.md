@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.5] - 2026-01-19
+
+### Changed
+
+- **Config component is now always required**
+  - Config is auto-included for all project types (Full-Stack, Backend API, Frontend Only, Custom)
+  - Added Config to "Frontend Only" project type
+  - Changed Config dependency from "Server" to "-" (no dependencies)
+  - Updated validation rules: Config is always auto-included
+  - Config directory and files are now created in "Always create" section
+
 ## [2.0.4] - 2026-01-19
 
 ### Fixed
