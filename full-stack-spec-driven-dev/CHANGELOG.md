@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.2] - 2026-01-21
+
+### Changed
+
+- **sdd-init requires --name argument**: Shows usage when invoked without arguments instead of starting interactive prompts. `--name` is now required.
+
 ## [2.2.1] - 2026-01-21
 
 ### Changed

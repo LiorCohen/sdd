@@ -10,34 +10,45 @@ Initialize a new spec-driven project, optionally from an existing external speci
 ## Usage
 
 ```
-/sdd-init [--name project-name] [--spec <path-to-external-spec>]
+/sdd-init --name <project-name> [--spec <path-to-external-spec>]
 ```
 
 **Arguments:**
-- `--name <project-name>` (optional): Name of the project directory to create
+- `--name <project-name>` (required): Name of the project directory to create
 - `--spec <path>` (optional): Path to an external specification file to use as the initial spec
 
 **Examples:**
 ```bash
-# Standard initialization with prompts
+# Standard initialization
 /sdd-init --name my-app
 
 # Initialize from existing spec
 /sdd-init --name my-app --spec /path/to/existing-spec.md
-
-# Initialize from external spec (will prompt for project name)
-/sdd-init --spec /path/to/product-requirements.md
 ```
 
 ## Workflow
 
 **CRITICAL**: This command follows an approval-based workflow. Do NOT create any files or directories until the user has approved the project configuration.
 
-### Phase 0: Parse Arguments and Load External Spec (if provided)
+### Phase 0: Parse Arguments
 
-1. **Parse command arguments:**
+1. **If no arguments provided**, display usage and exit:
+   ```
+   Usage: /sdd-init --name <project-name> [--spec <path>]
+
+   Arguments:
+     --name <project-name>  Name of the project directory to create (required)
+     --spec <path>          Path to external specification file (optional)
+
+   Examples:
+     /sdd-init --name my-app
+     /sdd-init --name my-app --spec /path/to/spec.md
+   ```
+   **Do not proceed to Phase 1 without at least `--name`.**
+
+2. **Parse command arguments:**
    - Check if `--spec <path>` argument is provided
-   - Extract project name (if provided)
+   - Extract project name (required)
    - Extract spec path (if provided)
 
 2. **If external spec is provided:**
@@ -58,15 +69,12 @@ Initialize a new spec-driven project, optionally from an existing external speci
 
 ### Phase 1: Gather Information
 
-When invoked, prompt the user for the following information (use extracted values from external spec as defaults if available):
+Prompt the user for the following information (use extracted values from external spec as defaults if available):
 
-1. **Project Name and Directory Check** (if not provided as argument)
-   - If external spec provided: Use extracted project name as default
-   - Must be valid directory name (lowercase, hyphens allowed)
-   - Prompt: "Project name [<default-if-any>]: "
-   - Example: "my-saas-app"
+1. **Directory Check** (using `--name` from arguments)
+   - Validate project name is a valid directory name (lowercase, hyphens allowed)
 
-   **CRITICAL: Check for existing directory match:**
+   **Check for existing directory match:**
    - Get the current working directory basename (e.g., if pwd is `/path/to/my-app`, basename is `my-app`)
    - If the current directory basename matches the project name:
      - Check if the directory is empty (no files except hidden files like .git, .DS_Store)
@@ -75,6 +83,7 @@ When invoked, prompt the user for the following information (use extracted value
      - If no: Ask for a different project name
      - If directory is not empty: Show warning "Current directory is not empty. Will create subdirectory '<project-name>/' instead."
    - If basename doesn't match: Will create new subdirectory `<project-name>/`
+   - If no: Show error and exit
 
 2. **Project Description**
    - If external spec provided: Use extracted description as default
