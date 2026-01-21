@@ -1,5 +1,72 @@
 # Changelog
 
+## [3.0.0] - 2026-01-21
+
+### Breaking Changes
+
+- **"Change" abstraction replaces "feature"**: All spec-driven workflows now use the "Change" concept
+  - Changes can be typed: `feature`, `bugfix`, or `refactor`
+  - Directory structure: `specs/features/` → `specs/changes/`
+  - Command renamed: `/sdd-new-feature` → `/sdd-new-change --type <type> --name <name>`
+  - INDEX.md format: Single list with type indicator instead of separate sections
+
+- **Skill renamed**: `feature-creation` → `change-creation`
+  - New required `type` parameter: `feature`, `bugfix`, or `refactor`
+  - Type-specific SPEC.md templates with appropriate sections
+  - Type-specific PLAN.md templates with streamlined phases for bugfix/refactor
+
+### Added
+
+- **Type-specific SPEC.md templates**
+  - `feature`: User stories, acceptance criteria, API contract, domain concepts
+  - `bugfix`: Bug description, symptoms, steps to reproduce, root cause, affected areas
+  - `refactor`: Refactoring goals, current state, proposed changes, risks
+
+- **Type-specific PLAN.md templates**
+  - `feature`: Full 6-phase structure (Domain → Contract → Backend → Frontend → Testing → Review)
+  - `bugfix`: Streamlined 4-phase (Investigation → Implementation → Testing → Review)
+  - `refactor`: Streamlined 4-phase (Preparation → Implementation → Testing → Review)
+
+- **Change type adjustment in sdd-init decomposition**
+  - New option `[T] Change type` to modify decomposed change types
+
+### Changed
+
+- **sdd-new-change command** (formerly sdd-new-feature)
+  - Requires `--type` and `--name` arguments
+  - Type-specific information prompts (e.g., symptoms for bugfix, goals for refactor)
+  - Branch suggestions use type prefix (e.g., `feature/name`, `bugfix/name`, `refactor/name`)
+
+- **sdd-init command**
+  - External spec decomposition now outputs "changes" instead of "features"
+  - Creates `specs/changes/` directory structure
+  - INDEX.md template updated with type column
+
+- **spec-decomposer skill**
+  - Output structure: `features` → `changes` in DecompositionResult
+  - DecomposedChange includes `type` field (defaults to `feature`)
+  - Change IDs: `f1, f2, ...` → `c1, c2, ...`
+
+- **planner agent**
+  - Plan location: `specs/changes/YYYY/MM/DD/<change-name>/PLAN.md`
+  - Added Change Types table documenting type-specific phase structures
+
+- **planning skill**
+  - Added templates for bugfix and refactor plan types
+  - Updated plan location to `specs/changes/`
+
+- **scaffold templates**
+  - `specs/features/` → `specs/changes/` in directory creation
+  - INDEX.md template includes Type column
+
+### Migration Guide
+
+For existing projects using the 2.x structure:
+1. Rename `specs/features/` directory to `specs/changes/`
+2. Update INDEX.md to include Type column
+3. Add `type: feature` to existing SPEC.md and PLAN.md frontmatter
+4. Update any scripts or documentation referencing `/sdd-new-feature`
+
 ## [2.3.0] - 2026-01-21
 
 ### Added

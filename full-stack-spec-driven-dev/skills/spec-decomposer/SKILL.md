@@ -1,13 +1,13 @@
 ---
 name: spec-decomposer
-description: Analyze specifications and decompose into independent features.
+description: Analyze specifications and decompose into independent changes.
 ---
 
 # Spec Decomposer Skill
 
 ## Purpose
 
-Analyze a specification document to identify natural feature boundaries and return a structured decomposition result. This is a pure analysis skill that takes input and returns output without user interaction.
+Analyze a specification document to identify natural change boundaries and return a structured decomposition result. This is a pure analysis skill that takes input and returns output without user interaction.
 
 ## Input
 
@@ -28,7 +28,7 @@ Returns a `DecompositionResult` structure (see Data Structures below).
 Parse the markdown document to extract:
 
 1. **Section headers** (H1, H2, H3)
-   - Look for feature-like patterns: `## Feature:`, `## Module:`, `## Capability:`, `## Epic:`
+   - Look for change-like patterns: `## Feature:`, `## Module:`, `## Capability:`, `## Epic:`
    - Note section hierarchy and nesting
 
 2. **User stories**
@@ -50,7 +50,7 @@ Parse the markdown document to extract:
 
 ### Phase 2: Boundary Detection
 
-Identify potential feature boundaries using these signals:
+Identify potential change boundaries using these signals:
 
 **Strong Signals (high confidence):**
 - Explicit section markers (`## Feature: User Authentication`)
@@ -69,18 +69,18 @@ Identify potential feature boundaries using these signals:
 
 ### Phase 3: Dependency Detection
 
-For each potential feature, identify dependencies:
+For each potential change, identify dependencies:
 
-1. **Concept dependencies**: Feature B uses concepts defined by Feature A
-2. **API dependencies**: Feature B calls endpoints exposed by Feature A
-3. **Data dependencies**: Feature B reads data created by Feature A
+1. **Concept dependencies**: Change B uses concepts defined by Change A
+2. **API dependencies**: Change B calls endpoints exposed by Change A
+3. **Data dependencies**: Change B reads data created by Change A
 4. **Explicit dependencies**: Spec mentions "requires X" or "after Y is complete"
 
-Build a directed acyclic graph (DAG) of feature dependencies.
+Build a directed acyclic graph (DAG) of change dependencies.
 
 ### Phase 4: Independence Scoring
 
-Score each feature's independence (0.0 to 1.0):
+Score each change's independence (0.0 to 1.0):
 
 ```
 Independence Score =
@@ -89,20 +89,20 @@ Independence Score =
   + 0.2 if has own UI section/pages
   + 0.2 if has >= 3 acceptance criteria
   + 0.1 if has distinct user role
-  - 0.2 for each hard dependency on other proposed features
+  - 0.2 for each hard dependency on other proposed changes
   - 0.1 for each shared domain concept
 ```
 
 **Interpretation:**
-- Score >= 0.5: Good standalone feature
-- Score 0.3-0.5: Consider merging with related feature
+- Score >= 0.5: Good standalone change
+- Score 0.3-0.5: Consider merging with related change
 - Score < 0.3: Should be merged or is cross-cutting concern
 
 ### Phase 5: Refinement
 
-1. **Merge** features with independence score < 0.5 into related features
-2. **Flag** large features (> 15 ACs) for potential splitting
-3. **Order** features by dependency graph (topological sort)
+1. **Merge** changes with independence score < 0.5 into related changes
+2. **Flag** large changes (> 15 ACs) for potential splitting
+3. **Order** changes by dependency graph (topological sort)
 4. **Identify** cross-cutting concerns (auth, logging, error handling)
 
 ## Complexity Estimation
@@ -115,41 +115,42 @@ Independence Score =
 
 ### Merge Candidates
 
-Features should be merged when:
-- Combined features have < 5 acceptance criteria total
-- Features share > 50% of their domain concepts
-- One feature's only purpose is to support another
+Changes should be merged when:
+- Combined changes have < 5 acceptance criteria total
+- Changes share > 50% of their domain concepts
+- One change's only purpose is to support another
 - Circular or bidirectional dependencies detected
 
 ### Split Candidates
 
-Features should be split when:
-- Feature has > 10 acceptance criteria
-- Feature has > 5 API endpoints
-- Feature spans multiple distinct user roles
-- Feature covers multiple domains
+Changes should be split when:
+- Change has > 10 acceptance criteria
+- Change has > 5 API endpoints
+- Change spans multiple distinct user roles
+- Change covers multiple domains
 
 ### Cross-Cutting Concerns
 
 These patterns indicate cross-cutting concerns:
-- **Authentication/Authorization**: Usually first feature (dependency for all)
-- **Error handling**: Often embedded in each feature, not standalone
-- **Logging/Telemetry**: Usually infrastructure, not a feature
-- **Configuration**: Part of project setup, not a feature
+- **Authentication/Authorization**: Usually first change (dependency for all)
+- **Error handling**: Often embedded in each change, not standalone
+- **Logging/Telemetry**: Usually infrastructure, not a change
+- **Configuration**: Part of project setup, not a change
 
 ## Data Structures
 
-### DecomposedFeature
+### DecomposedChange
 
 ```yaml
-id: string              # e.g., "f1", "f2"
-name: string            # slug: "user-authentication"
+id: string              # e.g., "c1", "c2"
+name: string            # e.g., "user-authentication"
 title: string           # display: "User Authentication"
+type: string            # "feature" | "bugfix" | "refactor"
 description: string     # 1-2 sentence summary
 domain: string          # "Identity", "Billing", "Core"
 source_sections: list   # section names from original spec
 complexity: string      # "small" | "medium" | "large"
-dependencies: list      # feature ids this depends on
+dependencies: list      # change ids this depends on
 acceptance_criteria: list
 api_endpoints: list     # "METHOD /path" strings
 user_stories: list
@@ -162,9 +163,9 @@ independence_score: float  # 0.0-1.0
 ```yaml
 spec_path: string          # original spec path (if provided)
 analysis_date: string      # ISO date
-features: list             # list of DecomposedFeature
-shared_concepts: list      # concepts used by multiple features
-suggested_order: list      # feature ids in implementation order
+changes: list              # list of DecomposedChange
+shared_concepts: list      # concepts used by multiple changes
+suggested_order: list      # change ids in implementation order
 warnings: list             # any issues detected
 is_decomposable: boolean   # false if spec is too small/simple
 ```
@@ -175,54 +176,61 @@ is_decomposable: boolean   # false if spec is too small/simple
 
 If spec has < 3 acceptance criteria AND < 2 API endpoints:
 - Set `is_decomposable: false`
-- Return single feature containing all content
-- Add warning: "Spec is compact enough for single feature implementation"
+- Return single change containing all content
+- Add warning: "Spec is compact enough for single change implementation"
 
 ### No Clear Boundaries
 
 If no strong boundary signals found:
 - Set `is_decomposable: false`
-- Return single feature containing all content
-- Add warning: "No clear feature boundaries detected; content appears tightly coupled"
+- Return single change containing all content
+- Add warning: "No clear change boundaries detected; content appears tightly coupled"
 
 ### Circular Dependencies
 
 If dependency graph contains cycles:
-- Add warning identifying the cycle: "Circular dependency detected: f2 ↔ f3"
-- Suggest merge in warning: "Consider merging these features"
+- Add warning identifying the cycle: "Circular dependency detected: c2 ↔ c3"
+- Suggest merge in warning: "Consider merging these changes"
 
-### Very Large Feature
+### Very Large Change
 
-If a feature has > 15 acceptance criteria:
-- Add warning: "Feature 'X' is large (N ACs); consider splitting"
+If a change has > 15 acceptance criteria:
+- Add warning: "Change 'X' is large (N ACs); consider splitting"
 
 ## Operations
 
 The caller can perform these operations on the result:
 
-### Merge Features
+### Merge Changes
 
-Combine features by ID:
+Combine changes by ID:
 - Union all sections, endpoints, acceptance criteria, user stories
-- Use first feature's name or generate new one
+- Use first change's name or generate new one
 - Recalculate dependencies (remove internal dependencies)
 - Recalculate independence scores
 - Update suggested_order
 
-### Split Feature
+### Split Change
 
-Split a feature by criteria:
-- Re-analyze the feature content with provided hint
-- Generate 2+ sub-features
-- Assign new IDs (e.g., f3 → f3a, f3b)
+Split a change by criteria:
+- Re-analyze the change content with provided hint
+- Generate 2+ sub-changes
+- Assign new IDs (e.g., c3 → c3a, c3b)
 - Recalculate dependencies
 - Update suggested_order
 
-### Rename Feature
+### Rename Change
 
-Change feature name/slug:
+Update change name:
 - Validate new name is valid directory name (lowercase, hyphens)
 - Update name and title fields
+
+### Change Type
+
+Update the change type:
+- Valid types: `feature`, `bugfix`, `refactor`
+- Update the type field
+- Note: Type defaults to `feature` for most decomposed specs
 
 ## Example Usage
 
@@ -236,10 +244,11 @@ Output:
   spec_path: /path/to/product-requirements.md
   analysis_date: 2026-01-21
   is_decomposable: true
-  features:
-    - id: f1
+  changes:
+    - id: c1
       name: user-authentication
       title: User Authentication
+      type: feature
       description: Allow users to sign up, sign in, and manage sessions
       domain: Identity
       complexity: medium
@@ -247,17 +256,18 @@ Output:
       acceptance_criteria: [...]
       api_endpoints: [POST /auth/signup, POST /auth/login, DELETE /auth/logout]
       independence_score: 0.8
-    - id: f2
+    - id: c2
       name: team-management
       title: Team Management
+      type: feature
       description: Create and manage teams with member invitations
       domain: Core
       complexity: medium
-      dependencies: [f1]
+      dependencies: [c1]
       acceptance_criteria: [...]
       api_endpoints: [POST /teams, GET /teams/:id, POST /teams/:id/invite]
       independence_score: 0.6
   shared_concepts: [User, Team, Session]
-  suggested_order: [f1, f2]
+  suggested_order: [c1, c2]
   warnings: []
 ```

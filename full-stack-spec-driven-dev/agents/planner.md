@@ -17,11 +17,11 @@ Use the `planning` skill for templates.
 
 Plans are stored alongside their specs:
 
-`specs/features/YYYY/MM/DD/<feature-name>/PLAN.md`
+`specs/changes/YYYY/MM/DD/<change-name>/PLAN.md`
 
 **Important:**
 - Plans live in the same directory as their corresponding SPEC.md
-- Use the same date as the spec (when the feature was created)
+- Use the same date as the spec (when the change was created)
 - This keeps related documentation together
 
 ## Component Awareness
@@ -36,7 +36,17 @@ This is a 5-component monorepo:
 | Helm | `components/helm/` | Kubernetes deployment | `devops` |
 | Testing | `components/testing/` | Testkube test definitions | `tester` |
 
-## Typical Phase Order
+## Change Types
+
+Plans vary based on the change type in the SPEC.md frontmatter:
+
+| Type | Description | Typical Phases |
+|------|-------------|----------------|
+| `feature` | New functionality | Full 6-phase structure |
+| `bugfix` | Fix existing behavior | Investigation → Implementation → Testing → Review |
+| `refactor` | Code restructuring | Preparation → Implementation → Testing → Review |
+
+## Typical Phase Order (Features)
 
 1. **API Design** (`api-designer`)
    - Update `components/contract/openapi.yaml`

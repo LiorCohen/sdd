@@ -178,8 +178,8 @@ Display a summary of what will be created:
 │   │   ├── definitions/
 │   │   └── use-cases/
 │   ├── architecture/
-│   └── features/
-│       └── YYYY/MM/DD/<feature-name>/
+│   └── changes/
+│       └── YYYY/MM/DD/<change-name>/
 │           ├── SPEC.md
 │           └── PLAN.md
 ├── components/
@@ -225,7 +225,7 @@ If an external spec was provided via `--spec` argument:
 3. This preserves the original external spec in the repository for reference
 4. Display: "✓ Copied external spec to: specs/external/<original-filename>"
 
-#### Step 5.2: Analyze spec for feature decomposition
+#### Step 5.2: Analyze spec for change decomposition
 
 Use the `spec-decomposer` skill to analyze the external spec:
 
@@ -237,132 +237,135 @@ Input:
 ```
 
 The skill returns a `DecompositionResult` with:
-- `is_decomposable`: whether the spec can be split into multiple features
-- `features`: list of identified features with their metadata
-- `shared_concepts`: domain concepts used across features
+- `is_decomposable`: whether the spec can be split into multiple changes
+- `changes`: list of identified changes with their metadata
+- `shared_concepts`: domain concepts used across changes
 - `suggested_order`: recommended implementation sequence
-- `warnings`: any issues detected (circular deps, large features, etc.)
+- `warnings`: any issues detected (circular deps, large changes, etc.)
 
 See `skills/spec-decomposer/SKILL.md` for the full algorithm and data structures.
 
 **If `is_decomposable` is false:**
 - Display any warnings from the result
-- Display: "This spec will be implemented as a single feature."
-- Skip to Step 5.4 with single feature from the result
+- Display: "This spec will be implemented as a single change."
+- Skip to Step 5.4 with single change from the result
 
 #### Step 5.3: Present decomposition and get user approval
 
 **If `is_decomposable` is true**, present the decomposition result to the user:
 
-1. **Display any warnings** from the result (circular dependencies, large features, etc.)
+1. **Display any warnings** from the result (circular dependencies, large changes, etc.)
 
-2. **Display the proposed feature breakdown** using data from the result:
+2. **Display the proposed change breakdown** using data from the result:
 
 ```
-I've identified N features in this specification:
+I've identified N changes in this specification:
 
-[f1] feature-slug (Domain) - COMPLEXITY
+[c1] change-name (Domain) - feature - COMPLEXITY
      Brief description (1 line)
      Sections: "Section A", "Section B"
      Endpoints: METHOD /path, METHOD /path
      Dependencies: none
 
-[f2] another-feature (Domain) - COMPLEXITY
+[c2] another-change (Domain) - feature - COMPLEXITY
      Brief description
      Sections: "Section C"
      Endpoints: METHOD /path
-     Dependencies: f1
+     Dependencies: c1
 
 ...
 
 Shared concepts (will be added to domain glossary):
   - Concept1, Concept2, Concept3
 
-Suggested implementation order: f1 → f2 → f3 → ...
+Suggested implementation order: c1 → c2 → c3 → ...
 
 Options:
   [A] Accept this breakdown
-  [M] Merge features (e.g., "merge f2 f3")
-  [S] Split a feature (e.g., "split f4")
-  [R] Rename a feature (e.g., "rename f1 new-name")
+  [M] Merge changes (e.g., "merge c2 c3")
+  [S] Split a change (e.g., "split c4")
+  [R] Rename a change (e.g., "rename c1 new-name")
+  [T] Change type (e.g., "type c2 bugfix")
   [K] Keep as single spec (skip decomposition)
   [C] Cancel
 ```
 
 3. **Handle user adjustments in a loop:**
 
-- **[A] Accept**: Proceed to Step 5.4 with the accepted features
+- **[A] Accept**: Proceed to Step 5.4 with the accepted changes
 - **[M] Merge**: Use the merge operation from spec-decomposer skill, re-display result
 - **[S] Split**: Ask for split criteria, use split operation from skill, re-display result
 - **[R] Rename**: Use rename operation from skill, re-display result
-- **[K] Keep as single**: Proceed to Step 5.4 with single feature containing all content
+- **[T] Change type**: Update the change type (feature/bugfix/refactor), re-display result
+- **[K] Keep as single**: Proceed to Step 5.4 with single change containing all content
 - **[C] Cancel**: Display "Initialization cancelled." and exit
 
 Continue the adjustment loop until user accepts or cancels.
 
-#### Step 5.4: Create feature specifications
+#### Step 5.4: Create change specifications
 
-Use the `feature-creation` skill to create each feature. For each accepted feature (or single feature if [K] was chosen), invoke the skill with:
+Use the `change-creation` skill to create each change. For each accepted change (or single change if [K] was chosen), invoke the skill with:
 
 ```
-feature_name: <feature-slug>
-title: <Feature Title>
+name: <change-name>
+type: <feature|bugfix|refactor>  # Default: feature for decomposed specs
+title: <Change Title>
 description: <extracted description>
 domain: {{PRIMARY_DOMAIN}} or detected domain
 issue: TBD
-user_stories: <extracted user stories for this feature>
-acceptance_criteria: <extracted ACs for this feature>
-api_endpoints: <extracted endpoints for this feature>
+user_stories: <extracted user stories for this change>
+acceptance_criteria: <extracted ACs for this change>
+api_endpoints: <extracted endpoints for this change>
 external_source: ../../external/<original-filename>
-decomposition_id: <uuid> (only if multi-feature decomposition)
-prerequisites: <list of prerequisite feature names> (if feature has dependencies)
+decomposition_id: <uuid> (only if multi-change decomposition)
+prerequisites: <list of prerequisite change names> (if change has dependencies)
 ```
 
-The `feature-creation` skill will:
-1. Create feature directory: `specs/features/YYYY/MM/DD/<feature-name>/`
+The `change-creation` skill will:
+1. Create change directory: `specs/changes/YYYY/MM/DD/<change-name>/`
 2. Create SPEC.md with proper frontmatter and extracted content
-3. Create PLAN.md with 6-phase structure and prerequisites section
-4. Update INDEX.md with the new feature entry
+3. Create PLAN.md with type-appropriate phases and prerequisites section
+4. Update INDEX.md with the new change entry (includes type indicator)
 
-See `skills/feature-creation/SKILL.md` for detailed specification.
+See `skills/change-creation/SKILL.md` for detailed specification.
 
 #### Step 5.5: Update shared files
 
-Note: INDEX.md is updated by the `feature-creation` skill for each feature. This step handles additional updates.
+Note: INDEX.md is updated by the `change-creation` skill for each change. This step handles additional updates.
 
 1. **Add External Specifications table to INDEX.md:**
    ```markdown
    ## External Specifications
 
-   | Source | Imported | Features |
-   |--------|----------|----------|
-   | [<filename>](external/<filename>) | YYYY-MM-DD | feature-1, feature-2, ... |
+   | Source | Imported | Changes |
+   |--------|----------|---------|
+   | [<filename>](external/<filename>) | YYYY-MM-DD | change-1, change-2, ... |
    ```
 
 2. **Update SNAPSHOT.md:**
-   - Add summary for each feature
+   - Add summary for each change
    - Extract key capabilities from each
 
 3. **Update domain glossary:**
    - Add shared concepts extracted during decomposition
-   - Add feature-specific terms with definitions
+   - Add change-specific terms with definitions
 
 #### Step 5.6: Display completion summary
 
 ```
 ✓ External spec copied to: specs/external/<original-filename>
-✓ Created N feature specifications:
-  - specs/features/YYYY/MM/DD/feature-1/SPEC.md
-  - specs/features/YYYY/MM/DD/feature-1/PLAN.md
-  - specs/features/YYYY/MM/DD/feature-2/SPEC.md
-  - specs/features/YYYY/MM/DD/feature-2/PLAN.md
+✓ Created N change specifications:
+  - specs/changes/YYYY/MM/DD/change-1/SPEC.md
+  - specs/changes/YYYY/MM/DD/change-1/PLAN.md
+  - specs/changes/YYYY/MM/DD/change-2/SPEC.md
+  - specs/changes/YYYY/MM/DD/change-2/PLAN.md
   ...
 ✓ Updated INDEX.md, SNAPSHOT.md, and domain glossary
 
-Suggested implementation order: feature-1 → feature-2 → ...
+Suggested implementation order: change-1 → change-2 → ...
 
-Next step: Start with the first feature:
-  /sdd-implement-plan specs/features/YYYY/MM/DD/feature-1/PLAN.md
+Next step: Start with the first change:
+  /sdd-implement-plan specs/changes/YYYY/MM/DD/change-1/PLAN.md
 ```
 
 ### Step 6: Initialize git repository
@@ -388,7 +391,7 @@ After ALL steps are done:
 
 2. Display completion message with customized next steps:
 
-   **If external spec was provided (multi-feature decomposition):**
+   **If external spec was provided (multi-change decomposition):**
    ```
    ✓ Project initialized: <project-name>
    ✓ Location: <absolute-path-to-target-dir>
@@ -396,11 +399,11 @@ After ALL steps are done:
    ✓ Primary Domain: <primary-domain>
    ✓ Components created: <list of selected components>
    ✓ External spec copied to: specs/external/<original-filename>
-   ✓ Created N feature specifications from external spec
+   ✓ Created N change specifications from external spec
 
-   Features created (in suggested implementation order):
-     1. feature-1: Brief description
-     2. feature-2: Brief description
+   Changes created (in suggested implementation order):
+     1. change-1 (feature): Brief description
+     2. change-2 (feature): Brief description
      ...
 
    Next steps:
@@ -409,13 +412,13 @@ After ALL steps are done:
    2. npm install --workspaces
    [If TARGET_DIR is current directory]
    1. npm install --workspaces
-   3. Review the decomposed features:
+   3. Review the decomposed changes:
       - specs/external/<original-filename> (original external spec)
-      - specs/INDEX.md (lists all features with links)
+      - specs/INDEX.md (lists all changes with links)
       - specs/domain/glossary.md (extracted domain terms)
-   4. Start implementing the first feature:
-      /sdd-implement-plan specs/features/YYYY/MM/DD/<first-feature>/PLAN.md
-   5. After completing each feature, proceed to the next in order.
+   4. Start implementing the first change:
+      /sdd-implement-plan specs/changes/YYYY/MM/DD/<first-change>/PLAN.md
+   5. After completing each change, proceed to the next in order.
    ```
 
    **If standard initialization (no external spec):**
@@ -436,7 +439,7 @@ After ALL steps are done:
    4. Review and customize:
       - specs/domain/glossary.md (add your domain terms)
       - components/contract/openapi.yaml (define your first API)
-   5. Create your first feature: /sdd-new-feature <feature-name>
+   5. Create your first change: /sdd-new-change --type feature --name <change-name>
    ```
 
 **DO NOT STOP until you have completed every single step above and verified the structure.**
@@ -450,12 +453,12 @@ After ALL steps are done:
 - **External spec support**: When `--spec` is provided, the external spec is:
   - Copied to `specs/external/<original-filename>` for permanent reference
   - Parsed to extract defaults for project setup
-  - **Analyzed for multi-feature decomposition** using the `spec-decomposer` skill
-  - Decomposed into multiple independent features (user confirms breakdown)
-  - Each feature gets its own `specs/features/YYYY/MM/DD/<feature-name>/` directory
-  - Features include SPEC.md and PLAN.md with proper frontmatter
-  - Dependencies between features are tracked and suggested implementation order provided
-  - User can merge, split, or rename features before creation
+  - **Analyzed for multi-change decomposition** using the `spec-decomposer` skill
+  - Decomposed into multiple independent changes (user confirms breakdown)
+  - Each change gets its own `specs/changes/YYYY/MM/DD/<change-name>/` directory
+  - Changes include SPEC.md and PLAN.md with proper frontmatter
+  - Dependencies between changes are tracked and suggested implementation order provided
+  - User can merge, split, rename, or change type before creation
   - User can choose [K] to keep as single spec (legacy behavior)
   - Shared domain concepts extracted to glossary
   - This allows incremental implementation of large product requirements

@@ -10,9 +10,9 @@ description: Templates for implementation plans.
 
 Plans are stored alongside their specs:
 
-`specs/features/YYYY/MM/DD/<feature-name>/PLAN.md`
+`specs/changes/YYYY/MM/DD/<change-name>/PLAN.md`
 
-This keeps all feature documentation (spec + plan) together in one location.
+This keeps all change documentation (spec + plan) together in one location.
 
 ## Phase Structure
 
@@ -22,18 +22,20 @@ This keeps all feature documentation (spec + plan) together in one location.
 
 ---
 
-## Template: Implementation Plan
+## Template: Implementation Plan (Feature)
 
 ```markdown
 ---
-title: Implementation Plan: [Feature Name]
+title: Implementation Plan: [Change Name]
+change: [change-name]
+type: feature
 spec: ./SPEC.md
 issue: [PROJ-XXX]
 created: YYYY-MM-DD
 sdd_version: [X.Y.Z]
 ---
 
-# Implementation Plan: [Feature Name]
+# Implementation Plan: [Change Name]
 
 ## Overview
 
@@ -59,7 +61,7 @@ Deliverables:
 - Use case documentation (if applicable)
 
 **Verification:**
-- [ ] All new terms from the feature spec are in the glossary
+- [ ] All new terms from the change spec are in the glossary
 - [ ] All new domain concepts have definition specs
 - [ ] Existing definitions updated if behavior changes
 
@@ -124,4 +126,153 @@ Tasks:
 | Risk | Mitigation |
 |------|------------|
 | [Risk] | [How to mitigate] |
+```
+
+---
+
+## Template: Implementation Plan (Bugfix)
+
+```markdown
+---
+title: Implementation Plan: [Change Name]
+change: [change-name]
+type: bugfix
+spec: ./SPEC.md
+issue: [BUG-XXX]
+created: YYYY-MM-DD
+sdd_version: [X.Y.Z]
+---
+
+# Implementation Plan: [Change Name]
+
+## Overview
+
+**Spec:** [link to spec]
+**Issue:** [link to issue]
+
+## Phases
+
+### Phase 1: Investigation
+**Agent:** `backend-dev` or `frontend-dev`
+
+Tasks:
+- [ ] Reproduce the bug locally
+- [ ] Identify root cause
+- [ ] Document findings in SPEC.md
+
+Deliverables:
+- Documented root cause
+- Clear reproduction steps
+
+### Phase 2: Implementation
+**Agent:** `backend-dev` or `frontend-dev`
+
+Tasks:
+- [ ] Implement the fix
+- [ ] Update any affected API contracts (if needed)
+- [ ] Add input validation (if applicable)
+
+Deliverables:
+- Working fix
+
+### Phase 3: Testing
+**Agent:** `tester`
+
+Tasks:
+- [ ] Add regression test for this bug
+- [ ] Verify fix resolves the issue
+- [ ] Run existing test suite
+- [ ] Verify no regressions
+
+Deliverables:
+- Regression test added
+- All tests passing
+
+### Phase 4: Review
+**Agent:** `reviewer`
+
+Tasks:
+- [ ] Code review
+- [ ] Verify acceptance criteria met
+- [ ] Final QA sign-off
+
+## Notes
+
+- Prioritize minimal, focused changes
+- Update this plan as investigation reveals more details
+```
+
+---
+
+## Template: Implementation Plan (Refactor)
+
+```markdown
+---
+title: Implementation Plan: [Change Name]
+change: [change-name]
+type: refactor
+spec: ./SPEC.md
+issue: [TECH-XXX]
+created: YYYY-MM-DD
+sdd_version: [X.Y.Z]
+---
+
+# Implementation Plan: [Change Name]
+
+## Overview
+
+**Spec:** [link to spec]
+**Issue:** [link to issue]
+
+## Phases
+
+### Phase 1: Preparation
+**Agent:** `backend-dev` or `frontend-dev`
+
+Tasks:
+- [ ] Ensure comprehensive test coverage exists
+- [ ] Document current behavior
+- [ ] Identify all affected areas
+
+Deliverables:
+- Test coverage report
+- Affected area documentation
+
+### Phase 2: Implementation
+**Agent:** `backend-dev` or `frontend-dev`
+
+Tasks:
+- [ ] Implement refactoring changes
+- [ ] Update any affected API contracts (if needed)
+- [ ] Maintain backward compatibility (if required)
+
+Deliverables:
+- Refactored code
+
+### Phase 3: Testing
+**Agent:** `tester`
+
+Tasks:
+- [ ] Run existing test suite
+- [ ] Verify no behavior changes
+- [ ] Add tests for improved structure (if applicable)
+- [ ] Performance testing (if applicable)
+
+Deliverables:
+- All tests passing
+- No behavior changes verified
+
+### Phase 4: Review
+**Agent:** `reviewer`
+
+Tasks:
+- [ ] Code review focusing on refactoring goals
+- [ ] Verify no regressions
+- [ ] Final QA sign-off
+
+## Notes
+
+- All tests must pass before and after refactoring
+- No functional changes should be introduced
+- Update this plan as implementation progresses
 ```

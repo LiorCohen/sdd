@@ -114,7 +114,7 @@ dist/
         "specs/domain/definitions",
         "specs/domain/use-cases",
         "specs/architecture",
-        "specs/features",
+        "specs/changes",
         "specs/external",
     ]
     for d in specs_dirs:
