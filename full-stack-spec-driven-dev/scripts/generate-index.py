@@ -40,6 +40,7 @@ def generate_index(specs_dir: Path) -> str:
 
         status = fm.get('status', 'active')
         title = fm.get('title', spec_path.stem)
+        change_type = fm.get('type', 'feature')
         domain = fm.get('domain', 'Unknown')
         issue = fm.get('issue', '')
         created = fm.get('created', '')
@@ -49,6 +50,7 @@ def generate_index(specs_dir: Path) -> str:
 
         by_status[status].append({
             'title': title,
+            'type': change_type,
             'path': str(rel_path),
             'domain': domain,
             'issue': issue,
@@ -73,20 +75,20 @@ def generate_index(specs_dir: Path) -> str:
 
     # Active specs
     lines.extend([
-        "## Active",
+        "## Active Changes",
         "",
-        "| Feature | Spec | Domain | Issue | Since |",
-        "|---------|------|--------|-------|-------|",
+        "| Change | Type | Spec | Domain | Issue | Since |",
+        "|--------|------|------|--------|-------|-------|",
     ])
 
     if by_status['active']:
         for spec in sorted(by_status['active'], key=lambda x: x['created']):
             issue_link = f"[{spec['issue']}](#)" if spec['issue'] else ""
             lines.append(
-                f"| {spec['title']} | [{spec['path']}]({spec['path']}) | {spec['domain']} | {issue_link} | {spec['created']} |"
+                f"| {spec['title']} | {spec['type']} | [{spec['path']}]({spec['path']}) | {spec['domain']} | {issue_link} | {spec['created']} |"
             )
     else:
-        lines.append("| *No active specs yet* | | | | |")
+        lines.append("| *No active changes yet* | | | | | |")
 
     lines.append("")
 
@@ -97,12 +99,12 @@ def generate_index(specs_dir: Path) -> str:
     ])
 
     if by_status['deprecated']:
-        lines.append("| Feature | Spec | Domain | Issue | Deprecated |")
-        lines.append("|---------|------|--------|-------|------------|")
+        lines.append("| Change | Type | Spec | Domain | Issue | Deprecated |")
+        lines.append("|--------|------|------|--------|-------|------------|")
         for spec in sorted(by_status['deprecated'], key=lambda x: x['created']):
             issue_link = f"[{spec['issue']}](#)" if spec['issue'] else ""
             lines.append(
-                f"| {spec['title']} | [{spec['path']}]({spec['path']}) | {spec['domain']} | {issue_link} | {spec['created']} |"
+                f"| {spec['title']} | {spec['type']} | [{spec['path']}]({spec['path']}) | {spec['domain']} | {issue_link} | {spec['created']} |"
             )
     else:
         lines.append("*None*")
@@ -116,12 +118,12 @@ def generate_index(specs_dir: Path) -> str:
     ])
 
     if by_status['archived']:
-        lines.append("| Feature | Spec | Domain | Issue | Archived |")
-        lines.append("|---------|------|--------|-------|----------|")
+        lines.append("| Change | Type | Spec | Domain | Issue | Archived |")
+        lines.append("|--------|------|------|--------|-------|----------|")
         for spec in sorted(by_status['archived'], key=lambda x: x['created']):
             issue_link = f"[{spec['issue']}](#)" if spec['issue'] else ""
             lines.append(
-                f"| {spec['title']} | [{spec['path']}]({spec['path']}) | {spec['domain']} | {issue_link} | {spec['created']} |"
+                f"| {spec['title']} | {spec['type']} | [{spec['path']}]({spec['path']}) | {spec['domain']} | {issue_link} | {spec['created']} |"
             )
     else:
         lines.append("*None*")

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Test: /sdd-new-feature command
+# Test: /sdd-new-change command
 # Verifies that spec-writer and planner agents are invoked correctly
 
 set -e
@@ -7,17 +7,17 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../test-helpers.sh"
 
-echo "Test: /sdd-new-feature invokes correct agents"
+echo "Test: /sdd-new-change invokes correct agents"
 echo ""
 
 # Setup - create a minimal SDD project structure first
-TEST_PROJECT=$(setup_test_project "sdd-new-feature")
+TEST_PROJECT=$(setup_test_project "sdd-new-change")
 
 echo "Test project directory: $TEST_PROJECT"
 echo ""
 
-# Create minimal project structure that /sdd-new-feature expects
-mkdir -p "$TEST_PROJECT/specs/features"
+# Create minimal project structure that /sdd-new-change expects
+mkdir -p "$TEST_PROJECT/specs/changes"
 mkdir -p "$TEST_PROJECT/specs/domain"
 mkdir -p "$TEST_PROJECT/components/contract"
 
@@ -39,18 +39,18 @@ EOF
 cat > "$TEST_PROJECT/specs/INDEX.md" << 'EOF'
 # Specifications Index
 
-## Active Specifications
+## Active Changes
 
-(No specifications yet)
+(No changes yet)
 EOF
 
 echo "Created minimal project structure"
 echo ""
 
-# Run the new-feature command
-PROMPT=$(cat "$SCRIPT_DIR/../prompts/sdd-new-feature.txt")
+# Run the new-change command
+PROMPT=$(cat "$SCRIPT_DIR/../prompts/sdd-new-change.txt")
 
-echo "Running /sdd-new-feature..."
+echo "Running /sdd-new-change..."
 OUTPUT=$(run_claude_capture "$PROMPT" 300 "$TEST_PROJECT")
 
 # Save output for debugging
@@ -71,8 +71,8 @@ echo ""
 echo "Verifying generated files..."
 echo ""
 
-# Find the generated spec directory (it will be in specs/features/YYYY/MM/DD/user-auth/)
-SPEC_DIR=$(find "$TEST_PROJECT/specs/features" -type d -name "user-auth" 2>/dev/null | head -1)
+# Find the generated spec directory (it will be in specs/changes/YYYY/MM/DD/user-auth/)
+SPEC_DIR=$(find "$TEST_PROJECT/specs/changes" -type d -name "user-auth" 2>/dev/null | head -1)
 
 if [[ -n "$SPEC_DIR" && -d "$SPEC_DIR" ]]; then
     echo "Found spec directory: $SPEC_DIR"
@@ -81,6 +81,7 @@ if [[ -n "$SPEC_DIR" && -d "$SPEC_DIR" ]]; then
     assert_file_exists "$(dirname "$SPEC_DIR")" "user-auth/SPEC.md" "SPEC.md created"
     assert_file_contains "$SPEC_DIR" "SPEC.md" "sdd_version:" "SPEC.md contains sdd_version"
     assert_file_contains "$SPEC_DIR" "SPEC.md" "issue:" "SPEC.md contains issue reference"
+    assert_file_contains "$SPEC_DIR" "SPEC.md" "type:" "SPEC.md contains type field"
 
     # Verify PLAN.md exists and has correct content
     assert_file_exists "$(dirname "$SPEC_DIR")" "user-auth/PLAN.md" "PLAN.md created"

@@ -4,7 +4,7 @@ A comprehensive Claude Code plugin for spec-driven development methodology desig
 
 ## Overview
 
-This plugin implements a complete workflow where **specifications are the source of truth**. Every feature, abstraction, and domain concept lives in markdown specifications before it lives in code.
+This plugin implements a complete workflow where **specifications are the source of truth**. Every change (feature, bugfix, or refactor) lives in markdown specifications before it lives in code.
 
 ```
 Specs → Plans → Implementation → Tests → Validation
@@ -14,11 +14,17 @@ Specs → Plans → Implementation → Tests → Validation
 
 ### Core Methodology
 
-**Specifications are Truth**: Every feature starts with a spec in `specs/features/YYYY/MM/DD/<feature-name>/SPEC.md` before any code is written. Specs include:
-- Frontmatter with metadata (title, status, domain, issue tracking)
+**Specifications are Truth**: Every change starts with a spec in `specs/changes/YYYY/MM/DD/<change-name>/SPEC.md` before any code is written. Specs include:
+- Frontmatter with metadata (title, type, status, domain, issue tracking)
+- Type-specific sections (user stories for features, symptoms for bugfixes, goals for refactors)
 - Acceptance criteria (Given/When/Then format)
 - Domain concepts and constraints
 - References to related specs and glossary terms
+
+**Change Types**: The plugin supports three types of changes:
+- **feature** - New functionality with full 6-phase implementation
+- **bugfix** - Fix existing behavior with streamlined 4-phase process
+- **refactor** - Code restructuring with streamlined 4-phase process
 
 **Git as State Machine**: Pull requests represent draft specs. Merging to main activates them. No separate "draft" status field needed.
 
@@ -28,17 +34,17 @@ Specs → Plans → Implementation → Tests → Validation
 
 | File | Purpose |
 |------|---------|
-| `INDEX.md` | Registry of all specifications - automatically updated when specs are created/modified |
-| `SNAPSHOT.md` | Current state of the product - living document that describes all active features and capabilities |
+| `INDEX.md` | Registry of all specifications with type indicators - automatically updated when specs are created/modified |
+| `SNAPSHOT.md` | Current state of the product - living document that describes all active changes and capabilities |
 | `domain/glossary.md` | Domain terminology dictionary - single source of truth for business terms |
 | `domain/definitions/` | Domain definitions - core business objects |
 | `domain/use-cases/` | Business use case definitions - key workflows and scenarios |
 | `architecture/` | Architecture decision records and overviews |
-| `features/YYYY/MM/DD/<name>/` | Feature specifications organized by date |
+| `changes/YYYY/MM/DD/<name>/` | Change specifications organized by date |
 | `external/` | Original external specifications (when imported) |
 
-**INDEX.md** lists all specifications in the project, making it easy to discover what exists:
-- Active specifications (currently implemented)
+**INDEX.md** lists all specifications in the project with their type, making it easy to discover what exists:
+- Active changes (currently implemented) with type indicator (feature, bugfix, refactor)
 - Deprecated specifications (superseded or no longer used)
 - External specifications (imported from external sources)
 
@@ -46,7 +52,7 @@ Specs → Plans → Implementation → Tests → Validation
 - What features exist
 - What capabilities the product has
 - How everything fits together
-- Regenerated using `/sdd-generate-snapshot` when features change
+- Regenerated using `/sdd-generate-snapshot` when changes are made
 
 ## Key Features
 
@@ -66,7 +72,7 @@ Agents handle different aspects of the development lifecycle:
 ### 5 Slash Commands
 Project lifecycle automation:
 - `/sdd-init` - Initialize new project from template
-- `/sdd-new-feature` - Create feature spec and plan
+- `/sdd-new-change` - Create change spec and plan (feature, bugfix, or refactor)
 - `/sdd-implement-plan` - Execute implementation plan
 - `/sdd-verify-spec` - Verify implementation matches spec
 - `/sdd-generate-snapshot` - Regenerate product snapshot
@@ -106,22 +112,27 @@ The plugin will be automatically loaded and all commands will be available.
 
 1. **Initialize a new project**:
    ```
-   /sdd-init my-app
+   /sdd-init --name my-app
    ```
 
 2. **Create your first feature**:
    ```
-   /sdd-new-feature user-authentication
+   /sdd-new-change --type feature --name user-authentication
    ```
 
-3. **Review the generated spec and plan**, then implement:
+3. **Or create a bugfix**:
    ```
-   /sdd-implement-plan specs/features/2026/01/13/user-authentication/PLAN.md
+   /sdd-new-change --type bugfix --name fix-session-timeout
    ```
 
-4. **Verify implementation matches spec**:
+4. **Review the generated spec and plan**, then implement:
    ```
-   /sdd-verify-spec specs/features/2026/01/13/user-authentication/SPEC.md
+   /sdd-implement-plan specs/changes/2026/01/21/user-authentication/PLAN.md
+   ```
+
+5. **Verify implementation matches spec**:
+   ```
+   /sdd-verify-spec specs/changes/2026/01/21/user-authentication/SPEC.md
    ```
 
 ## Project Structure
@@ -137,9 +148,9 @@ your-project/
 │   │   ├── glossary.md           # Domain terminology definitions
 │   │   └── definitions/          # Domain definitions
 │   ├── architecture/             # Architecture documentation
-│   └── features/                 # Feature specifications
-│       └── YYYY/MM/DD/<feature-name>/
-│           ├── SPEC.md           # Feature specification
+│   └── changes/                  # Change specifications
+│       └── YYYY/MM/DD/<change-name>/
+│           ├── SPEC.md           # Change specification
 │           └── PLAN.md           # Implementation plan
 ├── components/
 │   ├── contract/                 # OpenAPI specs (types generated here)
@@ -152,7 +163,7 @@ your-project/
 
 ## Core Principles
 
-1. **Specifications are truth** - Every feature lives in a SPEC.md before implementation
+1. **Specifications are truth** - Every change lives in a SPEC.md before implementation
 2. **Issue tracking required** - Every spec must reference a tracking issue (JIRA, GitHub, etc.)
 3. **Git as state machine** - PR = draft spec, merged to main = active spec
 4. **Contract-first API** - OpenAPI specs generate TypeScript types for both frontend and backend
@@ -256,7 +267,7 @@ Python utilities for spec management:
 
 ```bash
 # Validate single spec
-python scripts/validate-spec.py specs/features/2026/01/11/my-feature/SPEC.md
+python scripts/validate-spec.py specs/changes/2026/01/21/my-change/SPEC.md
 
 # Validate all specs
 python scripts/validate-spec.py --all --specs-dir specs/
@@ -274,7 +285,8 @@ All specs in `specs/` must include frontmatter:
 
 ```yaml
 ---
-title: Feature Name
+title: Change Name
+type: feature | bugfix | refactor
 status: active | deprecated | superseded | archived
 domain: Identity | Billing | Core | ...
 issue: PROJ-1234                    # Required: tracking issue

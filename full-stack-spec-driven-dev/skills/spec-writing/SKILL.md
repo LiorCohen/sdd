@@ -23,7 +23,8 @@ Every spec must include:
 
 ```yaml
 ---
-title: Feature Name
+title: Change Name
+type: feature | bugfix | refactor
 status: active | deprecated | superseded | archived
 domain: Identity | Billing | Core | ...
 issue: PROJ-1234                    # Required: JIRA/GitHub issue
@@ -37,6 +38,7 @@ superseded_by: [optional, path to new spec]
 
 **Required fields:**
 - `title`
+- `type` ← Must be `feature`, `bugfix`, or `refactor`
 - `status`
 - `domain`
 - `issue` ← Must reference a tracking issue
@@ -55,13 +57,13 @@ Run `scripts/validate-spec.py <path>` to check:
 
 | Type | Location |
 |------|----------|
-| Feature specs | `specs/features/YYYY/MM/DD/<feature-name>/SPEC.md` |
-| Implementation plans | `specs/features/YYYY/MM/DD/<feature-name>/PLAN.md` |
+| Change specs | `specs/changes/YYYY/MM/DD/<change-name>/SPEC.md` |
+| Implementation plans | `specs/changes/YYYY/MM/DD/<change-name>/PLAN.md` |
 | Domain definitions | `specs/domain/definitions/<definition-name>.md` |
 | API contracts | `specs/architecture/api-contracts.md` |
 
 **Date-based organization:**
-- Features are organized by creation date (YYYY/MM/DD)
+- Changes are organized by creation date (YYYY/MM/DD)
 - This provides chronological traceability
 - Plans live alongside their specs in the same directory
 
@@ -80,6 +82,7 @@ Always use Given/When/Then:
 ```markdown
 ---
 title: [Feature Name]
+type: feature
 status: active
 domain: [Domain Name]
 issue: [PROJ-XXX or GitHub issue URL]

@@ -54,7 +54,7 @@ testkube run testsuite e2e-tests --watch
 Generate verification report:
 
 ```markdown
-## Verification Report: [Feature Name]
+## Verification Report: [Change Name]
 
 **Spec:** [path/to/SPEC.md]
 **Issue:** [PROJ-XXX]
@@ -103,4 +103,4 @@ Generate verification report:
 ## Example
 
 ```
-User: /sdd-verify-spec specs/features/user-auth/SPEC.md
+User: /sdd-verify-spec specs/changes/2026/01/11/user-auth/SPEC.md

@@ -17,7 +17,7 @@ Regenerate product snapshot.
 
 ### 1. Find Active Specs
 
-- Scan `specs/features/` for all SPEC.md files
+- Scan `specs/changes/` for all SPEC.md files
 - Filter for `status: active`
 - Group by domain
 
@@ -27,7 +27,8 @@ Update the spec registry with:
 - Total count of specs
 - Breakdown by status (active, deprecated, archived)
 - Table of all specs with:
-  - Feature name
+  - Change name
+  - Type (feature, bugfix, refactor)
   - Path to spec
   - Domain
   - Issue reference
@@ -37,8 +38,8 @@ Update the spec registry with:
 
 Compile current product state:
 - Organize by domain
-- For each active feature:
-  - Feature name
+- For each active change:
+  - Change name
   - Link to spec
   - Issue reference
   - Summary of capabilities
@@ -56,7 +57,7 @@ Compile current product state:
 
 ✓ Generated specs/SNAPSHOT.md
   - Domains: Identity, Billing, Core
-  - Features: 12
+  - Changes: 12
 
 Next steps:
 1. Review specs/SNAPSHOT.md
@@ -85,12 +86,12 @@ Last updated: 2025-01-07
 
 Total: 15 specs (Active: 12, Deprecated: 2, Archived: 1)
 
-## Active
+## Active Changes
 
-| Feature | Spec | Domain | Issue | Since |
-|---------|------|--------|-------|-------|
-| User Authentication | [SPEC](features/user-auth/SPEC.md) | Identity | [PROJ-123](#) | 2025-01-01 |
-| Password Reset | [SPEC](features/password-reset/SPEC.md) | Identity | [PROJ-124](#) | 2025-01-02 |
+| Change | Type | Spec | Domain | Issue | Since |
+|--------|------|------|--------|-------|-------|
+| User Authentication | feature | [SPEC](changes/2025/01/01/user-auth/SPEC.md) | Identity | [PROJ-123](#) | 2025-01-01 |
+| Password Reset | feature | [SPEC](changes/2025/01/02/password-reset/SPEC.md) | Identity | [PROJ-124](#) | 2025-01-02 |
 ...
 ```
 
@@ -114,7 +115,7 @@ This document represents the current active state of the product.
 ### Identity
 
 #### User Authentication
-**Spec:** [features/user-auth/SPEC.md](features/user-auth/SPEC.md)
+**Spec:** [changes/2025/01/01/user-auth/SPEC.md](changes/2025/01/01/user-auth/SPEC.md)
 **Issue:** [PROJ-123](#)
 
 Provides secure user authentication with email/password.

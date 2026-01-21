@@ -1,11 +1,11 @@
 ---
 name: sdd-implement-plan
-description: Implement a feature by executing its implementation plan.
+description: Implement a change by executing its implementation plan.
 ---
 
 # /sdd-implement-plan
 
-Implement a feature by executing its implementation plan.
+Implement a change by executing its implementation plan.
 
 ## Usage
 
@@ -15,7 +15,7 @@ Implement a feature by executing its implementation plan.
 
 Example:
 ```
-/sdd-implement-plan specs/features/2026/01/11/user-auth/PLAN.md
+/sdd-implement-plan specs/changes/2026/01/11/user-auth/PLAN.md
 ```
 
 ## Flow
@@ -46,14 +46,14 @@ Example:
    - If no new concepts: explicitly note "No glossary updates needed"
 
 2. **Definition Documentation** (`specs/domain/definitions/`):
-   - Identify new definitions introduced by the feature
+   - Identify new definitions introduced by the change
    - Create definition spec files for new domain definitions (e.g., `specs/domain/definitions/user.md`)
    - Update existing definition specs if properties/relationships change
    - Document definition properties, relationships, business rules, and lifecycle
    - If no definition changes: explicitly note "No definition updates needed"
 
 3. **Architecture Documentation** (`specs/architecture/`):
-   - Review if the feature introduces new architectural patterns
+   - Review if the change introduces new architectural patterns
    - Update `specs/architecture/overview.md` if components are affected
    - Document new integration points or service dependencies
    - Update API contracts documentation if endpoints change
@@ -174,7 +174,7 @@ Before declaring implementation complete, you MUST:
 ## Example
 
 ```
-User: /sdd-implement-plan specs/features/2026/01/11/user-auth/PLAN.md
+User: /sdd-implement-plan specs/changes/2026/01/11/user-auth/PLAN.md
 
 Agent: Step 1: Loading spec and plan...
 Agent: ✓ Read PLAN.md
@@ -197,7 +197,7 @@ Agent: - Created specs/domain/definitions/session.md
 Agent: ✓ Definition specs created
 Agent:
 Agent: Reviewing architecture impact:
-Agent: - Feature adds new authentication service
+Agent: - Change adds new authentication service
 Agent: - Updated specs/architecture/overview.md with auth service
 Agent: ✓ Architecture docs updated
 Agent:

@@ -31,22 +31,23 @@ Config → [All layers] → Dependencies
 
 ## Spec-Driven Development
 
-1. **Specs are truth:** Every feature needs a SPEC.md
-2. **Issue required:** Every spec references a tracking issue
-3. **Git = state machine:** PR = draft, merged = active
+1. **Specs are truth:** Every change needs a SPEC.md
+2. **Change types:** Changes can be `feature`, `bugfix`, or `refactor`
+3. **Issue required:** Every spec references a tracking issue
+4. **Git = state machine:** PR = draft, merged = active
 
 ## Key Paths
 
 | Path | Purpose |
 |------|---------|
 | `specs/INDEX.md` | Registry of all specs |
-| `specs/features/` | Feature specifications |
+| `specs/changes/` | Change specifications (features, bugfixes, refactors) |
 | `components/contract/openapi.yaml` | API contract |
 
 ## Claude Code Commands
 
-- `/sdd-init` - Initialize new project
-- `/sdd-new-feature` - Start new feature
+- `/sdd-init --name [name]` - Initialize new project
+- `/sdd-new-change --type [type] --name [name]` - Start new change
 - `/sdd-implement-plan` - Implement plan
 - `/sdd-verify-spec` - Verify implementation
 - `/sdd-generate-snapshot` - Regenerate snapshot

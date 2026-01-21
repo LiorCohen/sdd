@@ -1,12 +1,14 @@
-Run /sdd-new-feature to create a new feature specification.
+Run /sdd-new-change --type feature --name user-auth to create a new change specification.
 
-Feature name: user-auth
+Change name: user-auth
+Change type: feature
 Issue reference: TEST-001
 Domain: Core
 Description: User authentication with email and password
 
 When prompted, provide these answers:
-- Feature name: user-auth
+- Change name: user-auth
+- Type: feature
 - Issue: TEST-001
 - Domain: Core
 - Description: Basic user authentication allowing users to sign up, log in, and log out using email and password credentials.

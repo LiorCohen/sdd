@@ -42,17 +42,19 @@ sdd/
 │   ├── ci-dev.md
 │   ├── tester.md
 │   └── reviewer.md
-├── skills/                     # 4 reusable skills
-│   ├── spec-writing.md
-│   ├── planning.md
-│   ├── testing.md
-│   └── spec-index.md
+├── skills/                     # Reusable skills
+│   ├── spec-writing/
+│   ├── planning/
+│   ├── testing/
+│   ├── spec-index/
+│   ├── change-creation/
+│   └── spec-decomposer/
 ├── commands/                   # 5 slash commands
-│   ├── init.md
-│   ├── new-feature.md
-│   ├── implement-plan.md
-│   ├── verify-spec.md
-│   └── generate-snapshot.md
+│   ├── sdd-init.md
+│   ├── sdd-new-change.md
+│   ├── sdd-implement-plan.md
+│   ├── sdd-verify-spec.md
+│   └── sdd-generate-snapshot.md
 ├── templates/                  # Project scaffolding
 │   ├── project/
 │   ├── specs/
@@ -82,8 +84,8 @@ This plugin is designed to work with Claude Code. Once loaded, you'll have acces
 - `/agent reviewer` - Code review
 
 **Commands:**
-- `/sdd-init [name]` - Initialize new project
-- `/sdd-new-feature [name]` - Start new feature
+- `/sdd-init --name [name]` - Initialize new project
+- `/sdd-new-change --type [type] --name [name]` - Start new change (feature, bugfix, refactor)
 - `/sdd-implement-plan [path]` - Implement a plan
 - `/sdd-verify-spec [path]` - Verify implementation
 - `/sdd-generate-snapshot` - Regenerate product snapshot
@@ -92,7 +94,7 @@ This plugin is designed to work with Claude Code. Once loaded, you'll have acces
 
 ```bash
 # In Claude Code
-/sdd-init my-awesome-app
+/sdd-init --name my-awesome-app
 ```
 
 This creates:
@@ -108,23 +110,34 @@ my-awesome-app/
 └── .github/workflows/     # CI/CD
 ```
 
-### 3. Create Your First Feature
+### 3. Create Your First Change
 
+**For a new feature:**
 ```bash
 # In Claude Code
-/sdd-new-feature user-authentication
+/sdd-new-change --type feature --name user-authentication
+```
+
+**For a bugfix:**
+```bash
+/sdd-new-change --type bugfix --name fix-session-timeout
+```
+
+**For a refactor:**
+```bash
+/sdd-new-change --type refactor --name extract-validation-layer
 ```
 
 This will:
-1. Create a spec in `specs/features/YYYY/MM/DD/user-authentication/SPEC.md`
-2. Create a plan in `specs/features/YYYY/MM/DD/user-authentication/PLAN.md`
+1. Create a spec in `specs/changes/YYYY/MM/DD/<change-name>/SPEC.md`
+2. Create a plan in `specs/changes/YYYY/MM/DD/<change-name>/PLAN.md`
 3. Update `specs/INDEX.md`
 
-### 4. Implement the Feature
+### 4. Implement the Change
 
 ```bash
 # In Claude Code
-/sdd-implement-plan specs/features/YYYY/MM/DD/user-authentication/PLAN.md
+/sdd-implement-plan specs/changes/YYYY/MM/DD/user-authentication/PLAN.md
 ```
 
 This orchestrates all agents to:
@@ -138,12 +151,22 @@ This orchestrates all agents to:
 
 ```bash
 # In Claude Code
-/sdd-verify-spec specs/features/user-authentication/SPEC.md
+/sdd-verify-spec specs/changes/YYYY/MM/DD/user-authentication/SPEC.md
 ```
+
+## Change Types
+
+The plugin supports three types of changes:
+
+| Type | Purpose | Plan Phases |
+|------|---------|-------------|
+| `feature` | New functionality | Domain → Contract → Backend → Frontend → Testing → Review |
+| `bugfix` | Fix existing behavior | Investigation → Implementation → Testing → Review |
+| `refactor` | Code restructuring | Preparation → Implementation → Testing → Review |
 
 ## Core Principles
 
-1. **Specs are truth** - Every feature has a SPEC.md before code
+1. **Specs are truth** - Every change has a SPEC.md before code
 2. **Issue required** - Every spec references a tracking issue (JIRA, GitHub, etc.)
 3. **Git = state machine** - PR = draft, merged to main = active
 4. **Contract-first** - OpenAPI spec generates types for both frontend and backend
@@ -183,7 +206,7 @@ This orchestrates all agents to:
 
 | File | Purpose |
 |------|---------|
-| `specs/INDEX.md` | Registry of all specs |
+| `specs/INDEX.md` | Registry of all specs with type indicators |
 | `specs/SNAPSHOT.md` | Current product state |
 | `specs/domain/glossary.md` | Domain terminology |
 | `specs/domain/use-cases/` | Business use case definitions |
@@ -193,7 +216,7 @@ This orchestrates all agents to:
 
 ```bash
 # Validate single spec
-python scripts/validate-spec.py specs/features/my-feature/SPEC.md
+python scripts/validate-spec.py specs/changes/YYYY/MM/DD/my-change/SPEC.md
 
 # Validate all specs
 python scripts/validate-spec.py --all --specs-dir specs/

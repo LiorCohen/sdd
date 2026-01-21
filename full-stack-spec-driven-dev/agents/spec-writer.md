@@ -17,11 +17,16 @@ Use the `spec-writing` skill for templates and validation.
 
 | Type | Location |
 |------|----------|
-| Feature specs | `specs/features/YYYY/MM/DD/<feature-name>/SPEC.md` |
-| Implementation plans | `specs/features/YYYY/MM/DD/<feature-name>/PLAN.md` |
+| Change specs | `specs/changes/YYYY/MM/DD/<change-name>/SPEC.md` |
+| Implementation plans | `specs/changes/YYYY/MM/DD/<change-name>/PLAN.md` |
 | Domain definitions | `specs/domain/definitions/<definition-name>.md` |
 | Business use cases | `specs/domain/use-cases/<use-case-name>.md` |
 | Glossary | `specs/domain/glossary.md` |
+
+**Change Types:**
+- `feature` - New functionality
+- `bugfix` - Fix existing behavior
+- `refactor` - Code restructuring
 
 **Date Format:**
 - Use the date when the spec was created
@@ -34,7 +39,8 @@ Every spec must include:
 
 ```yaml
 ---
-title: Feature Name
+title: Change Name
+type: feature | bugfix | refactor
 status: active | deprecated | superseded | archived
 domain: Identity | Billing | Core | ...
 issue: PROJ-1234                    # Required: tracking issue

@@ -6,19 +6,20 @@ This file provides guidance to Claude Code when working with the Spec-Driven Dev
 
 This is the **Spec-Driven Development (SDD) plugin** for Claude Code. It provides specialized agents, commands, and templates for full-stack TypeScript/React development with strict architectural patterns.
 
-**Version:** 1.9.0
+**Version:** 3.0.0
 
 ## Core Methodology
 
 This plugin implements a **specification-driven workflow**:
 
-1. **Specifications are truth** - Every feature lives in a SPEC.md before implementation
-2. **Issue tracking required** - Every spec must reference a tracking issue (JIRA, GitHub, etc.)
-3. **Git as state machine** - PR = draft spec, merged to main = active spec
-4. **Contract-first API** - OpenAPI specs generate TypeScript types for both frontend and backend
-5. **5-layer backend architecture** - Strict separation: Server → Controller → Model → Dependencies → DAL
-6. **Immutability enforced** - `readonly` everywhere, no mutations, native JavaScript only
-7. **OpenTelemetry by default** - All services emit structured logs, metrics, and traces
+1. **Specifications are truth** - Every change lives in a SPEC.md before implementation
+2. **Change types** - Changes can be `feature`, `bugfix`, or `refactor` with type-specific templates
+3. **Issue tracking required** - Every spec must reference a tracking issue (JIRA, GitHub, etc.)
+4. **Git as state machine** - PR = draft spec, merged to main = active spec
+5. **Contract-first API** - OpenAPI specs generate TypeScript types for both frontend and backend
+6. **5-layer backend architecture** - Strict separation: Server → Controller → Model → Dependencies → DAL
+7. **Immutability enforced** - `readonly` everywhere, no mutations, native JavaScript only
+8. **OpenTelemetry by default** - All services emit structured logs, metrics, and traces
 
 ## Key Components
 
@@ -43,11 +44,21 @@ This plugin implements a **specification-driven workflow**:
 
 5 slash commands for project lifecycle:
 
-- `/sdd-init [name]` - Initialize new project structure
-- `/sdd-new-feature [name]` - Create spec and plan for new feature
+- `/sdd-init --name [name]` - Initialize new project structure
+- `/sdd-new-change --type [type] --name [name]` - Create spec and plan for new change
 - `/sdd-implement-plan [path]` - Orchestrate implementation across agents
 - `/sdd-verify-spec [path]` - Verify implementation matches spec
 - `/sdd-generate-snapshot` - Regenerate product state snapshot
+
+### Change Types
+
+The plugin supports three types of changes:
+
+| Type | Purpose | Plan Phases |
+|------|---------|-------------|
+| `feature` | New functionality | Domain → Contract → Backend → Frontend → Testing → Review |
+| `bugfix` | Fix existing behavior | Investigation → Implementation → Testing → Review |
+| `refactor` | Code restructuring | Preparation → Implementation → Testing → Review |
 
 ### Validation Scripts (`scripts/`)
 
@@ -55,7 +66,7 @@ Python utilities for spec management:
 
 ```bash
 # Validate single spec
-python scripts/validate-spec.py specs/features/2026/01/11/my-feature/SPEC.md
+python scripts/validate-spec.py specs/changes/2026/01/21/my-change/SPEC.md
 
 # Validate all specs
 python scripts/validate-spec.py --all --specs-dir specs/
@@ -140,7 +151,8 @@ All specs in `specs/` must include frontmatter:
 
 ```yaml
 ---
-title: Feature Name
+title: Change Name
+type: feature | bugfix | refactor
 status: active | deprecated | superseded | archived
 domain: Identity | Billing | Core | ...
 issue: PROJ-1234                    # Required: tracking issue
@@ -183,10 +195,10 @@ When this plugin initializes projects, it creates:
 
 | File/Directory | Purpose |
 |----------------|---------|
-| `specs/INDEX.md` | Registry of all specifications |
+| `specs/INDEX.md` | Registry of all specifications with type indicators |
 | `specs/SNAPSHOT.md` | Current product state snapshot |
 | `specs/domain/glossary.md` | Domain terminology definitions |
-| `specs/features/YYYY/MM/DD/<feature-name>/` | Feature specifications and plans (date-organized) |
+| `specs/changes/YYYY/MM/DD/<change-name>/` | Change specifications and plans (date-organized) |
 | `components/contract/openapi.yaml` | API contract (source of truth for types) |
 
 ## Version Management (CRITICAL)
@@ -208,9 +220,9 @@ When making changes to this plugin, you MUST follow this exact sequence:
 Example workflow:
 ```
 1. Edit agents/backend-dev.md (add new feature)
-2. Update version 1.9.0 → 1.9.1 in both plugin.json and marketplace.json
-3. Add [1.9.1] entry to CHANGELOG.md describing the feature
-4. git commit -am "Add feature X, bump to 1.9.1"
+2. Update version 3.0.0 → 3.0.1 in both plugin.json and marketplace.json
+3. Add [3.0.1] entry to CHANGELOG.md describing the feature
+4. git commit -am "Add feature X, bump to 3.0.1"
 ```
 
 ## Notes for Claude Code

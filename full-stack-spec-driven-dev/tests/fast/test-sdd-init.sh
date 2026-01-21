@@ -46,7 +46,7 @@ echo ""
 # Verify directory structure
 assert_dir_exists "$PROJECT_DIR" "specs" "specs/ directory created"
 assert_dir_exists "$PROJECT_DIR" "specs/domain" "specs/domain/ directory created"
-assert_dir_exists "$PROJECT_DIR" "specs/features" "specs/features/ directory created"
+assert_dir_exists "$PROJECT_DIR" "specs/changes" "specs/changes/ directory created"
 assert_dir_exists "$PROJECT_DIR" "components" "components/ directory created"
 assert_dir_exists "$PROJECT_DIR" "components/config" "components/config/ directory created (always required)"
 assert_dir_exists "$PROJECT_DIR" "components/config/schemas" "components/config/schemas/ directory created"

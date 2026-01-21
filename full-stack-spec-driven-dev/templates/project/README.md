@@ -37,17 +37,18 @@ cd components/webapp && npm run dev
 
 ## Spec-Driven Development
 
-1. **Specs are truth** - Every feature has a spec before code
-2. **Issue required** - Every spec must reference a tracking issue
-3. **Git is the state machine** - In PR = draft, merged = active
-4. **Current state** - See `specs/SNAPSHOT.md` or `specs/INDEX.md`
+1. **Specs are truth** - Every change has a spec before code
+2. **Change types** - Changes can be `feature`, `bugfix`, or `refactor`
+3. **Issue required** - Every spec must reference a tracking issue
+4. **Git is the state machine** - In PR = draft, merged = active
+5. **Current state** - See `specs/SNAPSHOT.md` or `specs/INDEX.md`
 
 ## Claude Code Commands
 
 | Command | Purpose |
 |---------|---------|
-| `/sdd-init [name]` | Initialize new project |
-| `/sdd-new-feature [name]` | Start new feature |
+| `/sdd-init --name [name]` | Initialize new project |
+| `/sdd-new-change --type [type] --name [name]` | Start new change (feature, bugfix, refactor) |
 | `/sdd-implement-plan [path]` | Implement a plan |
 | `/sdd-verify-spec [path]` | Verify implementation |
 | `/sdd-generate-snapshot` | Regenerate snapshot |

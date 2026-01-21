@@ -30,7 +30,7 @@ Validates spec frontmatter and format.
 
 ```bash
 # Validate single spec
-python scripts/validate-spec.py specs/features/my-feature/SPEC.md
+python scripts/validate-spec.py specs/changes/2026/01/21/my-change/SPEC.md
 
 # Validate all specs
 python scripts/validate-spec.py --all --specs-dir specs/
@@ -49,17 +49,17 @@ Last updated: YYYY-MM-DD
 
 Total: X specs (Active: Y, Deprecated: Z, Archived: W)
 
-## Active
+## Active Changes
 
-| Feature | Spec | Domain | Issue | Since |
-|---------|------|--------|-------|-------|
-| User Authentication | [SPEC](features/user-auth/SPEC.md) | Identity | [PROJ-123](url) | 2025-01-01 |
+| Change | Type | Spec | Domain | Issue | Since |
+|--------|------|------|--------|-------|-------|
+| User Authentication | feature | [SPEC](changes/2025/01/01/user-auth/SPEC.md) | Identity | [PROJ-123](url) | 2025-01-01 |
 
 ## Deprecated
 
-| Feature | Spec | Domain | Issue | Deprecated |
-|---------|------|--------|-------|------------|
-| Old Auth | [SPEC](features/old-auth/SPEC.md) | Identity | [PROJ-100](url) | 2025-02-01 |
+| Change | Type | Spec | Domain | Issue | Deprecated |
+|--------|------|------|--------|-------|------------|
+| Old Auth | feature | [SPEC](changes/2025/01/15/old-auth/SPEC.md) | Identity | [PROJ-100](url) | 2025-02-01 |
 
 ## Archived
 
@@ -84,10 +84,10 @@ This document represents the current active state of the product by compiling al
 ### Identity
 
 #### User Authentication
-**Spec:** [features/user-auth/SPEC.md](features/user-auth/SPEC.md)
+**Spec:** [changes/2025/01/01/user-auth/SPEC.md](changes/2025/01/01/user-auth/SPEC.md)
 **Issue:** [PROJ-123](url)
 
-[Summary of feature capabilities]
+[Summary of change capabilities]
 
 ---
 

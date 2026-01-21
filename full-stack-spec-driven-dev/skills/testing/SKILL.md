@@ -91,7 +91,7 @@ Every test file must reference its spec and issue:
 
 ```typescript
 /**
- * @spec specs/features/user-auth/SPEC.md
+ * @spec specs/changes/user-auth/SPEC.md
  * @issue PROJ-123
  */
 describe('Feature: User Authentication', () => {
@@ -124,7 +124,7 @@ import { createUser } from '../createUser';
 import type { Dependencies } from '../../dependencies';
 
 /**
- * @spec specs/features/user-management/SPEC.md
+ * @spec specs/changes/user-management/SPEC.md
  * @issue PROJ-123
  */
 describe('createUser', () => {
@@ -178,7 +178,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createTestClient, cleanupDatabase } from '../helpers';
 
 /**
- * @spec specs/features/user-management/SPEC.md
+ * @spec specs/changes/user-management/SPEC.md
  * @issue PROJ-123
  */
 describe('Feature: User Management API', () => {
@@ -226,7 +226,7 @@ describe('Feature: User Management API', () => {
 import { test, expect } from '@playwright/test';
 
 /**
- * @spec specs/features/user-registration/SPEC.md
+ * @spec specs/changes/user-registration/SPEC.md
  * @issue PROJ-456
  */
 test.describe('Feature: User Registration', () => {
