@@ -3,10 +3,12 @@
 import './telemetry';
 import { createApp } from './app';
 import { loadConfig } from './config';
+import { createDatabase } from './db';
 
 const main = async (): Promise<void> => {
   const config = loadConfig();
-  const app = createApp({ config });
+  const db = createDatabase(config);
+  const app = createApp({ config, db });
   await app.start();
 };
 

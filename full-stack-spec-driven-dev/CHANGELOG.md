@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.2.1] - 2026-01-22
+
+### Changed
+
+- **Database module**: Extracted database connection to separate `db/` module
+  - `create_database.ts` - Factory function with in-memory implementation
+  - App layer now receives database via dependency injection
+  - Clear TODO showing how to replace with real database (pg, mysql2, etc.)
+  - Proper wiring: index.ts → createDatabase → createApp → DAL functions
+
 ## [3.2.0] - 2026-01-22
 
 ### Changed
@@ -7,7 +17,6 @@
 - **Templates simplified**: Replace complex User CRUD with simple Greeting API
   - Contract: `POST /greetings` and `GET /greetings/{id}` endpoints
   - Server: Clean 5-layer architecture (App → Controller → Model → Dependencies → DAL)
-  - Demonstrates in-memory store pattern for easy local development
 
 - **Webapp MVVM structure**: Proper Model-View-ViewModel architecture
   - Model: `api/greetings.ts` - API client matching OpenAPI contract

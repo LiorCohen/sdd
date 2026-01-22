@@ -3,10 +3,12 @@ import type { Server } from 'node:http';
 import { randomUUID } from 'node:crypto';
 import type { Config } from '../config';
 import { createController } from '../controller';
-import type { Greeting, CreateGreetingInput } from '../model';
+import { findGreetingById, insertGreeting } from '../dal';
+import type { Database } from '../db';
 
 type AppDependencies = Readonly<{
   readonly config: Config;
+  readonly db: Database;
 }>;
 
 type App = Readonly<{
@@ -15,32 +17,17 @@ type App = Readonly<{
 }>;
 
 export const createApp = (deps: AppDependencies): App => {
-  const { config } = deps;
+  const { config, db } = deps;
 
   let server: Server | null = null;
   const app: Express = express();
 
-  // In-memory store for demo purposes
-  // In production, replace with actual database (PostgreSQL, etc.)
-  const greetingsStore = new Map<string, Greeting>();
-
-  // Create DAL functions that use the in-memory store
+  // Wire DAL functions with their dependencies
+  const dalDeps = { db, generateId: randomUUID };
   const dal = {
-    findGreetingById: async (id: string): Promise<Greeting | null> => {
-      return greetingsStore.get(id) ?? null;
-    },
-    insertGreeting: async (
-      input: CreateGreetingInput & { readonly message: string }
-    ): Promise<Greeting> => {
-      const greeting: Greeting = {
-        id: randomUUID(),
-        name: input.name,
-        message: input.message,
-        createdAt: new Date(),
-      };
-      greetingsStore.set(greeting.id, greeting);
-      return greeting;
-    },
+    findGreetingById: (id: string) => findGreetingById(dalDeps, id),
+    insertGreeting: (input: Parameters<typeof insertGreeting>[1]) =>
+      insertGreeting(dalDeps, input),
   };
 
   // Create controller with DAL dependencies
