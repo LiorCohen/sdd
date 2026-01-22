@@ -1,7 +1,11 @@
-// Dependencies interface - defines what Model use-cases need from outside
-import type { User, CreateUserInput } from './definitions';
+// Model Dependencies: Interface defining what use-cases need from DAL
+// The Controller wires these when creating use-cases
+import type { Greeting, CreateGreetingInput } from './definitions';
+
+// Input for inserting a greeting includes the generated message
+export type InsertGreetingInput = CreateGreetingInput & { readonly message: string };
 
 export type Dependencies = {
-  readonly findUserByEmail: (email: string) => Promise<User | null>;
-  readonly insertUser: (input: CreateUserInput) => Promise<User>;
+  readonly findGreetingById: (id: string) => Promise<Greeting | null>;
+  readonly insertGreeting: (input: InsertGreetingInput) => Promise<Greeting>;
 };

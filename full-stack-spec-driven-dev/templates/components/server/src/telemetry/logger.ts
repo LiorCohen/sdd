@@ -7,7 +7,7 @@ import type { Config } from '../config';
 // Create base logger with config from Config layer
 export const createBaseLogger = (config: Config): pino.Logger => {
   return pino({
-    level: config.logging.level,
+    level: config.logLevel,
     formatters: {
       level: (label) => ({ level: label }),
     },

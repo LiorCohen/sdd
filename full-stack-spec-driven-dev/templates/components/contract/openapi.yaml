@@ -9,12 +9,91 @@ servers:
     description: API v1
 
 paths:
-  # Add your API endpoints here
   # NOTE: Health check endpoints (/health, /readiness, /liveness) should NOT be defined here.
   # They are infrastructure endpoints implemented directly in the controller for Kubernetes probes.
 
+  /greetings:
+    post:
+      operationId: createGreeting
+      summary: Create a new greeting
+      description: Creates a greeting with a personalized message for the given name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGreetingInput'
+      responses:
+        '201':
+          description: Greeting created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greeting'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /greetings/{id}:
+    get:
+      operationId: getGreeting
+      summary: Get a greeting by ID
+      description: Retrieves a previously created greeting
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The greeting ID
+      responses:
+        '200':
+          description: Greeting found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greeting'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
 components:
   schemas:
+    Greeting:
+      type: object
+      required:
+        - id
+        - name
+        - message
+        - createdAt
+      properties:
+        id:
+          type: string
+          description: Unique greeting identifier
+        name:
+          type: string
+          description: Name of the person being greeted
+        message:
+          type: string
+          description: The greeting message
+        createdAt:
+          type: string
+          format: date-time
+          description: When the greeting was created
+
+    CreateGreetingInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the person to greet
+          minLength: 1
+          maxLength: 100
+
     Error:
       type: object
       required:

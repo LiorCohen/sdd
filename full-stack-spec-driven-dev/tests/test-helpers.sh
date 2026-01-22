@@ -7,6 +7,8 @@ set -e
 # Directories
 HELPERS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_DIR="$(cd "$HELPERS_DIR/.." && pwd)"
+# Marketplace root contains .claude-plugin/marketplace.json
+MARKETPLACE_DIR="$(cd "$PLUGIN_DIR/.." && pwd)"
 TEST_OUTPUT_DIR="${TEST_OUTPUT_DIR:-/tmp/sdd-tests}"
 
 # Colors for output
@@ -45,8 +47,9 @@ run_claude() {
     echo -e "${YELLOW}Running Claude with timeout ${timeout_secs}s in $working_dir...${NC}" >&2
 
     # Run Claude from the working directory so file operations happen there
+    # Use MARKETPLACE_DIR which contains .claude-plugin/marketplace.json
     local cmd="cd \"$working_dir\" && claude -p \"$prompt\" \
-        --add-dir \"$PLUGIN_DIR\" \
+        --add-dir \"$MARKETPLACE_DIR\" \
         --permission-mode bypassPermissions \
         --output-format stream-json"
 
@@ -384,4 +387,4 @@ export -f assert_file_exists assert_dir_exists assert_file_contains
 export -f assert_command_succeeds assert_http_responds
 export -f setup_test_project cleanup_test_project
 export -f print_summary reset_counters
-export PLUGIN_DIR TEST_OUTPUT_DIR
+export PLUGIN_DIR MARKETPLACE_DIR TEST_OUTPUT_DIR

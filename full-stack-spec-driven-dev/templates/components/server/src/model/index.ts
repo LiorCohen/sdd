@@ -1,5 +1,4 @@
 // Model index - exports only
-export type { User, CreateUserInput } from './definitions';
+export type { Greeting, CreateGreetingInput } from './definitions';
 export type { Dependencies } from './dependencies';
-export { createUser } from './use-cases';
-export type { CreateUserArgs, CreateUserResult } from './use-cases';
+export { createGreeting, getGreeting } from './use-cases';

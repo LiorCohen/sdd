@@ -1,14 +1,14 @@
 // Controller: Assembles routers and creates Dependencies for Model
 // Imports routers from http_handlers and wires them together
-import type { Router, Application } from 'express';
+import type { Router } from 'express';
 import { Router as createRouter } from 'express';
 import type { Dependencies } from '../model';
-import { createUsersRouter } from './http_handlers';
+import { createGreetingsRouter } from './http_handlers';
 
 export type ControllerDependencies = {
   readonly dal: {
-    readonly findUserByEmail: Dependencies['findUserByEmail'];
-    readonly insertUser: Dependencies['insertUser'];
+    readonly findGreetingById: Dependencies['findGreetingById'];
+    readonly insertGreeting: Dependencies['insertGreeting'];
   };
 };
 
@@ -23,22 +23,22 @@ export type Controller = {
 export const createController = (deps: ControllerDependencies): Controller => {
   // Create Dependencies object for Model use cases
   const modelDeps: Dependencies = {
-    findUserByEmail: deps.dal.findUserByEmail,
-    insertUser: deps.dal.insertUser,
+    findGreetingById: deps.dal.findGreetingById,
+    insertGreeting: deps.dal.insertGreeting,
   };
 
   // Create main router and mount namespace routers
   const router = createRouter();
 
   // Mount namespace routers from http_handlers
-  const usersRouter = createUsersRouter({ modelDeps });
-  router.use('/users', usersRouter);
+  const greetingsRouter = createGreetingsRouter({ modelDeps });
+  router.use('/greetings', greetingsRouter);
 
   return {
     router,
     // Health check endpoints - infrastructure only, not in OpenAPI contract
-    handleHealth: () => ({ status: 'healthy' }),
-    handleReadiness: () => ({ status: 'ready' }),
-    handleLiveness: () => ({ status: 'alive' }),
+    handleHealth: () => ({ status: 'ok' }),
+    handleReadiness: () => ({ status: 'ok' }),
+    handleLiveness: () => ({ status: 'ok' }),
   };
 };

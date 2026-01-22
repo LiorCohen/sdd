@@ -1,5 +1,28 @@
 # Changelog
 
+## [3.2.0] - 2026-01-22
+
+### Changed
+
+- **Templates simplified**: Replace complex User CRUD with simple Greeting API
+  - Contract: `POST /greetings` and `GET /greetings/{id}` endpoints
+  - Server: Clean 5-layer architecture (App → Controller → Model → Dependencies → DAL)
+  - Demonstrates in-memory store pattern for easy local development
+
+- **Webapp MVVM structure**: Proper Model-View-ViewModel architecture
+  - Model: `api/greetings.ts` - API client matching OpenAPI contract
+  - ViewModel: `hooks/use-greetings.ts` - TanStack Query hooks for state management
+  - View: `pages/` and `components/` directories with sidebar navigation
+  - Interactive greeter page demonstrating full-stack flow
+
+### Fixed
+
+- **TypeScript module resolution**: Changed from NodeNext to ESNext/Bundler
+  - Imports no longer require `.js` extensions
+  - Added `tsconfig.node.json` for webapp Vite config
+- **Server template type errors**: Fixed null checks in DAL functions
+- **Integration test**: Fixed MARKETPLACE_DIR path for plugin discovery
+
 ## [3.1.0] - 2026-01-21
 
 ### Added
