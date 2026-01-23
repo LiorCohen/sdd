@@ -11,7 +11,22 @@ You are a technical architect. Analyze specifications and create actionable, pha
 
 ## Skills
 
-Use the `planning` skill for templates.
+Use the following skills:
+- `planning` - Templates for standard implementation plans
+- `epic-planning` - Templates for epic-level planning with phase-based PRs
+
+## When to Use Epic Planning
+
+Escalate to epic-level planning when:
+
+| Signal | Threshold |
+|--------|-----------|
+| Acceptance criteria | > 10 ACs |
+| Components affected | 3+ components |
+| Estimated lines | > 800 lines total |
+| Multiple domains | 2+ business domains |
+
+For epics, create `EPIC.md` instead of `PLAN.md`, with separate phase directories.
 
 ## Plan Location
 
@@ -26,15 +41,28 @@ Plans are stored alongside their specs:
 
 ## Component Awareness
 
-This is a 5-component monorepo:
+This is a multi-component monorepo. Check `sdd-settings.yaml` for actual components.
+
+**Standard Components:**
 
 | Component | Path | Purpose | Agent |
 |-----------|------|---------|-------|
 | Contract | `components/contract/` | OpenAPI spec | `api-designer` |
-| Server | `components/server/` | Backend (5-layer) | `backend-dev` |
+| Server | `components/server/` | Backend (CMDO) | `backend-dev` |
 | Webapp | `components/webapp/` | React frontend | `frontend-dev` |
 | Helm | `components/helm/` | Kubernetes deployment | `devops` |
 | Testing | `components/testing/` | Testkube test definitions | `tester` |
+
+**Multiple Instances:**
+
+Projects may have multiple server or webapp components:
+- `components/server-api/` - API server
+- `components/server-worker/` - Background worker
+- `components/webapp-admin/` - Admin dashboard
+- `components/webapp-public/` - Public site
+
+Check `sdd-settings.yaml` or scan `components/` to identify all instances.
+When planning, create separate phases for each affected component instance.
 
 ## Change Types
 

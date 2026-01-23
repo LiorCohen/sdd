@@ -20,6 +20,30 @@ This keeps all change documentation (spec + plan) together in one location.
 - Contract changes come first
 - Phases build on each other sequentially
 
+## PR Size Guidelines
+
+Each phase should result in a reviewable PR:
+
+| Metric | Target | Maximum |
+|--------|--------|---------|
+| Lines changed | < 400 | 800 |
+| Files changed | < 15 | 30 |
+| Acceptance criteria | < 5 | 8 |
+
+**If a phase exceeds limits:**
+1. Split into sub-phases (e.g., Phase 2a, Phase 2b)
+2. Each sub-phase gets its own PR
+3. Document splits in plan
+
+## When to Escalate to Epic
+
+If the total change exceeds:
+- 10 acceptance criteria
+- 3+ components
+- 800 estimated lines
+
+Use the `epic-planning` skill instead. See that skill for epic structure.
+
 ---
 
 ## Template: Implementation Plan (Feature)

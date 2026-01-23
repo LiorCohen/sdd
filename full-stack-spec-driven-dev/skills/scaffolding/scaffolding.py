@@ -5,6 +5,12 @@ SDD Project Scaffolding Script
 Creates project structure from templates with variable substitution.
 Called by Claude after user approves project configuration.
 
+Templates are colocated with their scaffolding skills:
+- skills/project-scaffolding/templates/ - Root files, specs, config
+- skills/backend-scaffolding/templates/ - Server components
+- skills/frontend-scaffolding/templates/ - Webapp components
+- skills/contract-scaffolding/templates/ - Contract component
+
 Usage:
     python scaffolding.py --config config.json
 
@@ -15,13 +21,12 @@ Config JSON format:
     "primary_domain": "E-commerce",
     "target_dir": "/path/to/output",
     "components": ["contract", "server", "webapp", "config"],
-    "template_dir": "/path/to/templates"
+    "skills_dir": "/path/to/skills"
 }
 """
 
 import argparse
 import json
-import os
 import shutil
 import sys
 from pathlib import Path
@@ -34,7 +39,49 @@ class Config(TypedDict):
     primary_domain: str
     target_dir: str
     components: list[str]
-    template_dir: str
+    skills_dir: str
+
+
+class ParsedComponent(TypedDict):
+    component_type: str  # "server", "webapp", etc.
+    name: str | None     # None for simple format, custom name for "type:name" format
+    dir_name: str        # Directory name: "server", "server-api", "webapp-admin", etc.
+
+
+def parse_component(component: str) -> ParsedComponent:
+    """
+    Parse component specification into type, name, and directory name.
+
+    Formats:
+    - Simple: "server" -> type=server, name=None, dir_name=server
+    - Named: "server:api" -> type=server, name=api, dir_name=server-api
+    """
+    if ":" in component:
+        component_type, name = component.split(":", 1)
+        return {
+            "component_type": component_type,
+            "name": name,
+            "dir_name": f"{component_type}-{name}",
+        }
+    return {
+        "component_type": component,
+        "name": None,
+        "dir_name": component,
+    }
+
+
+def get_components_by_type(components: list[str], component_type: str) -> list[ParsedComponent]:
+    """Get all components of a specific type."""
+    return [
+        parse_component(c)
+        for c in components
+        if parse_component(c)["component_type"] == component_type
+    ]
+
+
+def has_component_type(components: list[str], component_type: str) -> bool:
+    """Check if any component of the given type exists."""
+    return any(parse_component(c)["component_type"] == component_type for c in components)
 
 
 def substitute_variables(content: str, config: Config) -> str:
@@ -74,8 +121,18 @@ def create_directory(path: Path, config: Config) -> None:
 def scaffold_project(config: Config) -> dict:
     """Create the complete project structure."""
     target = Path(config["target_dir"])
-    templates = Path(config["template_dir"])
-    components = set(config["components"])
+    skills_dir = Path(config["skills_dir"])
+    components_raw = config["components"]
+
+    # Template locations (colocated with skills)
+    project_templates = skills_dir / "project-scaffolding" / "templates"
+    backend_templates = skills_dir / "backend-scaffolding" / "templates"
+    frontend_templates = skills_dir / "frontend-scaffolding" / "templates"
+    contract_templates = skills_dir / "contract-scaffolding" / "templates"
+
+    # Parse all components
+    parsed_components = [parse_component(c) for c in components_raw]
+    component_types = {pc["component_type"] for pc in parsed_components}
 
     created_files = []
     created_dirs = []
@@ -83,9 +140,17 @@ def scaffold_project(config: Config) -> dict:
     # Create target directory
     target.mkdir(parents=True, exist_ok=True)
 
+    # Build display string for components
+    component_display = []
+    for pc in parsed_components:
+        if pc["name"]:
+            component_display.append(f"{pc['component_type']}:{pc['name']}")
+        else:
+            component_display.append(pc["component_type"])
+
     print(f"\nScaffolding project: {config['project_name']}")
     print(f"Target: {target}")
-    print(f"Components: {', '.join(components)}")
+    print(f"Components: {', '.join(component_display)}")
     print()
 
     # -------------------------------------------------------------------------
@@ -100,7 +165,7 @@ dist/
 *.log
 """)
     created_files.append(".gitignore")
-    print(f"  Created: .gitignore")
+    print("  Created: .gitignore")
 
     # -------------------------------------------------------------------------
     # Step 2: Create directory structure
@@ -131,44 +196,49 @@ dist/
         created_dirs.append(d)
 
     # Component-specific directories
-    if "contract" in components:
+    if "contract" in component_types:
         create_directory(target / "components/contract", config)
         created_dirs.append("components/contract")
 
-    if "server" in components:
-        server_dirs = [
-            "components/server/src/app",
-            "components/server/src/config",
-            "components/server/src/controller/http_handlers",
-            "components/server/src/model/definitions",
-            "components/server/src/model/use-cases",
-            "components/server/src/dal",
-            "components/server/src/telemetry",
+    # Server components (supports multiple instances)
+    server_components = get_components_by_type(components_raw, "server")
+    for server in server_components:
+        dir_name = server["dir_name"]
+        server_subdirs = [
+            f"components/{dir_name}/src/operator",
+            f"components/{dir_name}/src/config",
+            f"components/{dir_name}/src/controller/http_handlers",
+            f"components/{dir_name}/src/model/definitions",
+            f"components/{dir_name}/src/model/use-cases",
+            f"components/{dir_name}/src/dal",
         ]
-        for d in server_dirs:
+        for d in server_subdirs:
             create_directory(target / d, config)
             created_dirs.append(d)
 
-    if "webapp" in components:
-        webapp_dirs = [
-            "components/webapp/src/pages",
-            "components/webapp/src/components",
-            "components/webapp/src/viewmodels",
-            "components/webapp/src/models",
-            "components/webapp/src/services",
-            "components/webapp/src/stores",
-            "components/webapp/src/types",
-            "components/webapp/src/utils",
+    # Webapp components (supports multiple instances)
+    webapp_components = get_components_by_type(components_raw, "webapp")
+    for webapp in webapp_components:
+        dir_name = webapp["dir_name"]
+        webapp_subdirs = [
+            f"components/{dir_name}/src/pages",
+            f"components/{dir_name}/src/components",
+            f"components/{dir_name}/src/viewmodels",
+            f"components/{dir_name}/src/models",
+            f"components/{dir_name}/src/services",
+            f"components/{dir_name}/src/stores",
+            f"components/{dir_name}/src/types",
+            f"components/{dir_name}/src/utils",
         ]
-        for d in webapp_dirs:
+        for d in webapp_subdirs:
             create_directory(target / d, config)
             created_dirs.append(d)
 
-    if "helm" in components:
+    if "helm" in component_types:
         create_directory(target / "components/helm", config)
         created_dirs.append("components/helm")
 
-    if "testing" in components:
+    if "testing" in component_types:
         testing_dirs = [
             "components/testing/tests/integration",
             "components/testing/tests/component",
@@ -179,7 +249,7 @@ dist/
             create_directory(target / d, config)
             created_dirs.append(d)
 
-    if "cicd" in components:
+    if "cicd" in component_types:
         create_directory(target / ".github/workflows", config)
         created_dirs.append(".github/workflows")
 
@@ -188,25 +258,25 @@ dist/
     # -------------------------------------------------------------------------
     print("\nCopying template files...")
 
-    # Root project files
-    project_templates = templates / "project"
-    if project_templates.exists():
+    # Root project files (from project-scaffolding skill)
+    project_files_dir = project_templates / "project"
+    if project_files_dir.exists():
         for template_file in ["README.md", "CLAUDE.md", "package.json"]:
-            src = project_templates / template_file
+            src = project_files_dir / template_file
             if src.exists():
                 copy_template_file(src, target / template_file, config)
                 created_files.append(template_file)
 
-    # Spec files
-    specs_templates = templates / "specs"
-    if specs_templates.exists():
+    # Spec files (from project-scaffolding skill)
+    specs_files_dir = project_templates / "specs"
+    if specs_files_dir.exists():
         spec_files = [
             ("INDEX.md", "specs/INDEX.md"),
             ("SNAPSHOT.md", "specs/SNAPSHOT.md"),
             ("glossary.md", "specs/domain/glossary.md"),
         ]
         for src_name, dest_path in spec_files:
-            src = specs_templates / src_name
+            src = specs_files_dir / src_name
             if src.exists():
                 copy_template_file(src, target / dest_path, config)
                 created_files.append(dest_path)
@@ -220,25 +290,38 @@ This document describes the architecture of {config['project_name']}.
 ## Components
 
 """
-    component_descriptions = {
+    # Static component descriptions
+    static_descriptions = {
         "contract": "- **Contract** (`components/contract/`): OpenAPI specifications and type generation",
-        "server": "- **Server** (`components/server/`): Node.js/TypeScript backend with 5-layer architecture",
-        "webapp": "- **Webapp** (`components/webapp/`): React/TypeScript frontend with MVVM pattern",
         "config": "- **Config** (`components/config/`): YAML-based configuration management",
         "helm": "- **Helm** (`components/helm/`): Kubernetes deployment charts",
         "testing": "- **Testing** (`components/testing/`): Testkube test definitions",
     }
-    for comp in sorted(components):
-        if comp in component_descriptions:
-            arch_content += component_descriptions[comp] + "\n"
+
+    # Add static components
+    for comp_type in ["contract", "config", "helm", "testing"]:
+        if comp_type in component_types:
+            arch_content += static_descriptions[comp_type] + "\n"
+
+    # Add server components (may be multiple)
+    for server in server_components:
+        dir_name = server["dir_name"]
+        display_name = server["name"] or "Server"
+        arch_content += f"- **{display_name.title()}** (`components/{dir_name}/`): Node.js/TypeScript backend with CMDO architecture\n"
+
+    # Add webapp components (may be multiple)
+    for webapp in webapp_components:
+        dir_name = webapp["dir_name"]
+        display_name = webapp["name"] or "Webapp"
+        arch_content += f"- **{display_name.title()}** (`components/{dir_name}/`): React/TypeScript frontend with MVVM pattern\n"
 
     arch_overview.write_text(arch_content)
     created_files.append("specs/architecture/overview.md")
-    print(f"  Created: specs/architecture/overview.md")
+    print("  Created: specs/architecture/overview.md")
 
-    # Config component (always created)
-    config_templates = templates / "components/config"
-    if config_templates.exists():
+    # Config component (from project-scaffolding skill, always created)
+    config_files_dir = project_templates / "config"
+    if config_files_dir.exists():
         config_files = [
             "config.yaml",
             "config-local.yaml",
@@ -249,14 +332,13 @@ This document describes the architecture of {config['project_name']}.
             "schemas/app-schema.json",
         ]
         for cf in config_files:
-            src = config_templates / cf
+            src = config_files_dir / cf
             if src.exists():
                 copy_template_file(src, target / "components/config" / cf, config)
                 created_files.append(f"components/config/{cf}")
 
-    # Contract component
-    if "contract" in components:
-        contract_templates = templates / "components/contract"
+    # Contract component (from contract-scaffolding skill)
+    if "contract" in component_types:
         if contract_templates.exists():
             contract_files = ["package.json", "openapi.yaml"]
             for cf in contract_files:
@@ -269,36 +351,48 @@ This document describes the architecture of {config['project_name']}.
         contract_gitignore = target / "components/contract/.gitignore"
         contract_gitignore.write_text("node_modules/\ngenerated/\n")
         created_files.append("components/contract/.gitignore")
-        print(f"  Created: components/contract/.gitignore")
+        print("  Created: components/contract/.gitignore")
 
-    # Server component
-    if "server" in components:
-        server_templates = templates / "components/server"
-        if server_templates.exists():
+    # Server components (from backend-scaffolding skill, supports multiple instances)
+    if backend_templates.exists():
+        for server in server_components:
+            dir_name = server["dir_name"]
+
             # Walk through all server template files
-            for src_file in server_templates.rglob("*"):
+            for src_file in backend_templates.rglob("*"):
                 if src_file.is_file():
-                    rel_path = src_file.relative_to(server_templates)
-                    dest_file = target / "components/server" / rel_path
+                    rel_path = src_file.relative_to(backend_templates)
+                    dest_file = target / f"components/{dir_name}" / rel_path
                     copy_template_file(src_file, dest_file, config)
-                    created_files.append(f"components/server/{rel_path}")
+                    created_files.append(f"components/{dir_name}/{rel_path}")
 
-    # Webapp component
-    if "webapp" in components:
-        webapp_templates = templates / "components/webapp"
-        if webapp_templates.exists():
+    # Webapp components (from frontend-scaffolding skill, supports multiple instances)
+    if frontend_templates.exists():
+        for webapp in webapp_components:
+            dir_name = webapp["dir_name"]
+
             # Walk through all webapp template files
-            for src_file in webapp_templates.rglob("*"):
+            for src_file in frontend_templates.rglob("*"):
                 if src_file.is_file():
-                    rel_path = src_file.relative_to(webapp_templates)
-                    dest_file = target / "components/webapp" / rel_path
+                    rel_path = src_file.relative_to(frontend_templates)
+                    dest_file = target / f"components/{dir_name}" / rel_path
                     copy_template_file(src_file, dest_file, config)
-                    created_files.append(f"components/webapp/{rel_path}")
+                    created_files.append(f"components/{dir_name}/{rel_path}")
 
     # CI/CD workflows
-    if "cicd" in components:
+    if "cicd" in component_types:
         ci_workflow = target / ".github/workflows/ci.yaml"
-        ci_content = f"""name: CI
+
+        # Build list of workspaces for CI
+        workspaces = []
+        if "contract" in component_types:
+            workspaces.append("components/contract")
+        for server in server_components:
+            workspaces.append(f"components/{server['dir_name']}")
+        for webapp in webapp_components:
+            workspaces.append(f"components/{webapp['dir_name']}")
+
+        ci_content = """name: CI
 
 on:
   push:
@@ -336,13 +430,13 @@ jobs:
 """
         ci_workflow.write_text(ci_content)
         created_files.append(".github/workflows/ci.yaml")
-        print(f"  Created: .github/workflows/ci.yaml")
+        print("  Created: .github/workflows/ci.yaml")
 
     # -------------------------------------------------------------------------
     # Summary
     # -------------------------------------------------------------------------
     print(f"\n{'='*60}")
-    print(f"Scaffolding complete!")
+    print("Scaffolding complete!")
     print(f"{'='*60}")
     print(f"Created {len(created_dirs)} directories")
     print(f"Created {len(created_files)} files")
@@ -381,8 +475,15 @@ def main() -> int:
     with open(config_path) as f:
         config: Config = json.load(f)
 
+    # Support both old template_dir and new skills_dir
+    if "skills_dir" not in config and "template_dir" in config:
+        # Legacy support: derive skills_dir from template_dir
+        # template_dir was typically <plugin>/templates, skills_dir is <plugin>/skills
+        template_dir = Path(config["template_dir"])
+        config["skills_dir"] = str(template_dir.parent / "skills")
+
     # Validate required fields
-    required = ["project_name", "target_dir", "components", "template_dir"]
+    required = ["project_name", "target_dir", "components", "skills_dir"]
     for field in required:
         if field not in config:
             print(f"Error: Missing required config field: {field}", file=sys.stderr)

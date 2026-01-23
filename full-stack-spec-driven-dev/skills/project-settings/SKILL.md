@@ -17,9 +17,9 @@ Settings file: `sdd-settings.yaml` (project root, git-tracked)
 
 ```yaml
 sdd:
-  plugin_version: "3.0.1"      # SDD plugin version that created this project
-  initialized_at: "2026-01-21" # Date project was initialized
-  last_updated: "2026-01-21"   # Date settings were last modified
+  plugin_version: "3.5.3"      # SDD plugin version that created this project
+  initialized_at: "2026-01-23" # Date project was initialized
+  last_updated: "2026-01-23"   # Date settings were last modified
 
 project:
   name: "my-app"
@@ -28,13 +28,66 @@ project:
   type: "fullstack"            # fullstack | backend | frontend | custom
 
 components:
+  # Single-instance components (boolean)
   contract: true
-  server: true
-  webapp: true
   config: true
   helm: false
   testing: true
   cicd: true
+
+  # Multi-instance components (list of names, or true for single unnamed instance)
+  server: true                 # Single server: components/server/
+  webapp: true                 # Single webapp: components/webapp/
+
+  # OR for multiple instances:
+  # server:                    # Multiple servers
+  #   - api                    # components/server-api/
+  #   - worker                 # components/server-worker/
+  # webapp:                    # Multiple webapps
+  #   - admin                  # components/webapp-admin/
+  #   - public                 # components/webapp-public/
+```
+
+## Component Format
+
+### Single-Instance Components
+
+These components only support one instance:
+
+| Component | Format | Example |
+|-----------|--------|---------|
+| `contract` | `true/false` | `contract: true` |
+| `config` | `true/false` | `config: true` |
+| `helm` | `true/false` | `helm: false` |
+| `testing` | `true/false` | `testing: true` |
+| `cicd` | `true/false` | `cicd: true` |
+
+### Multi-Instance Components
+
+`server` and `webapp` support multiple named instances:
+
+**Single instance (default):**
+```yaml
+server: true    # Creates components/server/
+webapp: true    # Creates components/webapp/
+```
+
+**Multiple instances:**
+```yaml
+server:         # Creates components/server-api/ and components/server-worker/
+  - api
+  - worker
+webapp:         # Creates components/webapp-admin/ and components/webapp-public/
+  - admin
+  - public
+```
+
+**Mixed:**
+```yaml
+server:
+  - api
+  - worker
+webapp: true    # Single webapp is fine with multiple servers
 ```
 
 ## Operations
@@ -52,7 +105,7 @@ Initialize a new settings file.
 | `project_description` | Yes | Project description |
 | `project_domain` | Yes | Primary domain |
 | `project_type` | Yes | One of: `fullstack`, `backend`, `frontend`, `custom` |
-| `components` | Yes | Object with component flags |
+| `components` | Yes | Object with component configuration |
 
 **Workflow:**
 
@@ -77,8 +130,8 @@ Initialize a new settings file.
 
    components:
      contract: <components.contract or false>
-     server: <components.server or false>
-     webapp: <components.webapp or false>
+     server: <components.server or false>      # Can be true, false, or list
+     webapp: <components.webapp or false>      # Can be true, false, or list
      config: <components.config or false>
      helm: <components.helm or false>
      testing: <components.testing or false>
@@ -93,11 +146,11 @@ Initialize a new settings file.
    path: sdd-settings.yaml
    ```
 
-**Example:**
+**Example - Standard Full-Stack:**
 
 ```
 Input:
-  plugin_version: "3.0.1"
+  plugin_version: "3.5.3"
   project_name: "my-app"
   project_description: "A task management SaaS application"
   project_domain: "Task Management"
@@ -108,6 +161,34 @@ Input:
     webapp: true
     config: true
     helm: false
+    testing: true
+    cicd: true
+
+Output:
+  success: true
+  path: sdd-settings.yaml
+```
+
+**Example - Multi-Component:**
+
+```
+Input:
+  plugin_version: "3.5.3"
+  project_name: "my-platform"
+  project_description: "A multi-tenant SaaS platform"
+  project_domain: "Platform"
+  project_type: "custom"
+  components:
+    contract: true
+    server:
+      - api
+      - worker
+      - scheduler
+    webapp:
+      - admin
+      - public
+    config: true
+    helm: true
     testing: true
     cicd: true
 
@@ -148,9 +229,9 @@ None (reads from standard location)
 exists: true
 settings:
   sdd:
-    plugin_version: "3.0.1"
-    initialized_at: "2026-01-21"
-    last_updated: "2026-01-21"
+    plugin_version: "3.5.3"
+    initialized_at: "2026-01-23"
+    last_updated: "2026-01-23"
   project:
     name: "my-app"
     description: "A task management SaaS application"
@@ -201,49 +282,53 @@ Merge partial updates into existing settings.
 
 5. Return updated settings
 
-**Example - Update description:**
-
-```
-Input:
-  updates:
-    project:
-      description: "An enterprise task management platform"
-
-Output:
-  success: true
-  settings:
-    sdd:
-      plugin_version: "3.0.1"
-      initialized_at: "2026-01-21"
-      last_updated: "2026-01-21"  # Updated to today
-    project:
-      name: "my-app"
-      description: "An enterprise task management platform"  # Updated
-      domain: "Task Management"
-      type: "fullstack"
-    components:
-      contract: true
-      server: true
-      webapp: true
-      config: true
-      helm: false
-      testing: true
-      cicd: true
-```
-
-**Example - Add a component:**
+**Example - Add a server component:**
 
 ```
 Input:
   updates:
     components:
-      helm: true
+      server:
+        - api
+        - worker
 
 Output:
   success: true
   settings:
-    # ... (helm is now true, last_updated changed)
+    # ... (server is now a list, last_updated changed)
 ```
+
+---
+
+### Operation: `get_component_dirs`
+
+Get the actual directory names for all components.
+
+**Input:**
+
+None (reads from settings)
+
+**Output:**
+
+```yaml
+directories:
+  contract: "components/contract"           # or null if disabled
+  config: "components/config"               # always present
+  server:                                   # list of server directories
+    - "components/server"                   # if server: true
+    # OR
+    - "components/server-api"               # if server: [api, worker]
+    - "components/server-worker"
+  webapp:                                   # list of webapp directories
+    - "components/webapp"                   # if webapp: true
+    # OR
+    - "components/webapp-admin"             # if webapp: [admin, public]
+    - "components/webapp-public"
+  helm: null                                # null if disabled
+  testing: "components/testing"             # or null if disabled
+```
+
+This operation is useful for agents that need to know which directories exist.
 
 ---
 
@@ -267,13 +352,29 @@ Valid values for `project.type`:
 - `frontend` - Frontend only (webapp)
 - `custom` - Custom component selection
 
-### Component Flags
+### Component Values
 
-All component flags must be boolean:
+**Single-instance components** (boolean only):
 - `contract` - OpenAPI specification
-- `server` - Node.js backend
-- `webapp` - React frontend
 - `config` - YAML configuration
 - `helm` - Kubernetes Helm charts
 - `testing` - Test setup (Testkube)
 - `cicd` - GitHub Actions workflows
+
+**Multi-instance components** (boolean or list):
+- `server` - Node.js backend(s)
+  - `true` → single `components/server/`
+  - `false` → no server
+  - `["api", "worker"]` → `components/server-api/`, `components/server-worker/`
+- `webapp` - React frontend(s)
+  - `true` → single `components/webapp/`
+  - `false` → no webapp
+  - `["admin", "public"]` → `components/webapp-admin/`, `components/webapp-public/`
+
+### Instance Naming Rules
+
+When using lists for `server` or `webapp`:
+- Names must be lowercase
+- Use hyphens, not underscores
+- No spaces allowed
+- Examples: `api`, `worker`, `admin`, `public`, `background-jobs`

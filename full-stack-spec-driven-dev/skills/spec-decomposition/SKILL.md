@@ -110,6 +110,10 @@ Independence Score =
 - **SMALL**: <= 3 acceptance criteria, <= 2 endpoints
 - **MEDIUM**: 4-8 acceptance criteria, 3-5 endpoints
 - **LARGE**: > 8 acceptance criteria, > 5 endpoints
+- **EPIC**: > 10 acceptance criteria, > 5 endpoints, 3+ components
+
+**Epic Flag:**
+If a change scores as EPIC, add `requires_epic: true` to the DecomposedChange and include a warning: "Change 'X' should use epic-level planning (see `epic-planning` skill)"
 
 ## Heuristics
 
@@ -149,13 +153,15 @@ type: string            # "feature" | "bugfix" | "refactor"
 description: string     # 1-2 sentence summary
 domain: string          # "Identity", "Billing", "Core"
 source_sections: list   # section names from original spec
-complexity: string      # "small" | "medium" | "large"
+complexity: string      # "small" | "medium" | "large" | "epic"
 dependencies: list      # change ids this depends on
 acceptance_criteria: list
 api_endpoints: list     # "METHOD /path" strings
 user_stories: list
 domain_concepts: list
 independence_score: float  # 0.0-1.0
+requires_epic: boolean  # true if complexity is "epic"
+components_affected: list  # ["contract", "server", "webapp", ...]
 ```
 
 ### DecompositionResult

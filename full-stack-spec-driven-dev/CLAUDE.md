@@ -192,7 +192,7 @@ updated: YYYY-MM-DD
 2. Generate plan with `planner` agent
 3. Design API contract with `api-designer` agent (OpenAPI)
 4. Generate TypeScript types from OpenAPI spec
-5. Implement backend with `backend-dev` agent (5-layer architecture)
+5. Implement backend with `backend-dev` agent (CMDO architecture)
 6. Implement frontend with `frontend-dev` agent (consume generated types)
 7. Add tests with `tester` agent (Testkube)
 8. Review with `reviewer` and `db-advisor` agents
@@ -237,8 +237,8 @@ Example workflow:
 ## Notes for Claude Code
 
 - This is a **plugin**, designed to be used via Claude Code
-- The plugin files define agents, commands, and templates
+- The plugin files define agents, commands, and skills
 - Users install this plugin, then run `/sdd-init` to create new projects
-- All agent definitions enforce strict patterns (immutability, 5-layer architecture, type safety)
+- All agent definitions enforce strict patterns (immutability, CMDO architecture, type safety)
 - Specs are validated by Python scripts that check for required frontmatter fields
 - When working on this plugin, test changes by using the plugin in a sample project

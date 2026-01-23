@@ -1,5 +1,78 @@
 # Changelog
 
+## [3.7.0] - 2026-01-23
+
+### Added
+
+- **epic-planning skill**: New skill for managing large changes
+  - EPIC.md template for epic-level planning
+  - Phase-based directory structure (phases/01-contract/, etc.)
+  - PR size guidelines (target <400, max 800 lines per PR)
+  - Escalation criteria from planning skill
+
+- **backend-scaffolding skill**: New skill with colocated server templates
+  - CMDO architecture scaffolding
+  - Multi-instance support (server:api, server:worker)
+  - Templates moved from templates/components/server/
+
+- **frontend-scaffolding skill**: New skill with colocated webapp templates
+  - MVVM architecture scaffolding
+  - Multi-instance support (webapp:admin, webapp:public)
+  - Templates moved from templates/components/webapp/
+
+- **contract-scaffolding skill**: New skill with colocated contract templates
+  - OpenAPI scaffolding and type generation setup
+  - Templates moved from templates/components/contract/
+
+- **project-scaffolding skill**: New skill with colocated project templates
+  - Root files (README.md, CLAUDE.md, package.json)
+  - Specs directory structure
+  - Config component templates
+  - Templates moved from templates/project/, templates/specs/, templates/components/config/
+
+### Changed
+
+- **scaffolding skill**: Now orchestrates component-specific scaffolding skills
+  - Uses `skills_dir` config instead of `template_dir`
+  - Legacy support for backward compatibility
+
+- **scaffolding.py**: Updated to use skill-specific template directories
+  - ParsedComponent type for multi-instance parsing
+  - Component naming: `type:name` format (e.g., server:api → server-api/)
+
+- **project-settings skill**: Added multi-instance component support
+  - `server` and `webapp` can be boolean OR list of names
+  - Added `get_component_dirs` operation
+
+- **planner agent**: Added epic-planning skill reference and multi-component awareness
+
+- **planning skill**: Added PR size guidelines and escalation to epic-planning
+
+- **spec-decomposition skill**: Added EPIC complexity level and `requires_epic` field
+
+- **sdd-init command**: Updated for multi-component initialization
+
+- **backend-dev, frontend-dev agents**: Added multi-instance working directory notes
+
+- **api-designer agent**: Updated type generation paths for multi-instance
+
+- **devops agent**: Added multi-component support section
+
+- **Documentation**: Updated CLAUDE.md, README.md, QUICKSTART.md
+  - Standardized on "CMDO architecture" terminology (was "5-layer")
+  - Updated skills listing
+  - Added multi-component examples
+
+### Removed
+
+- **templates/ directory**: Moved to skill-specific locations
+  - Templates now colocated with their scaffolding skills
+  - Better organization and maintainability
+
+### Rationale
+
+This release restructures scaffolding to improve maintainability by colocating templates with their skills, adds support for multiple server/webapp instances in a single project, and introduces epic-level planning for managing large changes that span multiple PRs.
+
 ## [3.6.1] - 2026-01-23
 
 ### Changed

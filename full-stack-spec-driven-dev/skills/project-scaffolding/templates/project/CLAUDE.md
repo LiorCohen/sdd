@@ -3,8 +3,8 @@
 ## Tech Stack
 
 - **API Contract:** OpenAPI 3.x in `components/contract/`
-- **Backend:** Node.js 20, TypeScript 5, Express (5-layer architecture)
-- **Frontend:** React 18, TypeScript 5, Vite
+- **Backend:** Node.js 20, TypeScript 5, Express (CMDO architecture)
+- **Frontend:** React 18, TypeScript 5, Vite (MVVM architecture)
 - **Database:** PostgreSQL 15
 - **Testing:** Vitest (unit), Testkube (integration/E2E)
 - **Deployment:** Kubernetes, Helm
@@ -13,20 +13,25 @@
 
 | Component | Path | Purpose |
 |-----------|------|---------|
+| Config | `components/config/` | Environment configuration |
 | Contract | `components/contract/` | OpenAPI spec, type generation |
-| Server | `components/server/` | Backend (5-layer architecture) |
-| Webapp | `components/webapp/` | React frontend |
+| Server | `components/server*/` | Backend (CMDO architecture) |
+| Webapp | `components/webapp*/` | React frontend (MVVM) |
 | Helm | `components/helm/` | Kubernetes deployment |
 | Testing | `components/testing/` | Testkube test definitions |
 
-## Backend Architecture (5 Layers)
+Note: Server and webapp components support multiple named instances (e.g., `server-api/`, `webapp-admin/`).
+
+## Backend Architecture (CMDO)
+
+**C**ontroller **M**odel **D**AL **O**perator - strict separation of concerns:
 
 ```
-Server → Controller → Model Use Cases
-   ↓         ↓            ↑
+Operator → Controller → Model Use Cases
+   ↓            ↓              ↑
 Config → [All layers] → Dependencies
-                           ↓
-                         DAL
+                              ↓
+                            DAL
 ```
 
 ## Spec-Driven Development
@@ -43,6 +48,7 @@ Config → [All layers] → Dependencies
 | `specs/INDEX.md` | Registry of all specs |
 | `specs/changes/` | Change specifications (features, bugfixes, refactors) |
 | `components/contract/openapi.yaml` | API contract |
+| `sdd-settings.yaml` | Project settings (components, domains) |
 
 ## Claude Code Commands
 

@@ -18,7 +18,9 @@ Use the following skills for standards and patterns:
 
 ## Working Directory
 
-`components/server/src/`
+Default: `components/server/src/`
+
+For multi-instance projects, check `sdd-settings.yaml` for the actual server component names (e.g., `server-api/`, `server-worker/`).
 
 ## Type Consumption
 

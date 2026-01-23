@@ -142,6 +142,30 @@ Prompt the user for the following information (use extracted values from externa
    - If Helm is selected, Server must be included (Helm is for backend deployment)
    - If Contract is selected without Server, warn and ask for confirmation
 
+5. **Multiple Component Instances** (Optional, for Custom projects)
+
+   If user selects Custom or requests multiple backends/frontends:
+
+   **For Server components:**
+   - Ask: "How many server components do you need? (1-5)"
+   - If > 1, for each: "Name for server component N (e.g., 'api', 'worker', 'scheduler'):"
+   - Creates: `components/server-api/`, `components/server-worker/`, etc.
+
+   **For Webapp components:**
+   - Ask: "How many webapp components do you need? (1-5)"
+   - If > 1, for each: "Name for webapp component N (e.g., 'admin', 'public', 'dashboard'):"
+   - Creates: `components/webapp-admin/`, `components/webapp-public/`, etc.
+
+   **Naming Rules:**
+   - Names must be lowercase
+   - Use hyphens, not underscores
+   - No spaces allowed
+   - Examples: `api`, `worker`, `admin`, `public`, `background-jobs`
+
+   **Component Format in Config:**
+   - Single instance: `"server"` → `components/server/`
+   - Named instance: `"server:api"` → `components/server-api/`
+
 ### Phase 2: Show Configuration Summary
 
 Display a summary of what will be created:
@@ -492,8 +516,13 @@ After ALL steps are done:
 
 ## Template Sources
 
-All template files are in the `templates/` directory of this plugin:
-- `templates/project/` - Root project files
-- `templates/components/` - Component scaffolding
-- `templates/specs/` - Initial spec structure
-- `templates/workflows/` - GitHub Actions workflows
+Templates are colocated with their scaffolding skills:
+
+| Skill | Templates | Content |
+|-------|-----------|---------|
+| `project-scaffolding` | `skills/project-scaffolding/templates/` | Root files, specs, config |
+| `backend-scaffolding` | `skills/backend-scaffolding/templates/` | Server component (CMDO) |
+| `frontend-scaffolding` | `skills/frontend-scaffolding/templates/` | Webapp component (MVVM) |
+| `contract-scaffolding` | `skills/contract-scaffolding/templates/` | OpenAPI contract |
+
+The main `scaffolding` skill orchestrates these component skills.

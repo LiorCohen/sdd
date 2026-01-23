@@ -43,9 +43,11 @@ cd components/contract
 npm run generate:types
 ```
 
-This generates types consumed by:
-- `components/server/src/types/generated.ts`
-- `components/webapp/src/types/generated.ts`
+This generates types consumed by all server and webapp components:
+- `components/server*/src/types/generated.ts`
+- `components/webapp*/src/types/generated.ts`
+
+For multi-instance projects, check `sdd-settings.yaml` for actual component names.
 
 ## HTTP Conventions
 

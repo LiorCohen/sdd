@@ -43,24 +43,30 @@ sdd/
 │   ├── tester.md
 │   └── reviewer.md
 ├── skills/                     # Reusable skills
+│   ├── api-design/
+│   ├── backend-scaffolding/    # Server templates (colocated)
+│   ├── backend-standards/
 │   ├── change-creation/
+│   ├── contract-scaffolding/   # Contract templates (colocated)
+│   ├── epic-planning/
+│   ├── frontend-scaffolding/   # Webapp templates (colocated)
+│   ├── frontend-standards/
 │   ├── planning/
-│   ├── scaffolding/
+│   ├── project-scaffolding/    # Root/specs templates (colocated)
+│   ├── project-settings/
+│   ├── scaffolding/            # Orchestrates scaffolding skills
 │   ├── spec-decomposition/
 │   ├── spec-index/
 │   ├── spec-writing/
-│   ├── testing/
-│   └── typescript-standards/
+│   ├── unit-testing/
+│   ├── integration-testing/
+│   └── e2e-testing/
 ├── commands/                   # 5 slash commands
 │   ├── sdd-init.md
 │   ├── sdd-new-change.md
 │   ├── sdd-implement-plan.md
 │   ├── sdd-verify-spec.md
 │   └── sdd-generate-snapshot.md
-├── templates/                  # Project scaffolding
-│   ├── project/
-│   ├── specs/
-│   └── components/
 └── scripts/                    # Utility scripts
     ├── validate-spec.py
     ├── generate-index.py
@@ -104,13 +110,21 @@ This creates:
 my-awesome-app/
 ├── specs/                  # Specifications
 ├── components/
+│   ├── config/            # Environment configuration
 │   ├── contract/          # OpenAPI API contract
-│   ├── server/            # Node.js backend
-│   ├── webapp/            # React frontend
+│   ├── server/            # Node.js backend (CMDO architecture)
+│   ├── webapp/            # React frontend (MVVM architecture)
 │   ├── helm/              # Kubernetes deployment
 │   └── testing/           # Testkube tests
 └── .github/workflows/     # CI/CD
 ```
+
+You can also create multiple backend or frontend instances:
+```bash
+/sdd-init --name my-app --components "server:api,server:worker,webapp:admin,webapp:public"
+```
+
+This creates `server-api/`, `server-worker/`, `webapp-admin/`, and `webapp-public/` directories.
 
 ### 3. Create Your First Change
 
@@ -234,7 +248,7 @@ python scripts/generate-snapshot.py --specs-dir specs/
 
 1. Read the full methodology in the original spec document
 2. Explore agent definitions in `agents/`
-3. Review templates in `templates/`
+3. Review skill documentation in `skills/`
 4. Initialize your first project with `/sdd-init`
 
 ## Support
@@ -243,4 +257,3 @@ For issues or questions, refer to:
 - Plugin README.md
 - Agent documentation in `agents/`
 - Skill documentation in `skills/`
-- Template examples in `templates/`

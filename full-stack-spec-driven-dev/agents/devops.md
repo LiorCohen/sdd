@@ -34,8 +34,8 @@ components/helm/your-app/
 ├── values-staging.yaml
 ├── values-production.yaml
 └── templates/
-    ├── deployment-server.yaml
-    ├── deployment-webapp.yaml
+    ├── deployment-server.yaml      # One per server instance
+    ├── deployment-webapp.yaml      # One per webapp instance
     ├── service.yaml
     ├── ingress.yaml
     ├── configmap.yaml
@@ -76,9 +76,15 @@ spec:
       path: components/server/src/__tests__/integration
 ```
 
+## Multi-Component Support
+
+Projects may have multiple server and webapp instances (e.g., `server-api`, `server-worker`, `webapp-admin`). Check `sdd-settings.yaml` for actual component names. Each instance needs:
+- Its own Dockerfile
+- Its own deployment template in Helm
+
 ## Responsibilities
 
-1. Maintain Dockerfiles for each component
+1. Maintain Dockerfiles for each component (including multi-instance)
 2. Maintain Helm chart and environment values
 3. Install and configure Testkube
 4. Create Testkube test and test suite definitions

@@ -153,8 +153,9 @@ your-project/
 │           ├── SPEC.md           # Change specification
 │           └── PLAN.md           # Implementation plan
 ├── components/
+│   ├── config/                   # Environment configuration
 │   ├── contract/                 # OpenAPI specs (types generated here)
-│   ├── server/                   # Node.js backend (5-layer architecture)
+│   ├── server/                   # Node.js backend (CMDO architecture)
 │   ├── webapp/                   # React frontend (MVVM architecture)
 │   ├── helm/                     # Kubernetes deployment charts
 │   └── testing/                  # Testkube test definitions
@@ -265,7 +266,7 @@ src/
 2. Generate plan with `planner` agent
 3. Design API contract with `api-designer` agent (OpenAPI)
 4. Generate TypeScript types from OpenAPI spec
-5. Implement backend with `backend-dev` agent (5-layer architecture)
+5. Implement backend with `backend-dev` agent (CMDO architecture)
 6. Implement frontend with `frontend-dev` agent (consume generated types)
 7. Add tests with `tester` agent (Testkube)
 8. Review with `reviewer` and `db-advisor` agents
