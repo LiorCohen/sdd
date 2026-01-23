@@ -1,5 +1,6 @@
 // App: Orchestrates application lifecycle and wires dependencies
-// Delegates HTTP concerns to create_http_server.ts
+// Telemetry is initialized here as the first thing before other modules
+import { createBaseLogger, createLogger } from "./logger";
 import { createController } from "../controller";
 import { findGreetingById, insertGreeting } from "../dal";
 import { createDatabase } from "./create_database";
@@ -7,12 +8,10 @@ import { createHttpServer } from "./create_http_server";
 import { createLifecycleProbes } from "./lifecycle_probes";
 import { createStateMachine } from "./state_machine";
 
-import type pino from "pino";
 import type { Config } from "../config";
 
 type AppDependencies = Readonly<{
     readonly config: Config;
-    readonly logger: pino.Logger;
 }>;
 
 type App = Readonly<{
@@ -34,7 +33,11 @@ type AppState =
     | "FAILED";
 
 export const createApp = (deps: AppDependencies): App => {
-    const { config, logger } = deps;
+    const { config } = deps;
+
+    // Initialize telemetry first - logger is created here before any other modules
+    const baseLogger = createBaseLogger(config);
+    const logger = createLogger(baseLogger, "app");
 
     const db = createDatabase({ config, logger });
     const dal = {

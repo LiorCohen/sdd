@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.4.2] - 2026-01-23
+
+### Changed
+
+- **Telemetry**: Moved into App module
+  - Removed `src/telemetry/` directory
+  - Added `src/app/logger.ts` and `src/app/metrics.ts`
+  - Logger is now created inside `createApp()` as the first operation
+  - Simplified `src/index.ts` entry point (only passes config to createApp)
+  - App module now owns all telemetry initialization
+
 ## [3.4.1] - 2026-01-23
 
 ### Fixed
