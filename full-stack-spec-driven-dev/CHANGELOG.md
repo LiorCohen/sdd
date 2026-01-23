@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.6.1] - 2026-01-23
+
+### Changed
+
+- **tester agent**: Enhanced with content from removed testing skill
+  - Added directory structure, Testkube commands, spec/issue reference pattern
+  - References integration-testing and e2e-testing skills only
+  - Clarified focus on integration and E2E tests (unit tests by implementors)
+
+### Removed
+
+- **testing skill**: Removed redundant overview skill
+  - Content merged into tester agent and specialized skills
+  - Three specialized skills (unit-testing, integration-testing, e2e-testing) now cover all patterns
+
 ## [3.6.0] - 2026-01-23
 
 ### Added
@@ -29,16 +44,6 @@
   - Test attributes (`data-testid`)
 
 ### Changed
-
-- **testing skill**: Simplified to overview that references specialized skills
-  - Now serves as entry point to testing hierarchy
-  - References unit-testing, integration-testing, e2e-testing skills
-  - Retains common rules and spec reference patterns
-
-- **tester agent**: Updated to reference all four testing skills
-  - Clear workflow for writing different test types
-  - Condensed rules summary
-  - Clarified focus on integration and E2E tests (not unit tests)
 
 - **backend-dev agent**: Added `unit-testing` skill reference
   - Clarified that backend-dev writes unit tests (not tester agent)
