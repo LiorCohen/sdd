@@ -35,8 +35,9 @@ For each affected plugin, check if version bump is needed:
 | `full-stack-spec-driven-dev/scripts/` | All script files |
 | `full-stack-spec-driven-dev/.claude-plugin/` | Plugin manifest |
 
-**Files That Do NOT Require Version Bump (Marketplace-Level):**
+**Files That Do NOT Require Version Bump:**
 
+Marketplace-level files:
 - Root `README.md`
 - Root `CLAUDE.md`
 - Root `CONTRIBUTING.md`
@@ -44,7 +45,12 @@ For each affected plugin, check if version bump is needed:
 - `.claude/skills/` (marketplace-level skills)
 - `.gitignore`
 - `.claudeignore`
+
+Plugin-level non-functional files:
 - `full-stack-spec-driven-dev/tests/` (test files)
+- `full-stack-spec-driven-dev/README.md` (plugin documentation)
+- `full-stack-spec-driven-dev/QUICKSTART.md` (plugin getting started)
+- `full-stack-spec-driven-dev/CLAUDE.md` (plugin guidance)
 
 If version bump is needed, prompt for type:
 - **PATCH** (x.x.Z): Bug fixes, small improvements

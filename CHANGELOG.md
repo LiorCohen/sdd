@@ -26,6 +26,7 @@ Changes to the marketplace infrastructure (not plugin-specific changes).
   - Plugin changes update plugin CHANGELOG with version numbers
   - Marketplace changes update root CHANGELOG with date-based entries
   - Added tests directory to files that don't require version bump
+  - Clarified plugin-level documentation files (README, QUICKSTART, CLAUDE.md) don't require version bump
 
 - **CONTRIBUTING.md**: Updated to reflect dual changelog structure
   - Added marketplace CHANGELOG to repository structure
