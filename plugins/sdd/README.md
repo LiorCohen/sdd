@@ -123,10 +123,7 @@ Agents are invoked by asking Claude to use them (e.g., "Use the planner agent to
 /sdd-init --name my-app
 ```
 
-You can also create multiple backend or frontend instances:
-```bash
-/sdd-init --name my-app --components "server:api,server:worker,webapp:admin,webapp:public"
-```
+The init command uses product discovery to understand what you're building, then recommends components. For multiple instances (e.g., separate admin/public webapps), it will prompt during setup.
 
 **Create a change** (feature, bugfix, or refactor):
 ```bash

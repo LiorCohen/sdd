@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.2.4] - 2026-01-24
+
+### Fixed
+
+- **README.md**: Removed incorrect `--components` argument from sdd-init example
+  - sdd-init only supports `--name` and `--spec` arguments
+  - Multi-instance setup is handled interactively during product discovery
+
 ## [4.2.3] - 2026-01-24
 
 ### Changed
