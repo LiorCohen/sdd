@@ -33,6 +33,7 @@ THIS IS AN AUTOMATED TEST. You MUST:
 4. Create the project as a subdirectory: ./test-fullstack-project/
 5. Execute ALL steps through completion
 6. Do NOT stop for user input at any point
+7. Create ALL files in the CURRENT WORKING DIRECTORY (.) - do NOT use absolute paths or navigate elsewhere
 
 The user has already approved. Execute the full sdd-init workflow now.`;
 

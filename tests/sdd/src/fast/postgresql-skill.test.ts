@@ -44,7 +44,8 @@ Create the docker-compose.yml file in the current directory.
 IMPORTANT:
 - Use the postgresql skill's deployment reference for best practices
 - Include health check configuration
-- Make it suitable for local development`;
+- Make it suitable for local development
+- Create ALL files in the CURRENT WORKING DIRECTORY (.) - do NOT use absolute paths`;
 
 const CREATE_SCHEMA_PROMPT = `Using the postgresql skill, create a database schema for a users table.
 
@@ -64,7 +65,8 @@ Create the SQL file at: db/migrations/001_create_users.sql
 IMPORTANT:
 - Use BIGINT GENERATED ALWAYS AS IDENTITY for the primary key
 - Include all appropriate constraints
-- The SQL must be executable via psql`;
+- The SQL must be executable via psql
+- Create ALL files in the CURRENT WORKING DIRECTORY (.) - do NOT use absolute paths`;
 
 const SEED_DATA_PROMPT = `Using the postgresql skill, create seed data for the users table.
 
@@ -82,7 +84,8 @@ IMPORTANT:
 - Follow the postgresql skill's seed-data reference
 - Use ON CONFLICT DO NOTHING or DO UPDATE for idempotency
 - The SQL must be executable via psql
-- Do not use external data files, generate data in SQL`;
+- Do not use external data files, generate data in SQL
+- Create ALL files in the CURRENT WORKING DIRECTORY (.) - do NOT use absolute paths`;
 
 const MIGRATION_PLAN_PROMPT = `Using the postgresql skill, create a migration to add a phone column to the users table.
 
@@ -99,7 +102,8 @@ IMPORTANT:
 - Follow the postgresql skill's schema-management reference for safe migrations
 - Add column as nullable first (this is safe and fast)
 - Use CREATE INDEX CONCURRENTLY if the migration supports it
-- The SQL must be executable via psql`;
+- The SQL must be executable via psql
+- Create ALL files in the CURRENT WORKING DIRECTORY (.) - do NOT use absolute paths`;
 
 const BACKUP_PROMPT = `Using the postgresql skill, create a backup script for the database.
 
@@ -121,7 +125,8 @@ Database connection info for reference:
 IMPORTANT:
 - Follow the postgresql skill's deployment reference for pg_dump usage
 - Make the script executable-ready (proper shebang, etc.)
-- Include comments explaining what each section does`;
+- Include comments explaining what each section does
+- Create ALL files in the CURRENT WORKING DIRECTORY (.) - do NOT use absolute paths`;
 
 // ============================================================================
 // Helper Functions

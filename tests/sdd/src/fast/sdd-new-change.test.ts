@@ -38,7 +38,9 @@ IMPORTANT:
 - Do not ask any questions. Use the values provided above.
 - You MUST use the spec-writer agent to create the spec.
 - You MUST use the planner agent to create the plan.
-- Complete both the spec and the plan before finishing.`;
+- Complete both the spec and the plan before finishing.
+- Create ALL files in the CURRENT WORKING DIRECTORY (.) - do NOT use absolute paths or navigate elsewhere.
+- The specs/ directory already exists in the current directory.`;
 
 describe('sdd-new-change command', () => {
   let testProject: TestProject;

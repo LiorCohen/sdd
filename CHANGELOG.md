@@ -12,6 +12,14 @@ Changes to the marketplace infrastructure (not plugin-specific changes).
   - Removed `PROMPTS_DIR` export from `test-helpers.ts`
   - Improves test readability and maintainability
 
+### Fixed
+
+- **Test isolation**: Added explicit working directory instructions to test prompts
+  - Prevents test artifacts from leaking into repository root
+  - All prompts now instruct Claude to use current working directory only
+
+### Changed
+
 - **Test infrastructure**: Migrated from Python/pytest to TypeScript/Vitest
   - `test-helpers.ts` replaces `test_helpers.py`
   - All test files migrated to TypeScript (`.test.ts`)
