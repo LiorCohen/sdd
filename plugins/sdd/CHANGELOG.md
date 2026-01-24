@@ -1,5 +1,33 @@
 # Changelog
 
+## [4.2.10] - 2026-01-24
+
+### Changed
+
+- **README.md**: Major cleanup - focused on what the plugin does, not implementation details
+  - Removed: Technical Principles, Tech Stack, Development Workflow, Validation Scripts, Spec File Format, Plugin Structure
+  - Removed: Backend Architecture (CMDO) and Frontend Architecture (MVVM) detailed sections
+  - Removed: Epics paragraph (planner agent handles this internally)
+  - Simplified "Key Files in specs/" table
+  - README reduced from ~365 lines to ~156 lines
+  - Architecture details can be added to a separate ARCHITECTURE.md if needed
+
+## [4.2.9] - 2026-01-24
+
+### Changed
+
+- **Documentation**: Updated all command examples across docs to use change directory paths
+  - Fixed examples in CLAUDE.md, README.md, sdd-init.md, and project templates
+  - Removed references to deleted sdd-generate-snapshot command
+  - Changed `[path]` to `[change-dir]` in command tables
+
+## [4.2.8] - 2026-01-24
+
+### Changed
+
+- **sdd-implement-change**: Updated to accept change directory path instead of PLAN.md file path
+- **sdd-verify-change**: Updated to accept change directory path instead of SPEC.md file path
+
 ## [4.2.7] - 2026-01-24
 
 ### Removed

@@ -10,12 +10,12 @@ Implement a change by executing its implementation plan.
 ## Usage
 
 ```
-/sdd-implement-change [path-to-plan]
+/sdd-implement-change [path-to-change-dir]
 ```
 
 Example:
 ```
-/sdd-implement-change specs/changes/2026/01/11/user-auth/PLAN.md
+/sdd-implement-change specs/changes/2026/01/11/user-auth
 ```
 
 ## Flow
@@ -174,7 +174,7 @@ Before declaring implementation complete, you MUST:
 ## Example
 
 ```
-User: /sdd-implement-change specs/changes/2026/01/11/user-auth/PLAN.md
+User: /sdd-implement-change specs/changes/2026/01/11/user-auth
 
 Agent: Step 1: Loading spec and plan...
 Agent: ✓ Read PLAN.md

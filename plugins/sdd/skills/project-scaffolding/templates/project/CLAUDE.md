@@ -54,6 +54,5 @@ Config → [All layers] → Dependencies
 
 - `/sdd-init --name [name]` - Initialize new project
 - `/sdd-new-change --type [type] --name [name]` - Start new change
-- `/sdd-implement-change` - Implement plan
-- `/sdd-verify-change` - Verify implementation
-- `/sdd-generate-snapshot` - Regenerate snapshot
+- `/sdd-implement-change [change-dir]` - Implement plan
+- `/sdd-verify-change [change-dir]` - Verify implementation

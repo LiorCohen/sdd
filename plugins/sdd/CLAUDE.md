@@ -40,13 +40,12 @@ This plugin implements a **specification-driven workflow**:
 
 ### Commands (`commands/`)
 
-5 slash commands for project lifecycle:
+4 slash commands for project lifecycle:
 
 - `/sdd-init --name [name]` - Initialize new project structure
 - `/sdd-new-change --type [type] --name [name]` - Create spec and plan for new change
-- `/sdd-implement-change [path]` - Orchestrate implementation across agents
-- `/sdd-verify-change [path]` - Verify implementation matches spec
-- `/sdd-generate-snapshot` - Regenerate product state snapshot
+- `/sdd-implement-change [change-dir]` - Orchestrate implementation across agents
+- `/sdd-verify-change [change-dir]` - Verify implementation matches spec
 
 ### Change Types
 
