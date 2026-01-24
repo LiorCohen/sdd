@@ -28,15 +28,15 @@ For each affected plugin, check if version bump is needed:
 
 | Directory/File | Description |
 |----------------|-------------|
-| `full-stack-spec-driven-dev/agents/` | All agent `.md` files |
-| `full-stack-spec-driven-dev/commands/` | All command `.md` files |
-| `full-stack-spec-driven-dev/skills/` | All skill `.md` files |
-| `full-stack-spec-driven-dev/templates/` | All template files |
-| `full-stack-spec-driven-dev/scripts/` | All script files |
-| `full-stack-spec-driven-dev/.claude-plugin/` | Plugin manifest |
-| `full-stack-spec-driven-dev/README.md` | Plugin documentation |
-| `full-stack-spec-driven-dev/QUICKSTART.md` | Plugin getting started guide |
-| `full-stack-spec-driven-dev/CLAUDE.md` | Plugin guidance for Claude |
+| `plugins/sdd/agents/` | All agent `.md` files |
+| `plugins/sdd/commands/` | All command `.md` files |
+| `plugins/sdd/skills/` | All skill `.md` files |
+| `plugins/sdd/templates/` | All template files |
+| `plugins/sdd/scripts/` | All script files |
+| `plugins/sdd/.claude-plugin/` | Plugin manifest |
+| `plugins/sdd/README.md` | Plugin documentation |
+| `plugins/sdd/QUICKSTART.md` | Plugin getting started guide |
+| `plugins/sdd/CLAUDE.md` | Plugin guidance for Claude |
 
 **Files That Do NOT Require Version Bump (Marketplace-Level):**
 
@@ -47,7 +47,7 @@ For each affected plugin, check if version bump is needed:
 - `.claude/skills/` (marketplace-level skills)
 - `.gitignore`
 - `.claudeignore`
-- `full-stack-spec-driven-dev/tests/` (test files)
+- `plugins/sdd/tests/` (test files)
 
 If version bump is needed, prompt for type:
 - **PATCH** (x.x.Z): Bug fixes, small improvements
@@ -55,14 +55,14 @@ If version bump is needed, prompt for type:
 - **MAJOR** (X.0.0): Breaking changes
 
 Update BOTH files:
-- `full-stack-spec-driven-dev/.claude-plugin/plugin.json`
+- `plugins/sdd/.claude-plugin/plugin.json`
 - `.claude-plugin/marketplace.json`
 
 ### Step 3: Changelog Check
 
 **Two separate changelogs exist:**
 
-1. **Plugin CHANGELOG** (`full-stack-spec-driven-dev/CHANGELOG.md`):
+1. **Plugin CHANGELOG** (`plugins/sdd/CHANGELOG.md`):
    - Updated when plugin files change (agents, commands, skills, templates, scripts)
    - Tied to plugin version numbers
    - Format: `## [x.y.z] - YYYY-MM-DD`
@@ -142,12 +142,12 @@ User: /commit
 Agent: Analyzing changes...
 
 Found changes in:
-- full-stack-spec-driven-dev/agents/backend-dev.md
+- plugins/sdd/agents/backend-dev.md
 
-Detected plugin: full-stack-spec-driven-dev (current version: 1.10.19)
+Detected plugin: plugins/sdd (current version: 1.10.19)
 
 Version files need updating:
-- full-stack-spec-driven-dev/.claude-plugin/plugin.json
+- plugins/sdd/.claude-plugin/plugin.json
 - .claude-plugin/marketplace.json
 
 What type of version bump?
@@ -186,9 +186,9 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 ---
 
 Files to commit:
-- full-stack-spec-driven-dev/agents/backend-dev.md
-- full-stack-spec-driven-dev/.claude-plugin/plugin.json
-- full-stack-spec-driven-dev/CHANGELOG.md
+- plugins/sdd/agents/backend-dev.md
+- plugins/sdd/.claude-plugin/plugin.json
+- plugins/sdd/CHANGELOG.md
 - .claude-plugin/marketplace.json
 
 Proceed with commit? (yes/edit/no)
@@ -224,13 +224,13 @@ Run these before committing:
 ```bash
 # Check versions match
 echo "Plugin version:"
-cat full-stack-spec-driven-dev/.claude-plugin/plugin.json | grep version
+cat plugins/sdd/.claude-plugin/plugin.json | grep version
 
 echo "Marketplace version:"
 cat .claude-plugin/marketplace.json | grep version
 
 # Check CHANGELOG has entry for new version
-head -20 full-stack-spec-driven-dev/CHANGELOG.md
+head -20 plugins/sdd/CHANGELOG.md
 
 # Check staged files
 git status

@@ -12,6 +12,6 @@ export const LIB_DIR = __dirname;
 export const SRC_DIR = path.resolve(LIB_DIR, '..');
 export const TESTS_ROOT_DIR = path.resolve(SRC_DIR, '..');
 export const MARKETPLACE_DIR = path.resolve(TESTS_ROOT_DIR, '../..');
-export const PLUGIN_DIR = path.join(MARKETPLACE_DIR, 'full-stack-spec-driven-dev');
+export const PLUGIN_DIR = path.join(MARKETPLACE_DIR, 'plugins', 'sdd');
 export const SKILLS_DIR = path.join(PLUGIN_DIR, 'skills');
 export const TEST_OUTPUT_DIR = process.env['TEST_OUTPUT_DIR'] ?? '/tmp/sdd-tests';

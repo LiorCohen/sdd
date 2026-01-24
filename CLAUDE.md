@@ -28,7 +28,8 @@ claude-code-plugins/
 │           └── SKILL.md           # TypeScript coding standards
 ├── .claude-plugin/
 │   └── marketplace.json           # Marketplace manifest
-├── full-stack-spec-driven-dev/    # SDD plugin
+├── plugins/
+│   └── sdd/                       # SDD plugin
 ├── README.md                      # Marketplace overview
 ├── CLAUDE.md                      # This file
 ├── CHANGELOG.md                   # Marketplace changelog (infrastructure)
@@ -46,13 +47,12 @@ A Claude Code marketplace is a directory structure that:
 ## Available Plugins
 
 ### Spec-Driven Development (SDD)
-**Directory:** `full-stack-spec-driven-dev/`
+**Directory:** `plugins/sdd/`
 **Description:** Comprehensive plugin for spec-driven development with React, Node.js, and TypeScript
 
 **For detailed information about this plugin, see:**
-- [Plugin README](./full-stack-spec-driven-dev/README.md) - Complete documentation
-- [Plugin QUICKSTART](./full-stack-spec-driven-dev/QUICKSTART.md) - Getting started
-- [Plugin CHANGELOG](./full-stack-spec-driven-dev/CHANGELOG.md) - Version history
+- [Plugin README](./plugins/sdd/README.md) - Complete documentation
+- [Plugin CHANGELOG](./plugins/sdd/CHANGELOG.md) - Version history
 
 ## Working with This Marketplace
 
@@ -60,14 +60,14 @@ A Claude Code marketplace is a directory structure that:
 
 When adding a new plugin to this marketplace:
 
-1. **Create plugin directory** under root:
+1. **Create plugin directory** under `plugins/`:
    ```
-   mkdir your-plugin-name
+   mkdir plugins/your-plugin-name
    ```
 
 2. **Create plugin structure**:
    ```
-   your-plugin-name/
+   plugins/your-plugin-name/
    ├── .claude-plugin/
    │   └── plugin.json       # Required manifest
    ├── agents/               # Optional: agent definitions
@@ -86,14 +86,14 @@ When adding a new plugin to this marketplace:
      },
      "plugins": [
        {
-         "name": "existing-plugin",
-         "source": "./full-stack-spec-driven-dev",
+         "name": "sdd",
+         "source": "./plugins/sdd",
          "description": "...",
          "version": "x.y.z"
        },
        {
          "name": "your-plugin-name",
-         "source": "./your-plugin-name",
+         "source": "./plugins/your-plugin-name",
          "description": "Brief description",
          "version": "x.y.z"
        }

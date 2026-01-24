@@ -6,9 +6,9 @@
     "plugins": [
         {
             "name": "sdd",
-            "source": "./full-stack-spec-driven-dev",
+            "source": "./plugins/sdd",
             "description": "Spec-driven development methodology for full-stack teams",
-            "version": "4.1.1"
+            "version": "4.1.2"
         }
     ]
 }

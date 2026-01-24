@@ -4,6 +4,16 @@ Changes to the marketplace infrastructure (not plugin-specific changes).
 
 ## 2026-01-24
 
+### Changed
+
+- **Directory structure**: Moved plugin from `full-stack-spec-driven-dev/` to `plugins/sdd/`
+  - Establishes cleaner multi-plugin marketplace structure
+  - Updated all path references in marketplace files, commit skill, and test infrastructure
+
+---
+
+## 2026-01-24 (earlier)
+
 ### Added
 
 - **Plugin testing standards skill**: New marketplace skill at `.claude/skills/plugin-testing-standards/`

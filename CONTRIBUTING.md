@@ -12,19 +12,17 @@ claude-code-plugins/
 │   └── marketplace.json              # Marketplace manifest
 ├── .claude/
 │   └── skills/                       # Marketplace-level skills (e.g., commit)
-├── full-stack-spec-driven-dev/       # SDD plugin
-│   ├── .claude-plugin/
-│   │   └── plugin.json               # Plugin manifest
-│   ├── agents/                       # Plugin agents
-│   ├── commands/                     # Plugin commands
-│   ├── skills/                       # Plugin skills
-│   ├── templates/                    # Plugin templates
-│   ├── scripts/                      # Plugin utilities
-│   ├── tests/                        # Plugin tests
-│   ├── README.md                     # Plugin documentation
-│   ├── QUICKSTART.md                 # Plugin getting started
-│   ├── CHANGELOG.md                  # Plugin version history
-│   └── CLAUDE.md                     # Plugin-specific guidance
+├── plugins/
+│   └── sdd/                          # SDD plugin
+│       ├── .claude-plugin/
+│       │   └── plugin.json           # Plugin manifest
+│       ├── agents/                   # Plugin agents
+│       ├── commands/                 # Plugin commands
+│       ├── skills/                   # Plugin skills
+│       ├── scripts/                  # Plugin utilities
+│       ├── README.md                 # Plugin documentation
+│       ├── CHANGELOG.md              # Plugin version history
+│       └── CLAUDE.md                 # Plugin-specific guidance
 ├── README.md                         # Marketplace overview
 ├── CLAUDE.md                         # Marketplace guidance
 ├── CHANGELOG.md                      # Marketplace changelog (infrastructure)
@@ -37,16 +35,16 @@ claude-code-plugins/
 
 ### Working on the SDD Plugin
 
-When making changes to the `full-stack-spec-driven-dev` plugin:
+When making changes to the `plugins/sdd` plugin:
 
 1. **Make your changes** to plugin files (agents, commands, skills, etc.)
 
 2. **Bump the version** in both locations:
-   - `full-stack-spec-driven-dev/.claude-plugin/plugin.json`
+   - `plugins/sdd/.claude-plugin/plugin.json`
    - `.claude-plugin/marketplace.json`
 
 3. **Update CHANGELOG.md**:
-   - Add a new version entry in `full-stack-spec-driven-dev/CHANGELOG.md`
+   - Add a new version entry in `plugins/sdd/CHANGELOG.md`
    - Include version number, date, and clear description of changes
    - Categorize changes (Added, Enhanced, Fixed, Removed, etc.)
 
@@ -57,7 +55,7 @@ When making changes to the `full-stack-spec-driven-dev` plugin:
 
 5. **Commit all changes together**:
    ```bash
-   git add full-stack-spec-driven-dev/ .claude-plugin/marketplace.json
+   git add plugins/sdd/ .claude-plugin/marketplace.json
    git commit -m "Descriptive message about changes
 
    🤖 Generated with [Claude Code](https://claude.com/claude-code)
@@ -77,21 +75,21 @@ We follow [Semantic Versioning](https://semver.org/):
 
 ```bash
 # 1. Make your changes
-vim full-stack-spec-driven-dev/agents/backend-dev.md
+vim plugins/sdd/agents/backend-dev.md
 
 # 2. Update version in both locations
-# - full-stack-spec-driven-dev/.claude-plugin/plugin.json: 1.9.0 → 1.9.1
+# - plugins/sdd/.claude-plugin/plugin.json: 1.9.0 → 1.9.1
 # - .claude-plugin/marketplace.json: 1.9.0 → 1.9.1
 
 # 3. Update CHANGELOG.md
-vim full-stack-spec-driven-dev/CHANGELOG.md
+vim plugins/sdd/CHANGELOG.md
 # Add [1.9.1] entry with description
 
 # 4. Test changes
 # Reload plugin in Claude Code and test
 
 # 5. Commit everything together
-git add full-stack-spec-driven-dev/ .claude-plugin/marketplace.json
+git add plugins/sdd/ .claude-plugin/marketplace.json
 git commit -m "Enhance backend-dev agent with X feature, bump to 1.9.1
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
@@ -106,15 +104,15 @@ To add a new plugin to this marketplace:
 ### 1. Create Plugin Directory
 
 ```bash
-mkdir your-plugin-name
-cd your-plugin-name
+mkdir plugins/your-plugin-name
+cd plugins/your-plugin-name
 ```
 
 ### 2. Create Plugin Structure
 
 Required files:
 ```
-your-plugin-name/
+plugins/your-plugin-name/
 ├── .claude-plugin/
 │   └── plugin.json          # Required: plugin manifest
 ├── README.md               # Required: plugin documentation
@@ -124,7 +122,7 @@ your-plugin-name/
 
 Optional directories (as needed):
 ```
-your-plugin-name/
+plugins/your-plugin-name/
 ├── agents/                 # Specialized agents
 ├── commands/               # Slash commands
 ├── skills/                 # Reusable patterns
@@ -164,13 +162,13 @@ Add your plugin to `.claude-plugin/marketplace.json`:
   "plugins": [
     {
       "name": "sdd",
-      "source": "./full-stack-spec-driven-dev",
+      "source": "./plugins/sdd",
       "description": "Spec-driven development methodology for full-stack teams",
-      "version": "1.9.0"
+      "version": "4.1.1"
     },
     {
       "name": "your-plugin-name",
-      "source": "./your-plugin-name",
+      "source": "./plugins/your-plugin-name",
       "description": "Brief description of your plugin",
       "version": "1.0.0"
     }
@@ -183,13 +181,13 @@ Add your plugin to `.claude-plugin/marketplace.json`:
 Add your plugin to the root `README.md` under "Available Plugins":
 
 ```markdown
-### [Your Plugin Name](./your-plugin-name/)
+### [Your Plugin Name](./plugins/your-plugin-name/)
 
 **Version:** 1.0.0
 
 Brief description and key features.
 
-**[Read full documentation →](./your-plugin-name/README.md)**
+**[Read full documentation →](./plugins/your-plugin-name/README.md)**
 ```
 
 ### 6. Commit and Submit
@@ -223,7 +221,7 @@ git push origin your-branch-name
 
 **Two separate changelogs:**
 
-1. **Plugin CHANGELOG** (`full-stack-spec-driven-dev/CHANGELOG.md`):
+1. **Plugin CHANGELOG** (`plugins/sdd/CHANGELOG.md`):
    - Updated when plugin functionality changes
    - Tied to semantic version numbers
    - Covers: agents, commands, skills, templates, scripts

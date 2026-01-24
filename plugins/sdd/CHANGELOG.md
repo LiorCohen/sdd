@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.1.2] - 2026-01-24
+
+### Changed
+
+- **Directory location**: Moved from `full-stack-spec-driven-dev/` to `plugins/sdd/`
+  - Cleaner marketplace structure for multi-plugin support
+  - No changes to plugin functionality
+
 ## [4.1.1] - 2026-01-24
 
 ### Removed
