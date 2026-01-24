@@ -19,7 +19,7 @@ claude plugin install sdd
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on adding new plugins.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ## Resources
 
