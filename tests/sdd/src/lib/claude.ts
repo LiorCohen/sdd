@@ -32,7 +32,7 @@ export const runClaude = async (
   prompt: string,
   workingDir: string,
   timeoutSeconds = 120,
-  verbose = true
+  verbose = false
 ): Promise<ClaudeResult> => {
   await mkdir(TEST_OUTPUT_DIR);
   const outputFile = joinPath(TEST_OUTPUT_DIR, `output-${Date.now()}.json`);
@@ -56,48 +56,52 @@ export const runClaude = async (
   }
 
   const startTime = Date.now();
-  let toolCount = 0;
-  let lastTool = '';
+
+  // State tracking object - mutations confined to this closure
+  const state = {
+    toolCount: 0,
+    lastTool: '',
+    timeoutId: null as NodeJS.Timeout | null,
+  };
 
   return new Promise((resolve, reject) => {
-    const process: ChildProcess = spawn(cmd, args, {
+    const proc: ChildProcess = spawn(cmd, args, {
       cwd: workingDir,
       stdio: ['ignore', 'pipe', 'pipe'],
     });
 
-    const outputLines: string[] = [];
-    let timeoutId: NodeJS.Timeout | null = null;
+    const outputChunks: readonly string[] = [];
 
     const cleanup = (): void => {
-      if (timeoutId) clearTimeout(timeoutId);
+      if (state.timeoutId) clearTimeout(state.timeoutId);
     };
 
     const checkTimeout = (): void => {
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
       if (elapsed > timeoutSeconds) {
         cleanup();
-        process.kill();
+        proc.kill();
         reject(new Error(`Claude timed out after ${timeoutSeconds}s`));
       } else {
-        timeoutId = setTimeout(checkTimeout, 1000);
+        state.timeoutId = setTimeout(checkTimeout, 1000);
       }
     };
 
-    timeoutId = setTimeout(checkTimeout, 1000);
+    state.timeoutId = setTimeout(checkTimeout, 1000);
 
-    process.stdout?.on('data', (data: Buffer) => {
+    proc.stdout?.on('data', (data: Buffer) => {
       const line = data.toString();
-      outputLines.push(line);
+      (outputChunks as string[]).push(line);
 
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
 
       // Check for tool calls
       const toolMatch = /"name":"([^"]+)"/.exec(line);
-      if (toolMatch?.[1] && toolMatch[1] !== lastTool) {
-        toolCount++;
-        lastTool = toolMatch[1];
+      if (toolMatch?.[1] && toolMatch[1] !== state.lastTool) {
+        state.toolCount++;
+        state.lastTool = toolMatch[1];
         if (verbose) {
-          console.log(`  \x1b[1;33m[${elapsed}s]\x1b[0m Tool #${toolCount}: ${lastTool}`);
+          console.log(`  \x1b[1;33m[${elapsed}s]\x1b[0m Tool #${state.toolCount}: ${state.lastTool}`);
         }
       }
 
@@ -108,14 +112,14 @@ export const runClaude = async (
       }
     });
 
-    process.stderr?.on('data', (data: Buffer) => {
-      outputLines.push(data.toString());
+    proc.stderr?.on('data', (data: Buffer) => {
+      (outputChunks as string[]).push(data.toString());
     });
 
-    process.on('close', (code) => {
+    proc.on('close', (code) => {
       cleanup();
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      const output = outputLines.join('');
+      const output = outputChunks.join('');
 
       // Save output for debugging
       writeFile(outputFile, output);
@@ -135,7 +139,7 @@ export const runClaude = async (
       });
     });
 
-    process.on('error', (err) => {
+    proc.on('error', (err) => {
       cleanup();
       reject(err);
     });
@@ -146,51 +150,69 @@ export const runClaude = async (
  * Parse Claude's stream-json output into structured data.
  */
 export const parseClaudeOutput = (output: string): ParsedOutput => {
-  const toolUses: ToolUse[] = [];
-  const skillInvocations: string[] = [];
-  const agentInvocations: string[] = [];
-
   const lines = output.split('\n').filter((line) => line.trim());
 
-  for (const line of lines) {
-    try {
-      const event = JSON.parse(line) as {
-        type?: string;
-        message?: {
-          content?: readonly {
-            type?: string;
-            name?: string;
-            input?: Record<string, unknown>;
-            id?: string;
-          }[];
+  const results = lines.reduce(
+    (acc, line) => {
+      try {
+        const event = JSON.parse(line) as {
+          type?: string;
+          message?: {
+            content?: readonly {
+              type?: string;
+              name?: string;
+              input?: Record<string, unknown>;
+              id?: string;
+            }[];
+          };
         };
-      };
 
-      if (event.type === 'assistant' && event.message?.content) {
-        for (const content of event.message.content) {
-          if (content.type === 'tool_use' && content.name && content.id) {
-            toolUses.push({
-              name: content.name,
-              input: content.input ?? {},
-              id: content.id,
-            });
+        if (event.type === 'assistant' && event.message?.content) {
+          const lineResults = event.message.content.reduce(
+            (contentAcc, content) => {
+              if (content.type === 'tool_use' && content.name && content.id) {
+                const toolUse: ToolUse = {
+                  name: content.name,
+                  input: content.input ?? {},
+                  id: content.id,
+                };
 
-            if (content.name === 'Skill' && content.input?.['skill']) {
-              skillInvocations.push(content.input['skill'] as string);
-            }
+                const skill =
+                  content.name === 'Skill' && content.input?.['skill']
+                    ? [content.input['skill'] as string]
+                    : [];
 
-            if (content.name === 'Task' && content.input?.['subagent_type']) {
-              agentInvocations.push(content.input['subagent_type'] as string);
-            }
-          }
+                const agent =
+                  content.name === 'Task' && content.input?.['subagent_type']
+                    ? [content.input['subagent_type'] as string]
+                    : [];
+
+                return {
+                  toolUses: [...contentAcc.toolUses, toolUse],
+                  skillInvocations: [...contentAcc.skillInvocations, ...skill],
+                  agentInvocations: [...contentAcc.agentInvocations, ...agent],
+                };
+              }
+              return contentAcc;
+            },
+            { toolUses: [] as readonly ToolUse[], skillInvocations: [] as readonly string[], agentInvocations: [] as readonly string[] }
+          );
+
+          return {
+            toolUses: [...acc.toolUses, ...lineResults.toolUses],
+            skillInvocations: [...acc.skillInvocations, ...lineResults.skillInvocations],
+            agentInvocations: [...acc.agentInvocations, ...lineResults.agentInvocations],
+          };
         }
+      } catch {
+        // Skip non-JSON lines
       }
-    } catch {
-      // Skip non-JSON lines
-    }
-  }
+      return acc;
+    },
+    { toolUses: [] as readonly ToolUse[], skillInvocations: [] as readonly string[], agentInvocations: [] as readonly string[] }
+  );
 
-  return { toolUses, skillInvocations, agentInvocations };
+  return results;
 };
 
 /**

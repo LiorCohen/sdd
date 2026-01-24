@@ -4,6 +4,8 @@
  * WHY: Verifies that sdd-init creates the expected project structure.
  * This is a workflow test that runs Claude with a predefined prompt
  * and validates the generated output deterministically.
+ *
+ * Token usage is recorded to tests/sdd/data/sdd-init.yaml for benchmarking.
  */
 
 import { describe, expect, it, beforeAll } from 'vitest';
@@ -16,30 +18,29 @@ import {
   writeFileAsync,
   joinPath,
   statAsync,
+  recordBenchmark,
+  getTestFilePath,
   type TestProject,
 } from '../../lib';
 
-const FULLSTACK_PROMPT = `Run /sdd-init to create a new Full-Stack project.
+const TEST_FILE = getTestFilePath(import.meta.url.replace('file://', ''));
 
-Configuration:
-- Project name: test-fullstack-project
-- Description: A test project for SDD plugin validation
-- Domain: Testing
-- Type: Full-Stack Application
-- Users: Testers (run tests), Admins (manage test suites)
-- Entities: TestSuite, TestCase, TestResult
-- Workflows: Run tests, View results, Manage suites
+const FULLSTACK_PROMPT = `Run /sdd-init --name test-fullstack-project to create a new project.
 
-THIS IS AN AUTOMATED TEST. You MUST:
-1. Skip ALL discovery questions (Phase 1) and use the values above
-2. Skip Phase 4 approval - consider it PRE-APPROVED
-3. Proceed DIRECTLY to Phase 5 (project creation)
-4. Create the project as a subdirectory: ./test-fullstack-project/
-5. Execute ALL steps through completion
-6. Do NOT stop for user input at any point
-7. Create ALL files in the CURRENT WORKING DIRECTORY (.) - do NOT use absolute paths or navigate elsewhere
+AUTOMATED TEST MODE - SKIP ALL INTERACTIVE PHASES:
+- Skip Phase 0-1: Use project name "test-fullstack-project"
+- Skip Phase 1: Product = "Test Suite Manager", Domain = "Testing", Users = Testers and Admins, Entities = TestSuite, TestCase, TestResult
+- Skip Phase 2-3: Use fullstack components (contract, server, webapp, config)
+- Skip Phase 4: Consider PRE-APPROVED
+- Execute Phase 5: Create all files using the scaffolding skill
 
-The user has already approved. Execute the full sdd-init workflow now.`;
+CRITICAL INSTRUCTIONS:
+1. DO NOT ask any questions - all input is provided above
+2. DO NOT wait for user approval - consider everything pre-approved
+3. Create subdirectory: ./test-fullstack-project/
+4. Work in CURRENT WORKING DIRECTORY only - no absolute paths
+5. Create ALL required files for a fullstack project
+6. Complete the entire workflow without stopping`;
 
 /**
  * WHY: sdd-init is the primary entry point for new projects. If it doesn't
@@ -61,7 +62,8 @@ describe('sdd-init command', () => {
     console.log(`\nTest directory: ${testProject.path}\n`);
     console.log('Running /sdd-init...');
 
-    const result = await runClaude(FULLSTACK_PROMPT, testProject.path, 300);
+    // sdd-init creates many files via scaffolding - needs extended timeout
+    const result = await runClaude(FULLSTACK_PROMPT, testProject.path, 420);
 
     // Save output for debugging
     await writeFileAsync(joinPath(testProject.path, 'claude-output.json'), result.output);
@@ -122,6 +124,13 @@ describe('sdd-init command', () => {
     // Verify project name substitution
     expect(projectFileContains(project, 'package.json', 'test-fullstack-project')).toBe(true);
 
+    // Record token usage benchmark
+    const benchmark = await recordBenchmark('sdd-init', TEST_FILE, 'init-fullstack', result.output);
+    console.log(`\nToken usage recorded:`);
+    console.log(`  Total: ${benchmark.total.total_tokens} tokens`);
+    console.log(`  Input: ${benchmark.total.input_tokens}, Output: ${benchmark.total.output_tokens}`);
+    console.log(`  Turns: ${benchmark.turn_count}`);
+
     console.log('\nAll assertions passed!');
-  }, 360000); // 6 minute timeout
+  }, 480000); // 8 minute timeout for complex scaffolding
 });

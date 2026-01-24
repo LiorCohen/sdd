@@ -32,8 +32,8 @@ export const runCommand = async (
       stdio: ['pipe', 'pipe', 'pipe'],
     });
 
-    let stdout = '';
-    let stderr = '';
+    const stdoutChunks: readonly Buffer[] = [];
+    const stderrChunks: readonly Buffer[] = [];
     const timeout = options.timeout ?? 120000;
 
     const timeoutId = setTimeout(() => {
@@ -47,15 +47,17 @@ export const runCommand = async (
     }
 
     proc.stdout?.on('data', (data: Buffer) => {
-      stdout += data.toString();
+      (stdoutChunks as Buffer[]).push(data);
     });
 
     proc.stderr?.on('data', (data: Buffer) => {
-      stderr += data.toString();
+      (stderrChunks as Buffer[]).push(data);
     });
 
     proc.on('close', (code) => {
       clearTimeout(timeoutId);
+      const stdout = Buffer.concat(stdoutChunks as Buffer[]).toString();
+      const stderr = Buffer.concat(stderrChunks as Buffer[]).toString();
       resolve({ exitCode: code ?? 0, stdout, stderr });
     });
 

@@ -62,16 +62,14 @@ export const rmdir = (dirpath: string): Promise<void> =>
 export const mkdtemp = (prefix: string): Promise<string> =>
   fsp.mkdtemp(path.join(os.tmpdir(), prefix));
 
-export const listDir = (dirpath: string): readonly string[] => fs.readdirSync(dirpath);
+export const listDir = (dirpath: string): readonly string[] => [...fs.readdirSync(dirpath)];
 
-export const listDirWithTypes = (dirpath: string): readonly DirEntry[] => {
-  const entries = fs.readdirSync(dirpath, { withFileTypes: true });
-  return entries.map((e) => ({
+export const listDirWithTypes = (dirpath: string): readonly DirEntry[] =>
+  fs.readdirSync(dirpath, { withFileTypes: true }).map((e) => ({
     name: e.name,
     isDirectory: e.isDirectory(),
     isFile: e.isFile(),
   }));
-};
 
 export const stat = (filepath: string): fs.Stats | null => {
   try {

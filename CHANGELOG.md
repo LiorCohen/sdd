@@ -12,6 +12,34 @@ Changes to the marketplace infrastructure (not plugin-specific changes).
   - Establishes deterministic LLM testing patterns
   - Includes WHY comment requirements and file size guidelines
 
+- **Benchmark module**: New `benchmark.ts` for tracking token usage during tests
+  - Per-model usage tracking (Sonnet, Opus, Haiku)
+  - JSON report generation in test output directory
+
+### Changed
+
+- **Test organization**: Moved `database-component` tests from `unit/` to `integration/`
+  - Better reflects their nature (scaffolding involves file system operations)
+
+- **Claude runner**: Changed `verbose` default to `false` in `runClaude()`
+  - Suppresses "Tool..." output during normal test runs
+  - Pass `verbose=true` when debugging specific tests
+
+### Fixed
+
+- **sdd-new-change workflow test**: Removed incorrect agent detection assertions
+  - Command uses `change-creation` skill, not Task tool agents
+  - Test now verifies SPEC.md and PLAN.md file creation
+
+- **sdd-init workflow test**: Increased timeout and simplified prompt
+  - Timeout increased from 300s to 420s (complex scaffolding operation)
+  - Simplified prompt to reduce ambiguity
+
+### Removed
+
+- **Linting-style tests**: Deleted tests that validated format rather than behavior
+  - `skill-structure.test.ts` - was just checking file format
+
 ### Refactored
 
 - **Test infrastructure**: Reorganized `tests/sdd/src/` with lib/tests separation

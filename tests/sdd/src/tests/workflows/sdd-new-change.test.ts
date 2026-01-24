@@ -1,25 +1,29 @@
 /**
  * Workflow Test: /sdd-new-change command
  *
- * WHY: Verifies that sdd-new-change correctly invokes the spec-writer and
- * planner agents in the right order. This ensures the SDD workflow produces
+ * WHY: Verifies that sdd-new-change correctly creates SPEC.md and PLAN.md
+ * with proper structure and content. This ensures the SDD workflow produces
  * valid specifications and implementation plans.
+ *
+ * Token usage is recorded to tests/sdd/data/sdd-new-change.yaml for benchmarking.
  */
 
 import { describe, expect, it, beforeAll } from 'vitest';
 import {
   createTestProject,
   runClaude,
-  agentWasUsed,
-  agentOrder,
   projectFindDir,
   writeFileAsync,
   mkdir,
   joinPath,
   statAsync,
   readFileAsync,
+  recordBenchmark,
+  getTestFilePath,
   type TestProject,
 } from '../../lib';
+
+const TEST_FILE = getTestFilePath(import.meta.url.replace('file://', ''));
 
 const NEW_CHANGE_PROMPT = `Run /sdd-new-change --type feature --name user-auth to create a new change specification.
 
@@ -36,22 +40,16 @@ When prompted, provide these answers:
 - Domain: Core
 - Description: Basic user authentication allowing users to sign up, log in, and log out using email and password credentials.
 
-Proceed through the entire workflow:
-1. Create the SPEC.md using the spec-writer agent
-2. Create the PLAN.md using the planner agent
-
 IMPORTANT:
 - Do not ask any questions. Use the values provided above.
-- You MUST use the spec-writer agent to create the spec.
-- You MUST use the planner agent to create the plan.
-- Complete both the spec and the plan before finishing.
+- Complete both the SPEC.md and PLAN.md before finishing.
 - Create ALL files in the CURRENT WORKING DIRECTORY (.) - do NOT use absolute paths or navigate elsewhere.
 - The specs/ directory already exists in the current directory.`;
 
 /**
  * WHY: sdd-new-change is the primary workflow for creating new feature specs.
- * If agents aren't invoked correctly, specifications will be malformed or
- * missing critical information.
+ * If the workflow fails, specifications will be malformed or missing critical
+ * information, breaking the entire SDD process.
  */
 describe('sdd-new-change command', () => {
   let testProject: TestProject;
@@ -93,11 +91,11 @@ The primary business domain.
   });
 
   /**
-   * WHY: The spec-writer and planner agents must be invoked in the correct
-   * order (spec-writer first, then planner). Spec-writer creates the SPEC.md
-   * which planner needs to create the PLAN.md. Wrong order = broken workflow.
+   * WHY: The change-creation workflow must create SPEC.md and PLAN.md with
+   * proper structure and content. These files define the specification and
+   * implementation plan for the feature.
    */
-  it('invokes spec-writer and planner agents in correct order', async () => {
+  it('creates SPEC.md and PLAN.md with proper structure', async () => {
     console.log(`\nTest project directory: ${testProject.path}\n`);
     console.log('Created minimal project structure\n');
     console.log('Running /sdd-new-change...');
@@ -106,15 +104,6 @@ The primary business domain.
 
     // Save output for debugging
     await writeFileAsync(joinPath(testProject.path, 'claude-output.json'), result.output);
-
-    console.log('\nVerifying agent invocations...\n');
-
-    // Verify agents were used
-    expect(agentWasUsed(result, 'spec-writer')).toBe(true);
-    expect(agentWasUsed(result, 'planner')).toBe(true);
-
-    // Verify agent order (spec-writer should come before planner)
-    expect(agentOrder(result, 'spec-writer', 'planner')).toBe(true);
 
     console.log('\nVerifying generated files...\n');
 
@@ -141,6 +130,18 @@ The primary business domain.
 
     const planContent = await readFileAsync(planFile);
     expect(planContent).toContain('sdd_version:');
+
+    // Record token usage benchmark
+    const benchmark = await recordBenchmark(
+      'sdd-new-change',
+      TEST_FILE,
+      'new-change-feature',
+      result.output
+    );
+    console.log(`\nToken usage recorded:`);
+    console.log(`  Total: ${benchmark.total.total_tokens} tokens`);
+    console.log(`  Input: ${benchmark.total.input_tokens}, Output: ${benchmark.total.output_tokens}`);
+    console.log(`  Turns: ${benchmark.turn_count}`);
 
     console.log('\nAll assertions passed!');
   }, 360000); // 6 minute timeout
