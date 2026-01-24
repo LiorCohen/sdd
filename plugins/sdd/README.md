@@ -26,6 +26,8 @@ Specs → Plans → Implementation → Tests → Validation
 - **bugfix** - Fix existing behavior with streamlined 4-phase process
 - **refactor** - Code restructuring with streamlined 4-phase process
 
+**Epics**: Large changes that span multiple components can be structured as epics with phase-based PRs. Use epics when a change has 10+ acceptance criteria, touches 3+ components, or naturally splits into multiple independent deliverables. See `skills/epic-planning/` for templates.
+
 **Git as State Machine**: Pull requests represent draft specs. Merging to main activates them. No separate "draft" status field needed.
 
 **Issue Tracking Required**: Every spec must reference a tracking issue (JIRA, GitHub, etc.) in the frontmatter `issue` field.

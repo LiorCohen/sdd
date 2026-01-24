@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.2.1] - 2026-01-24
+
+### Added
+
+- **README.md**: Added documentation for epics (large multi-phase changes)
+  - Describes when to use epics vs regular changes
+  - References epic-planning skill for templates
+
 ## [4.2.0] - 2026-01-24
 
 ### Changed
