@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.2.11] - 2026-01-24
+
+### Changed
+
+- **CLAUDE.md**: Complete rewrite - focused on guidance for Claude, not implementation details
+  - Reduced from ~253 lines to ~50 lines
+  - Removed: Architecture details (CMDO, MVVM, telemetry) - belong in agent files
+  - Removed: Spec file format, tech stack, development workflow - duplicated README/templates
+  - Removed: Version management instructions - belong in commit skill
+  - Kept: Commands, agents, key directories, core rules
+  - Proper resolution for context window management
+
 ## [4.2.10] - 2026-01-24
 
 ### Changed
