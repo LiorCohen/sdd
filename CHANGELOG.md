@@ -6,6 +6,12 @@ Changes to the marketplace infrastructure (not plugin-specific changes).
 
 ### Changed
 
+- **Test prompts**: Embedded prompts as constants in test files
+  - Removed separate `prompts/` directory with `.txt` files
+  - Each test file now contains its prompts as multiline string constants
+  - Removed `PROMPTS_DIR` export from `test-helpers.ts`
+  - Improves test readability and maintainability
+
 - **Test infrastructure**: Migrated from Python/pytest to TypeScript/Vitest
   - `test-helpers.ts` replaces `test_helpers.py`
   - All test files migrated to TypeScript (`.test.ts`)

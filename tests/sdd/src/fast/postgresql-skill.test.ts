@@ -15,7 +15,7 @@ import { spawn } from 'node:child_process';
 import * as fsp from 'node:fs/promises';
 import * as path from 'node:path';
 import { describe, expect, it, beforeAll, afterAll, beforeEach } from 'vitest';
-import { createTestProject, runClaude, type TestProject, PROMPTS_DIR } from '../test-helpers.js';
+import { createTestProject, runClaude, type TestProject } from '../test-helpers.js';
 
 // Container name for tests
 const PG_CONTAINER = 'sdd-postgres-test';
@@ -23,6 +23,109 @@ const PG_USER = 'testuser';
 const PG_PASSWORD = 'testpass';
 const PG_DATABASE = 'testdb';
 const PG_PORT = 5433; // Use non-standard port to avoid conflicts
+
+// ============================================================================
+// Test Prompts
+// ============================================================================
+
+const DEPLOY_DOCKER_PROMPT = `Using the postgresql skill, create a Docker Compose configuration for local PostgreSQL development.
+
+Requirements:
+- PostgreSQL 16 image
+- Database name: myapp
+- User: app_user
+- Password: dev_password
+- Expose port 5432
+- Persistent volume for data
+- Health check using pg_isready
+
+Create the docker-compose.yml file in the current directory.
+
+IMPORTANT:
+- Use the postgresql skill's deployment reference for best practices
+- Include health check configuration
+- Make it suitable for local development`;
+
+const CREATE_SCHEMA_PROMPT = `Using the postgresql skill, create a database schema for a users table.
+
+Requirements:
+- Table name: users
+- Columns:
+  - id: auto-incrementing primary key (use IDENTITY)
+  - email: unique, not null, varchar(255)
+  - name: not null, varchar(100)
+  - created_at: timestamptz, not null, default now()
+  - updated_at: timestamptz, not null, default now()
+- Add an index on email column
+- Follow postgresql skill best practices for table creation
+
+Create the SQL file at: db/migrations/001_create_users.sql
+
+IMPORTANT:
+- Use BIGINT GENERATED ALWAYS AS IDENTITY for the primary key
+- Include all appropriate constraints
+- The SQL must be executable via psql`;
+
+const SEED_DATA_PROMPT = `Using the postgresql skill, create seed data for the users table.
+
+The users table has columns: id, email, name, created_at, updated_at
+
+Requirements:
+- Insert 10 sample users with realistic data
+- Use generate_series or similar for efficient bulk insert
+- Make the seed idempotent using ON CONFLICT
+- Include varied timestamps for created_at
+
+Create the SQL file at: db/seeds/seed_users.sql
+
+IMPORTANT:
+- Follow the postgresql skill's seed-data reference
+- Use ON CONFLICT DO NOTHING or DO UPDATE for idempotency
+- The SQL must be executable via psql
+- Do not use external data files, generate data in SQL`;
+
+const MIGRATION_PLAN_PROMPT = `Using the postgresql skill, create a migration to add a phone column to the users table.
+
+The users table already exists with columns: id, email, name, created_at, updated_at
+
+Migration requirements:
+- Add a new column: phone VARCHAR(20), nullable
+- Add an index on the phone column (use CONCURRENTLY if possible)
+- Follow safe migration patterns from the postgresql skill
+
+Create the migration file at: db/migrations/002_add_user_phone.sql
+
+IMPORTANT:
+- Follow the postgresql skill's schema-management reference for safe migrations
+- Add column as nullable first (this is safe and fast)
+- Use CREATE INDEX CONCURRENTLY if the migration supports it
+- The SQL must be executable via psql`;
+
+const BACKUP_PROMPT = `Using the postgresql skill, create a backup script for the database.
+
+Requirements:
+- Create a shell script that backs up the database using pg_dump
+- Use custom format (-Fc) for the backup
+- Include a timestamp in the backup filename
+- Store backups in a ./backups directory
+- Add basic error handling
+
+Create the script at: scripts/backup.sh
+
+Database connection info for reference:
+- Host: localhost
+- Port: 5432
+- User: app_user
+- Database: myapp
+
+IMPORTANT:
+- Follow the postgresql skill's deployment reference for pg_dump usage
+- Make the script executable-ready (proper shebang, etc.)
+- Include comments explaining what each section does`;
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
 
 /**
  * Run a command and return the result.
@@ -182,6 +285,10 @@ const findSqlFiles = async (dir: string): Promise<readonly string[]> => {
   return files;
 };
 
+// ============================================================================
+// Tests
+// ============================================================================
+
 describe('PostgreSQL Skill Tests', () => {
   let dockerIsAvailable = false;
 
@@ -197,9 +304,7 @@ describe('PostgreSQL Skill Tests', () => {
     });
 
     it('generates Docker deployment commands', async () => {
-      const prompt = await fsp.readFile(path.join(PROMPTS_DIR, 'postgresql-deploy-docker.txt'), 'utf-8');
-
-      const result = await runClaude(prompt, testProject.path, 180);
+      const result = await runClaude(DEPLOY_DOCKER_PROMPT, testProject.path, 180);
       await fsp.writeFile(path.join(testProject.path, 'claude-output.json'), result.output);
 
       expect(result.exitCode).toBe(0);
@@ -247,9 +352,7 @@ describe('PostgreSQL Skill Tests', () => {
     });
 
     it.skipIf(!dockerIsAvailable)('creates users table with proper constraints', async () => {
-      const prompt = await fsp.readFile(path.join(PROMPTS_DIR, 'postgresql-create-schema.txt'), 'utf-8');
-
-      const result = await runClaude(prompt, testProject.path, 180);
+      const result = await runClaude(CREATE_SCHEMA_PROMPT, testProject.path, 180);
       await fsp.writeFile(path.join(testProject.path, 'claude-output.json'), result.output);
 
       expect(result.exitCode).toBe(0);
@@ -315,9 +418,7 @@ describe('PostgreSQL Skill Tests', () => {
     });
 
     it.skipIf(!dockerIsAvailable)('seeds users data', async () => {
-      const prompt = await fsp.readFile(path.join(PROMPTS_DIR, 'postgresql-seed-data.txt'), 'utf-8');
-
-      const result = await runClaude(prompt, testProject.path, 180);
+      const result = await runClaude(SEED_DATA_PROMPT, testProject.path, 180);
       await fsp.writeFile(path.join(testProject.path, 'claude-output.json'), result.output);
 
       expect(result.exitCode).toBe(0);
@@ -380,9 +481,7 @@ describe('PostgreSQL Skill Tests', () => {
     });
 
     it.skipIf(!dockerIsAvailable)('creates migration to add column', async () => {
-      const prompt = await fsp.readFile(path.join(PROMPTS_DIR, 'postgresql-migration-plan.txt'), 'utf-8');
-
-      const result = await runClaude(prompt, testProject.path, 180);
+      const result = await runClaude(MIGRATION_PLAN_PROMPT, testProject.path, 180);
       await fsp.writeFile(path.join(testProject.path, 'claude-output.json'), result.output);
 
       expect(result.exitCode).toBe(0);
@@ -426,9 +525,7 @@ describe('PostgreSQL Skill Tests', () => {
     });
 
     it('generates backup commands', async () => {
-      const prompt = await fsp.readFile(path.join(PROMPTS_DIR, 'postgresql-backup.txt'), 'utf-8');
-
-      const result = await runClaude(prompt, testProject.path, 180);
+      const result = await runClaude(BACKUP_PROMPT, testProject.path, 180);
       await fsp.writeFile(path.join(testProject.path, 'claude-output.json'), result.output);
 
       expect(result.exitCode).toBe(0);

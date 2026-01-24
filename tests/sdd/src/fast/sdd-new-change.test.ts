@@ -13,8 +13,32 @@ import {
   agentOrder,
   projectFindDir,
   type TestProject,
-  PROMPTS_DIR,
 } from '../test-helpers.js';
+
+const NEW_CHANGE_PROMPT = `Run /sdd-new-change --type feature --name user-auth to create a new change specification.
+
+Change name: user-auth
+Change type: feature
+Issue reference: TEST-001
+Domain: Core
+Description: User authentication with email and password
+
+When prompted, provide these answers:
+- Change name: user-auth
+- Type: feature
+- Issue: TEST-001
+- Domain: Core
+- Description: Basic user authentication allowing users to sign up, log in, and log out using email and password credentials.
+
+Proceed through the entire workflow:
+1. Create the SPEC.md using the spec-writer agent
+2. Create the PLAN.md using the planner agent
+
+IMPORTANT:
+- Do not ask any questions. Use the values provided above.
+- You MUST use the spec-writer agent to create the spec.
+- You MUST use the planner agent to create the plan.
+- Complete both the spec and the plan before finishing.`;
 
 describe('sdd-new-change command', () => {
   let testProject: TestProject;
@@ -56,13 +80,11 @@ The primary business domain.
   });
 
   it('invokes spec-writer and planner agents', async () => {
-    const prompt = await fsp.readFile(path.join(PROMPTS_DIR, 'sdd-new-change.txt'), 'utf-8');
-
     console.log(`\nTest project directory: ${testProject.path}\n`);
     console.log('Created minimal project structure\n');
     console.log('Running /sdd-new-change...');
 
-    const result = await runClaude(prompt, testProject.path, 300);
+    const result = await runClaude(NEW_CHANGE_PROMPT, testProject.path, 300);
 
     // Save output for debugging
     await fsp.writeFile(path.join(testProject.path, 'claude-output.json'), result.output);

@@ -13,8 +13,28 @@ import {
   projectIsFile,
   projectFileContains,
   type TestProject,
-  PROMPTS_DIR,
 } from '../test-helpers.js';
+
+const FULLSTACK_PROMPT = `Run /sdd-init to create a new Full-Stack project.
+
+Configuration:
+- Project name: test-fullstack-project
+- Description: A test project for SDD plugin validation
+- Domain: Testing
+- Type: Full-Stack Application
+- Users: Testers (run tests), Admins (manage test suites)
+- Entities: TestSuite, TestCase, TestResult
+- Workflows: Run tests, View results, Manage suites
+
+THIS IS AN AUTOMATED TEST. You MUST:
+1. Skip ALL discovery questions (Phase 1) and use the values above
+2. Skip Phase 4 approval - consider it PRE-APPROVED
+3. Proceed DIRECTLY to Phase 5 (project creation)
+4. Create the project as a subdirectory: ./test-fullstack-project/
+5. Execute ALL steps through completion
+6. Do NOT stop for user input at any point
+
+The user has already approved. Execute the full sdd-init workflow now.`;
 
 describe('sdd-init command', () => {
   let testProject: TestProject;
@@ -24,12 +44,10 @@ describe('sdd-init command', () => {
   });
 
   it('creates fullstack project structure', async () => {
-    const prompt = await fsp.readFile(path.join(PROMPTS_DIR, 'sdd-init-fullstack.txt'), 'utf-8');
-
     console.log(`\nTest directory: ${testProject.path}\n`);
     console.log('Running /sdd-init...');
 
-    const result = await runClaude(prompt, testProject.path, 300);
+    const result = await runClaude(FULLSTACK_PROMPT, testProject.path, 300);
 
     // Save output for debugging
     await fsp.writeFile(path.join(testProject.path, 'claude-output.json'), result.output);

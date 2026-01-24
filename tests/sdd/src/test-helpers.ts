@@ -18,7 +18,6 @@ export const TESTS_DIR = path.resolve(SRC_DIR, '..'); // tests/sdd/
 export const MARKETPLACE_DIR = path.resolve(TESTS_DIR, '../..'); // repository root
 export const PLUGIN_DIR = path.join(MARKETPLACE_DIR, 'full-stack-spec-driven-dev');
 export const SKILLS_DIR = path.join(PLUGIN_DIR, 'skills');
-export const PROMPTS_DIR = path.join(SRC_DIR, 'prompts'); // tests/sdd/src/prompts/
 export const TEST_OUTPUT_DIR = process.env['TEST_OUTPUT_DIR'] ?? '/tmp/sdd-tests';
 
 export interface ClaudeResult {
