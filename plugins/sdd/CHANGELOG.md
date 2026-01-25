@@ -1,5 +1,29 @@
 # Changelog
 
+## [4.2.12] - 2026-01-25
+
+### Added
+
+- **product-discovery skill**: Interactive product discovery with adaptive questioning
+  - Extracts problem, users, workflows, entities, integrations, constraints, scope
+  - Supports external spec pre-population
+- **component-recommendation skill**: Technical component recommendation with dependency validation
+  - Maps product requirements to architecture
+  - Handles multiple component instances (server:api, webapp:admin)
+- **domain-population skill**: Populate domain specs from discovery results
+  - TypeScript script for deterministic file creation
+  - Creates glossary entries, entity definitions, use-case stubs
+- **external-spec-integration skill**: Process external specs into change specifications
+  - Orchestrates spec-decomposition and change-creation
+  - Handles user adjustment loop (merge/split/rename)
+
+### Changed
+
+- **sdd-init command**: Refactored from 831 to 347 lines (58% reduction)
+  - Now an orchestrator that invokes specialized skills
+  - Removed inline implementation details
+  - Cleaner separation of concerns
+
 ## [4.2.11] - 2026-01-24
 
 ### Changed
