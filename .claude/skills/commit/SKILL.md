@@ -208,6 +208,23 @@ Infrastructure file changed? → Add Infrastructure entry to CHANGELOG.md → St
 5. **Wrong commit format** - Must include Co-Authored-By
 6. **Staging incomplete** - Must include all version files in same commit
 7. **Wrong date in CHANGELOG** - Use today's date
+8. **Amending pushed commits** - NEVER amend commits that have been pushed to remote
+
+## Amending vs New Commit
+
+**CRITICAL:** Before amending, check if the commit has been pushed:
+
+```bash
+git log origin/main..HEAD --oneline
+```
+
+- **If the commit appears in this list** → Safe to amend (not pushed yet)
+- **If the commit does NOT appear** → It's been pushed, create a NEW commit instead
+
+**When a pushed commit needs fixing:**
+1. Do NOT use `git commit --amend`
+2. Create a new commit with a clear message explaining it fixes the previous commit
+3. Example: `Fix: Correct typo in previous commit (a3614c1)`
 
 ## Verification Commands
 
