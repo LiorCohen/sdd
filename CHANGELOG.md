@@ -13,6 +13,24 @@ Changes to the marketplace infrastructure (not plugin-specific changes).
   - Includes style guide for pain/outcome messaging and tutorial structure
   - Uses Opus model for quality prose and user empathy
 
+- **docs/ directory**: User-facing documentation at marketplace level
+  - `getting-started.md` - First project tutorial
+  - `workflows.md` - Feature, bugfix, refactor workflow guides
+  - `commands.md` - Command reference
+  - `agents.md` - Agent overview for users
+
+### Changed
+
+- **README.md**: Consolidated plugin README into root README
+  - Single entry point with hook, value prop, and quick start
+  - Links to `docs/` for in-depth tutorials
+  - Removed separate plugin-level README
+
+### Removed
+
+- **plugins/sdd/README.md**: Consolidated into root README
+- **plugins/sdd/CLAUDE.md**: Developer guidance now only at root level
+
 ---
 
 ## 2026-01-24
