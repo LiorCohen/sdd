@@ -2,7 +2,7 @@
 
 ## Tech Stack
 
-- **API Contract:** OpenAPI 3.x in `components/contract/`
+- **API Contract:** OpenAPI 3.x (path depends on contract component name in `sdd-settings.yaml`)
 - **Backend:** Node.js 20, TypeScript 5, Express (CMDO architecture)
 - **Frontend:** React 18, TypeScript 5, Vite (MVVM architecture)
 - **Database:** PostgreSQL 15
@@ -13,14 +13,14 @@
 
 | Component | Path | Purpose |
 |-----------|------|---------|
-| Config | `components/config/` | Environment configuration |
-| Contract | `components/contract/` | OpenAPI spec, type generation |
-| Server | `components/server*/` | Backend (CMDO architecture) |
-| Webapp | `components/webapp*/` | React frontend (MVVM) |
-| Helm | `components/helm/` | Kubernetes deployment |
-| Testing | `components/testing/` | Testkube test definitions |
+| Config | `config/` | Environment configuration (project root, not a component) |
+| Contract | `components/{name}/` | OpenAPI spec, type generation |
+| Server | `components/{name}/` | Backend (CMDO architecture) |
+| Webapp | `components/{name}/` | React frontend (MVVM) |
+| Helm | `components/{name}/` | Kubernetes deployment |
+| Testing | `components/{name}/` | Testkube test definitions |
 
-Note: Server and webapp components support multiple named instances (e.g., `server-api/`, `webapp-admin/`).
+Note: Component directory names are determined by `{type, name}` in `sdd-settings.yaml`. The directory is `components/{type}/` when name equals type, or `components/{type}-{name}/` when they differ (e.g., `components/contract-task-api/`, `components/server-admin/`).
 
 ## Backend Architecture (CMDO)
 
@@ -47,7 +47,7 @@ Config → [All layers] → Dependencies
 |------|---------|
 | `specs/INDEX.md` | Registry of all specs |
 | `specs/changes/` | Change specifications (features, bugfixes, refactors) |
-| `components/contract/openapi.yaml` | API contract |
+| `components/{contract-component}/openapi.yaml` | API contract (path depends on component name) |
 | `sdd-settings.yaml` | Project settings (components, domains) |
 
 ## Claude Code Commands

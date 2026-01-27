@@ -17,9 +17,9 @@ Settings file: `sdd-settings.yaml` (project root, git-tracked)
 
 ```yaml
 sdd:
-  plugin_version: "3.5.3"      # SDD plugin version that created this project
-  initialized_at: "2026-01-23" # Date project was initialized
-  last_updated: "2026-01-23"   # Date settings were last modified
+  plugin_version: "4.4.0"      # SDD plugin version that created this project
+  initialized_at: "2026-01-27" # Date project was initialized
+  last_updated: "2026-01-27"   # Date settings were last modified
 
 project:
   name: "my-app"
@@ -28,69 +28,49 @@ project:
   type: "fullstack"            # fullstack | backend | frontend | custom
 
 components:
-  # Single-instance components (boolean)
-  contract: true
-  config: true
-  database: true
-  helm: false
-  testing: true
-  cicd: true
-
-  # Multi-instance components (list of names, or true for single unnamed instance)
-  server: true                 # Single server: components/server/
-  webapp: true                 # Single webapp: components/webapp/
-
-  # OR for multiple instances:
-  # server:                    # Multiple servers
-  #   - api                    # components/server-api/
-  #   - worker                 # components/server-worker/
-  # webapp:                    # Multiple webapps
-  #   - admin                  # components/webapp-admin/
-  #   - public                 # components/webapp-public/
+  - type: contract
+    name: task-api
+  - type: server
+    name: task-service
+  - type: webapp
+    name: task-dashboard
+  - type: database
+    name: task-db
+  - type: testing
+    name: task-tests
+  - type: cicd
+    name: task-ci
 ```
+
+**Config** is not a component. It always exists at `config/` in the project root and is created automatically.
 
 ## Component Format
 
-### Single-Instance Components
+Components are a list of objects. Each object has two required properties:
 
-These components only support one instance:
+| Property | Required | Description |
+|----------|----------|-------------|
+| `type` | Yes | One of: `contract`, `server`, `webapp`, `database`, `helm`, `testing`, `cicd` |
+| `name` | Yes | Instance name (lowercase, hyphens only) |
 
-| Component | Format | Example |
-|-----------|--------|---------|
-| `contract` | `true/false` | `contract: true` |
-| `config` | `true/false` | `config: true` |
-| `database` | `true/false` | `database: true` |
-| `helm` | `true/false` | `helm: false` |
-| `testing` | `true/false` | `testing: true` |
-| `cicd` | `true/false` | `cicd: true` |
+**Directory derivation:** `components/{type}-{name}/` when type ≠ name, `components/{type}/` when type = name.
 
-### Multi-Instance Components
-
-`server` and `webapp` support multiple named instances:
-
-**Single instance (default):**
-```yaml
-server: true    # Creates components/server/
-webapp: true    # Creates components/webapp/
-```
+**Single instance (type = name):**
+- `{type: server, name: server}` → `components/server/`
 
 **Multiple instances:**
-```yaml
-server:         # Creates components/server-api/ and components/server-worker/
-  - api
-  - worker
-webapp:         # Creates components/webapp-admin/ and components/webapp-public/
-  - admin
-  - public
-```
+- `{type: server, name: order-service}` → `components/server-order-service/`
+- `{type: server, name: notification-worker}` → `components/server-notification-worker/`
 
-**Mixed:**
-```yaml
-server:
-  - api
-  - worker
-webapp: true    # Single webapp is fine with multiple servers
-```
+### Naming Rules
+
+- Names must be lowercase
+- Use hyphens, not underscores
+- No spaces allowed
+- Names should be domain-specific and descriptive, not generic
+  - Good: `order-service`, `analytics-db`, `customer-portal`, `task-api`
+  - Avoid: `api`, `public`, `primary`, `main`
+- When only one instance of a type exists, name = type is technically valid but discouraged — it's not future-proof if a second instance is added later. Prefer a domain-specific name even for single instances.
 
 ## Operations
 
@@ -107,7 +87,7 @@ Initialize a new settings file.
 | `project_description` | Yes | Project description |
 | `project_domain` | Yes | Primary domain |
 | `project_type` | Yes | One of: `fullstack`, `backend`, `frontend`, `custom` |
-| `components` | Yes | Object with component configuration |
+| `components` | Yes | List of `{type, name}` objects |
 
 **Workflow:**
 
@@ -131,14 +111,9 @@ Initialize a new settings file.
      type: <project_type>
 
    components:
-     contract: <components.contract or false>
-     server: <components.server or false>      # Can be true, false, or list
-     webapp: <components.webapp or false>      # Can be true, false, or list
-     database: <components.database or false>
-     config: <components.config or false>
-     helm: <components.helm or false>
-     testing: <components.testing or false>
-     cicd: <components.cicd or false>
+     - type: <type>
+       name: <name>
+     # ... for each component
    ```
 
 4. Write to `sdd-settings.yaml` with proper YAML formatting
@@ -153,20 +128,22 @@ Initialize a new settings file.
 
 ```
 Input:
-  plugin_version: "3.5.3"
+  plugin_version: "4.4.0"
   project_name: "my-app"
   project_description: "A task management SaaS application"
   project_domain: "Task Management"
   project_type: "fullstack"
   components:
-    contract: true
-    server: true
-    webapp: true
-    database: false
-    config: true
-    helm: false
-    testing: true
-    cicd: true
+    - type: contract
+      name: task-api
+    - type: server
+      name: task-service
+    - type: webapp
+      name: task-dashboard
+    - type: testing
+      name: task-tests
+    - type: cicd
+      name: task-ci
 
 Output:
   success: true
@@ -177,24 +154,36 @@ Output:
 
 ```
 Input:
-  plugin_version: "3.5.3"
+  plugin_version: "4.4.0"
   project_name: "my-platform"
   project_description: "A multi-tenant SaaS platform"
   project_domain: "Platform"
   project_type: "custom"
   components:
-    contract: true
-    server:
-      - api
-      - worker
-      - scheduler
-    webapp:
-      - admin
-      - public
-    config: true
-    helm: true
-    testing: true
-    cicd: true
+    - type: contract
+      name: customer-api
+    - type: contract
+      name: back-office-api
+    - type: server
+      name: order-service
+    - type: server
+      name: notification-worker
+    - type: server
+      name: task-scheduler
+    - type: webapp
+      name: back-office
+    - type: webapp
+      name: customer-portal
+    - type: database
+      name: app-db
+    - type: database
+      name: analytics-db
+    - type: helm
+      name: platform-deploy
+    - type: testing
+      name: platform-tests
+    - type: cicd
+      name: platform-ci
 
 Output:
   success: true
@@ -223,7 +212,7 @@ None (reads from standard location)
    - `sdd.initialized_at`
    - `project.name`
    - `project.type`
-   - `components` (object)
+   - `components` (list)
 
 4. Return parsed settings
 
@@ -233,22 +222,25 @@ None (reads from standard location)
 exists: true
 settings:
   sdd:
-    plugin_version: "3.5.3"
-    initialized_at: "2026-01-23"
-    last_updated: "2026-01-23"
+    plugin_version: "4.4.0"
+    initialized_at: "2026-01-27"
+    last_updated: "2026-01-27"
   project:
     name: "my-app"
     description: "A task management SaaS application"
     domain: "Task Management"
     type: "fullstack"
   components:
-    contract: true
-    server: true
-    webapp: true
-    config: true
-    helm: false
-    testing: true
-    cicd: true
+    - type: contract
+      name: task-api
+    - type: server
+      name: task-service
+    - type: webapp
+      name: task-dashboard
+    - type: testing
+      name: task-tests
+    - type: cicd
+      name: task-ci
 ```
 
 **Error Output (file not found):**
@@ -278,6 +270,7 @@ Merge partial updates into existing settings.
 2. Deep merge `updates` into current settings:
    - Top-level keys in `updates` replace corresponding keys
    - Nested objects are merged recursively
+   - `components` list: replaces the entire list (no list merging)
    - `null` values remove keys
 
 3. Update `sdd.last_updated` to current date
@@ -286,20 +279,25 @@ Merge partial updates into existing settings.
 
 5. Return updated settings
 
-**Example - Add a server component:**
+**Example - Replace components list:**
 
 ```
 Input:
   updates:
     components:
-      server:
-        - api
-        - worker
+      - type: contract
+        name: task-api
+      - type: server
+        name: order-service
+      - type: server
+        name: notification-worker
+      - type: webapp
+        name: task-dashboard
 
 Output:
   success: true
   settings:
-    # ... (server is now a list, last_updated changed)
+    # ... (components is now the new list, last_updated changed)
 ```
 
 ---
@@ -315,22 +313,23 @@ None (reads from settings)
 **Output:**
 
 ```yaml
+config_dir: "config"                              # always present, at project root
 directories:
-  contract: "components/contract"           # or null if disabled
-  config: "components/config"               # always present
-  database: "components/database"           # or null if disabled
-  server:                                   # list of server directories
-    - "components/server"                   # if server: true
-    # OR
-    - "components/server-api"               # if server: [api, worker]
-    - "components/server-worker"
-  webapp:                                   # list of webapp directories
-    - "components/webapp"                   # if webapp: true
-    # OR
-    - "components/webapp-admin"             # if webapp: [admin, public]
-    - "components/webapp-public"
-  helm: null                                # null if disabled
-  testing: "components/testing"             # or null if disabled
+  - type: contract
+    name: task-api
+    dir: "components/contract-task-api"
+  - type: server
+    name: order-service
+    dir: "components/server-order-service"
+  - type: server
+    name: notification-worker
+    dir: "components/server-notification-worker"
+  - type: webapp
+    name: task-dashboard
+    dir: "components/webapp-task-dashboard"
+  - type: database
+    name: app-db
+    dir: "components/database-app-db"
 ```
 
 This operation is useful for agents that need to know which directories exist.
@@ -359,28 +358,8 @@ Valid values for `project.type`:
 
 ### Component Values
 
-**Single-instance components** (boolean only):
-- `contract` - OpenAPI specification
-- `config` - YAML configuration
-- `database` - PostgreSQL migrations and seeds
-- `helm` - Kubernetes Helm charts
-- `testing` - Test setup (Testkube)
-- `cicd` - GitHub Actions workflows
+Each component is an object with:
+- `type` (required) — one of: `contract`, `server`, `webapp`, `database`, `helm`, `testing`, `cicd`
+- `name` (required) — lowercase, hyphens only, no spaces. Should be domain-specific and descriptive (e.g., `order-service`, `user-dashboard`), not generic (e.g., avoid `api`, `public`, `primary`). When there's only one instance of a type, name = type is technically valid but discouraged — it's not future-proof if a second instance is added later. Prefer a domain-specific name even for single instances.
 
-**Multi-instance components** (boolean or list):
-- `server` - Node.js backend(s)
-  - `true` → single `components/server/`
-  - `false` → no server
-  - `["api", "worker"]` → `components/server-api/`, `components/server-worker/`
-- `webapp` - React frontend(s)
-  - `true` → single `components/webapp/`
-  - `false` → no webapp
-  - `["admin", "public"]` → `components/webapp-admin/`, `components/webapp-public/`
-
-### Instance Naming Rules
-
-When using lists for `server` or `webapp`:
-- Names must be lowercase
-- Use hyphens, not underscores
-- No spaces allowed
-- Examples: `api`, `worker`, `admin`, `public`, `background-jobs`
+Directory: `components/{type}/` when name = type, `components/{type}-{name}/` otherwise.

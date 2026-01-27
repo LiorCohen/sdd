@@ -9,8 +9,10 @@ Creates database component structure for PostgreSQL-based projects.
 
 ## What It Creates
 
+The directory path depends on the component name as defined in `sdd-settings.yaml`: `components/{type}-{name}/` (when type and name differ). Database components support multiple instances (e.g., `database-app-db/`, `database-analytics-db/`).
+
 ```
-components/database/
+components/database[-<name>]/
 ├── package.json              # npm scripts for database operations
 ├── README.md                 # Component documentation
 ├── migrations/
@@ -42,7 +44,7 @@ Use when your project needs:
 After scaffolding, the database component provides:
 
 ```bash
-# From components/database/
+# From components/database/ (path depends on component name)
 npm run migrate   # Run all migrations in order
 npm run seed      # Run all seed files in order
 npm run reset     # Full reset: drop, create, migrate, seed

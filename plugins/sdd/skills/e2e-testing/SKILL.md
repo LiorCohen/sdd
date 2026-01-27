@@ -6,6 +6,8 @@ description: End-to-end testing with Playwright - browser automation, visual reg
 
 # E2E Testing Skill
 
+> **Dynamic path:** All paths below use `components/<testing-component>/` as a placeholder. The actual directory depends on the testing component defined in `sdd-settings.yaml`: it is `components/{type}-{name}/` when the type and name differ (e.g., `components/testing-platform-tests/`), or `components/{type}/` when they match (e.g., `components/<testing-component>/`).
+
 Full browser automation tests that verify complete user journeys. E2E tests run in Kubernetes via Testkube with Playwright.
 
 ---
@@ -14,7 +16,7 @@ Full browser automation tests that verify complete user journeys. E2E tests run 
 
 | Aspect | Details |
 |--------|---------|
-| Location | `components/testing/tests/e2e/` and `e2e/` |
+| Location | `components/<testing-component>/tests/e2e/` and `e2e/` |
 | Framework | Playwright |
 | Executor | Testkube |
 | Runs In | Kubernetes cluster |
@@ -27,7 +29,7 @@ Full browser automation tests that verify complete user journeys. E2E tests run 
 ### Directory Organization
 
 ```
-components/testing/tests/e2e/
+components/<testing-component>/tests/e2e/
 ├── tests/
 │   ├── auth/
 │   │   ├── login.spec.ts
@@ -55,7 +57,7 @@ components/testing/tests/e2e/
 ## Playwright Configuration
 
 ```typescript
-// components/testing/tests/e2e/playwright.config.ts
+// components/<testing-component>/tests/e2e/playwright.config.ts
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
@@ -98,7 +100,7 @@ export default defineConfig({
 ### Page Object Pattern
 
 ```typescript
-// components/testing/tests/e2e/pages/login.page.ts
+// components/<testing-component>/tests/e2e/pages/login.page.ts
 import { Page, Locator, expect } from '@playwright/test';
 
 export class LoginPage {
@@ -139,7 +141,7 @@ export class LoginPage {
 ### Dashboard Page Object
 
 ```typescript
-// components/testing/tests/e2e/pages/dashboard.page.ts
+// components/<testing-component>/tests/e2e/pages/dashboard.page.ts
 import { Page, Locator, expect } from '@playwright/test';
 
 export class DashboardPage {
@@ -189,7 +191,7 @@ export class DashboardPage {
 ### Fixtures for Test Data
 
 ```typescript
-// components/testing/tests/e2e/fixtures/users.ts
+// components/<testing-component>/tests/e2e/fixtures/users.ts
 export const testUsers = {
   admin: {
     email: 'e2e-admin@test.com',
@@ -215,7 +217,7 @@ export const testUsers = {
 ### API Helper for Test Setup
 
 ```typescript
-// components/testing/tests/e2e/helpers/api.ts
+// components/<testing-component>/tests/e2e/helpers/api.ts
 import { APIRequestContext } from '@playwright/test';
 
 export class TestAPI {
@@ -260,7 +262,7 @@ export class TestAPI {
 ### Auth Helper
 
 ```typescript
-// components/testing/tests/e2e/helpers/auth.ts
+// components/<testing-component>/tests/e2e/helpers/auth.ts
 import { Page } from '@playwright/test';
 import { LoginPage } from '../pages/login.page';
 
@@ -290,7 +292,7 @@ export const loginWithStorageState = async (
 ### Basic Test
 
 ```typescript
-// components/testing/tests/e2e/tests/auth/login.spec.ts
+// components/<testing-component>/tests/e2e/tests/auth/login.spec.ts
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/login.page';
 import { DashboardPage } from '../../pages/dashboard.page';
@@ -340,7 +342,7 @@ test.describe('Feature: User Login', () => {
 ### Test with API Setup
 
 ```typescript
-// components/testing/tests/e2e/tests/planning/create-plan.spec.ts
+// components/<testing-component>/tests/e2e/tests/planning/create-plan.spec.ts
 import { test, expect } from '@playwright/test';
 import { TestAPI } from '../../helpers/api';
 import { loginAs } from '../../helpers/auth';
@@ -505,7 +507,7 @@ test('eventually shows notification', async ({ page }) => {
 ### Test Definition
 
 ```yaml
-# components/testing/tests/e2e/e2e-tests.yaml
+# components/<testing-component>/tests/e2e/e2e-tests.yaml
 apiVersion: tests.testkube.io/v3
 kind: Test
 metadata:
@@ -521,7 +523,7 @@ spec:
     repository:
       uri: https://github.com/org/repo
       branch: main
-      path: components/testing/tests/e2e
+      path: components/<testing-component>/tests/e2e
   executionRequest:
     envConfigMaps:
       - name: test-config

@@ -24,16 +24,18 @@ Note: Unit tests are written by implementors (backend-dev, frontend-dev) using t
 | Test Type | Written By | Location |
 |-----------|------------|----------|
 | Unit | Implementors | `components/*/src/**/*.test.ts` |
-| Component | Tester (you) | `components/testing/tests/component/` |
-| Integration | Tester (you) | `components/testing/tests/integration/` |
-| E2E | Tester (you) | `components/testing/tests/e2e/` |
+| Component | Tester (you) | `{testing-component}/tests/component/` |
+| Integration | Tester (you) | `{testing-component}/tests/integration/` |
+| E2E | Tester (you) | `{testing-component}/tests/e2e/` |
+
+Check `sdd-settings.yaml` for testing component paths (e.g., `components/testing/`, `components/testing-api/`).
 
 ---
 
 ## Directory Structure
 
 ```
-components/testing/
+{testing-component}/           # e.g., components/testing/ — check sdd-settings.yaml
 ├── tests/
 │   ├── component/            # React components with mocked API
 │   ├── integration/          # API with real database

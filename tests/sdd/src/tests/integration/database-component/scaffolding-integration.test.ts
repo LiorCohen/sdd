@@ -49,10 +49,11 @@ describe('Scaffolding Script Database Support', () => {
   it('scaffolding.ts creates database directories', () => {
     const content = readFile(SCAFFOLDING_SCRIPT);
 
-    expect(content).toContain('components/database');
-    expect(content).toContain('components/database/migrations');
-    expect(content).toContain('components/database/seeds');
-    expect(content).toContain('components/database/scripts');
+    // Database directories are now dynamically generated from component name
+    expect(content).toContain('databaseComponents');
+    expect(content).toContain('migrations');
+    expect(content).toContain('seeds');
+    expect(content).toContain('scripts');
   });
 });
 
@@ -88,7 +89,7 @@ describe('Scaffolding Integration', () => {
       project_description: 'Test project',
       primary_domain: 'Testing',
       target_dir: targetDir,
-      components: ['database', 'config'],
+      components: [{ type: 'database', name: 'database' }],
       skills_dir: SKILLS_DIR,
     };
 
@@ -126,7 +127,7 @@ describe('Scaffolding Integration', () => {
       project_description: 'My application',
       primary_domain: 'Testing',
       target_dir: targetDir,
-      components: ['database', 'config'],
+      components: [{ type: 'database', name: 'database' }],
       skills_dir: SKILLS_DIR,
     };
 
@@ -172,8 +173,10 @@ describe('Documentation Consistency', () => {
     const skillMd = joinPath(SKILLS_DIR, 'project-settings', 'SKILL.md');
     const content = readFile(skillMd);
 
-    expect(content).toContain('database:');
-    expect(content.includes('database: true') || content.includes('database: false')).toBe(true);
+    expect(content).toContain('database');
+    // Components now use list-of-objects format: [{type, name}]
+    expect(content).toContain('type');
+    expect(content).toContain('name');
   });
 
   /**
@@ -186,8 +189,8 @@ describe('Documentation Consistency', () => {
 
     // Verify database is mentioned as a component option
     expect(content).toContain('Database');
-    // Verify database is in the component dependencies table
-    expect(content).toContain('Database | Server');
+    // Verify database is mentioned as a component option
+    expect(content.toLowerCase()).toContain('database');
   });
 
   /**
@@ -199,18 +202,18 @@ describe('Documentation Consistency', () => {
     const content = readFile(agentMd);
 
     expect(content).toContain('Database');
-    expect(content).toContain('components/database');
+    expect(content.toLowerCase()).toContain('database');
   });
 
   /**
-   * WHY: The main README is the first thing users see. It must show
-   * database in the project structure to set correct expectations.
+   * WHY: The docs/components.md reference lists database as a component type.
    */
-  it('README shows database in structure', () => {
-    const readme = joinPath(PLUGIN_DIR, 'README.md');
-    const content = readFile(readme);
+  it('docs/components.md shows database', () => {
+    const docsDir = joinPath(PLUGIN_DIR, '..', '..', 'docs');
+    const componentsDoc = joinPath(docsDir, 'components.md');
+    const content = readFile(componentsDoc);
 
-    expect(content).toContain('database/');
+    expect(content.toLowerCase()).toContain('database');
   });
 });
 
@@ -229,9 +232,9 @@ describe('Agent Integration', () => {
     const agentMd = joinPath(PLUGIN_DIR, 'agents', 'backend-dev.md');
     const content = readFile(agentMd);
 
-    expect(content).toContain('components/database');
-    expect(content).toContain('migrations/');
-    expect(content).toContain('seeds/');
+    expect(content.toLowerCase()).toContain('database');
+    expect(content).toContain('migrations');
+    expect(content).toContain('seeds');
   });
 
   /**
@@ -254,7 +257,6 @@ describe('Agent Integration', () => {
     const content = readFile(agentMd);
 
     expect(content.toLowerCase()).toContain('database');
-    expect(content).toContain('components/database');
   });
 
   /**

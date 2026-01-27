@@ -5,7 +5,7 @@ description: Scaffolds project-level structure (root files, specs, config).
 
 # Project Scaffolding Skill
 
-Creates the non-component parts of an SDD project: root files, specs directory, and config component.
+Creates the non-component parts of an SDD project: root files, specs directory, and config directory.
 
 ## When to Use
 
@@ -38,10 +38,10 @@ specs/
 └── external/             # External specs (if imported)
 ```
 
-### Config Component
+### Config Directory
 
 ```
-components/config/
+config/
 ├── config.yaml           # Base configuration
 ├── config-local.yaml     # Local development overrides
 ├── config-testing.yaml   # Test environment overrides

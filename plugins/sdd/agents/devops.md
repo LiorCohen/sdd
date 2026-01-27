@@ -23,10 +23,10 @@ All environments use Kubernetes:
 
 ## Helm Chart Location
 
-`components/helm/your-app/`
+Check `sdd-settings.yaml` for helm component names and paths (e.g., `components/helm/`, `components/helm-myapp/`).
 
 ```
-components/helm/your-app/
+components/helm-{name}/
 ├── Chart.yaml
 ├── values.yaml
 ├── values-local.yaml
@@ -58,10 +58,10 @@ helm install testkube kubeshop/testkube --namespace testkube --create-namespace
 
 ### Test Definitions
 
-`components/testing/tests/`
+Check `sdd-settings.yaml` for testing component paths (e.g., `components/testing/`, `components/testing-api/`).
 
 ```yaml
-# components/testing/tests/integration/api-tests.yaml
+# {testing-component}/tests/integration/api-tests.yaml
 apiVersion: tests.testkube.io/v3
 kind: Test
 metadata:
@@ -85,13 +85,13 @@ Projects may have multiple server and webapp instances (e.g., `server-api`, `ser
 
 ## Database Component
 
-If the project includes `components/database/`:
+Check `sdd-settings.yaml` for database component paths (e.g., `components/database/`, `components/database-analytics/`).
 
 | Directory | Purpose |
 |-----------|---------|
-| `components/database/migrations/` | Sequential SQL migration files |
-| `components/database/seeds/` | Idempotent seed data |
-| `components/database/scripts/` | Management scripts (migrate, seed, reset) |
+| `{database-component}/migrations/` | Sequential SQL migration files |
+| `{database-component}/seeds/` | Idempotent seed data |
+| `{database-component}/scripts/` | Management scripts (migrate, seed, reset) |
 
 For Kubernetes deployments with database:
 - Use PostgreSQL StatefulSet or external managed database

@@ -36,7 +36,7 @@ This is a multi-component monorepo. Check `sdd-settings.yaml` for actual compone
 
 **Standard Components:**
 
-| Component | Path | Purpose | Agent |
+| Component | Default Path | Purpose | Agent |
 |-----------|------|---------|-------|
 | Contract | `components/contract/` | OpenAPI spec | `api-designer` |
 | Server | `components/server/` | Backend (CMDO) | `backend-dev` |
@@ -44,6 +44,9 @@ This is a multi-component monorepo. Check `sdd-settings.yaml` for actual compone
 | Database | `components/database/` | PostgreSQL migrations/seeds | `backend-dev` |
 | Helm | `components/helm/` | Kubernetes deployment | `devops` |
 | Testing | `components/testing/` | Testkube test definitions | `tester` |
+| Config | `config/` (project root) | Configuration files | -- |
+
+All component types support multiple instances. Paths follow `components/{type}-{name}/` when type differs from name. Check `sdd-settings.yaml` for actual paths. Note: config is not a component -- it lives at `config/` in the project root.
 
 **Multiple Instances:**
 
@@ -70,7 +73,7 @@ Plans vary based on the change type in the SPEC.md frontmatter:
 ## Typical Phase Order (Features)
 
 1. **API Design** (`api-designer`)
-   - Update `components/contract/openapi.yaml`
+   - Update the contract component's `openapi.yaml` (check `sdd-settings.yaml` for path)
    - Generate types
 
 2. **Backend Implementation** (`backend-dev`)

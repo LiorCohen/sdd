@@ -141,8 +141,6 @@ components:
     name: webapp
   - type: database
     name: database
-  - type: config
-    name: config
   - type: helm
     name: helm
   - type: testing
@@ -348,8 +346,8 @@ Components created: <list>
 Next steps:
   1. cd <project-name> (if not current directory)
   2. npm install --workspaces
-  3. cd components/contract && npm run generate:types
-  4. Review: specs/domain/glossary.md, components/contract/openapi.yaml
+  3. cd components/<contract-component-name> && npm run generate:types
+  4. Review: specs/domain/glossary.md, components/<contract-component-name>/openapi.yaml
   5. Create first change: /sdd-new-change --type feature --name <name>
 ```
 

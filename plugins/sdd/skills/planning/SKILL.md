@@ -88,7 +88,7 @@ Deliverables:
 **Agent:** `api-designer`
 
 Tasks:
-- [ ] Update `components/contract/openapi.yaml`
+- [ ] Update the contract component's `openapi.yaml` (path depends on component name in `sdd-settings.yaml`, e.g., `components/contract/openapi.yaml`)
 - [ ] Add schemas for [definitions]
 - [ ] Generate types
 

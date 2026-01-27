@@ -56,8 +56,6 @@ components:
     name: webapp
   - type: database
     name: database
-  - type: config
-    name: config
   - type: testing
     name: testing
   - type: cicd
@@ -69,13 +67,17 @@ components:
 ```yaml
 components:
   - type: server
-    name: api                 # -> components/server-api/
+    name: order-service       # -> components/server-order-service/
   - type: server
-    name: worker              # -> components/server-worker/
+    name: notification-service # -> components/server-notification-service/
   - type: webapp
-    name: admin               # -> components/webapp-admin/
+    name: admin-portal        # -> components/webapp-admin-portal/
   - type: webapp
-    name: public              # -> components/webapp-public/
+    name: customer-portal     # -> components/webapp-customer-portal/
+  - type: database
+    name: analytics-db        # -> components/database-analytics-db/
+  - type: database
+    name: orders-db           # -> components/database-orders-db/
 ```
 
 - Both `type` and `name` are ALWAYS required
@@ -86,14 +88,13 @@ components:
 
 | Component | Description | Scaffolding Skill | Multi-Instance |
 |-----------|-------------|-------------------|----------------|
-| `contract` | OpenAPI specification | `contract-scaffolding` | No |
+| `contract` | OpenAPI specification | `contract-scaffolding` | Yes |
 | `server` | Node.js backend (CMDO pattern) | `backend-scaffolding` | Yes |
 | `webapp` | React frontend (MVVM pattern) | `frontend-scaffolding` | Yes |
-| `database` | PostgreSQL migrations/seeds | `database-scaffolding` | No |
-| `config` | YAML configuration | `project-scaffolding` | No |
-| `helm` | Kubernetes Helm charts | (inline) | No |
-| `testing` | Testkube test setup | (inline) | No |
-| `cicd` | GitHub Actions workflows | (inline) | No |
+| `database` | PostgreSQL migrations/seeds | `database-scaffolding` | Yes |
+| `helm` | Kubernetes Helm charts | (inline) | Yes |
+| `testing` | Testkube test setup | (inline) | Yes |
+| `cicd` | GitHub Actions workflows | (inline) | Yes |
 
 ## Component Dependencies
 
@@ -103,7 +104,6 @@ components:
 | Server | Contract | Backend requires API contract |
 | Webapp | - | Can work standalone with external API |
 | Database | Server | PostgreSQL database for backend data persistence |
-| Config | - | Always required for all project types |
 | Helm | Server | Kubernetes deployment is for backend services |
 | Testing | Server or Webapp | Tests need something to test |
 | CI/CD | Server or Webapp | Workflows need something to build/test |
@@ -133,7 +133,6 @@ Based on what you've described, I recommend:
 - **Backend API** - to handle <specific workflows from discovery>
 - **Web Frontend** - for <specific user types from discovery>
 - **Database** - to persist <specific entities from discovery>
-- **Config** - for <integrations or environment settings>
 [Additional components with justification based on discovery]
 
 Does this match what you had in mind, or would you like to adjust?
@@ -146,7 +145,6 @@ If user wants changes:
 1. **Adding components**: Add to the list
 2. **Removing components**: Remove, but check for dependencies
 3. **Validate dependencies** (see table above):
-   - Config is always auto-included
    - If Server is selected, Contract is auto-included
    - If Helm is selected, Server must be included
    - If Contract is selected without Server, warn and ask for confirmation
@@ -179,11 +177,68 @@ Should the backend be a single service or multiple? (e.g., api + worker)
 - If multiple, for each: "Name for server component N:"
 - Creates: `components/server-api/`, `components/server-worker/`, etc.
 
+**For Contract (if multiple APIs or bounded contexts):**
+
+If discovery suggests separate API boundaries:
+
+```
+Should there be a single API contract or multiple? (e.g., separate contracts for public API vs internal API)
+```
+
+- If multiple: Ask "What should I call them? (e.g., 'public-api', 'internal-api')"
+- Creates: `components/contract-public-api/`, `components/contract-internal-api/`, etc.
+
+**For Database (if separate data stores are needed):**
+
+If discovery suggests distinct data domains:
+
+```
+Should there be a single database or multiple? (e.g., separate databases for orders vs analytics)
+```
+
+- If multiple: Ask "What should I call them? (e.g., 'orders-db', 'analytics-db')"
+- Creates: `components/database-orders-db/`, `components/database-analytics-db/`, etc.
+
+**For Helm (if multiple deployment targets):**
+
+If discovery suggests separate deployment configurations:
+
+```
+Should there be a single Helm chart or multiple? (e.g., separate charts per service)
+```
+
+- If multiple: Ask "What should I call them? (e.g., 'api-chart', 'worker-chart')"
+- Creates: `components/helm-api-chart/`, `components/helm-worker-chart/`, etc.
+
+**For Testing (if separate test suites):**
+
+If discovery suggests distinct testing concerns:
+
+```
+Should there be a single test suite or multiple? (e.g., separate suites for integration vs e2e)
+```
+
+- If multiple: Ask "What should I call them? (e.g., 'integration-tests', 'e2e-tests')"
+- Creates: `components/testing-integration-tests/`, `components/testing-e2e-tests/`, etc.
+
+**For CI/CD (if separate pipelines):**
+
+If discovery suggests distinct deployment pipelines:
+
+```
+Should there be a single CI/CD pipeline or multiple? (e.g., separate pipelines per service)
+```
+
+- If multiple: Ask "What should I call them? (e.g., 'api-pipeline', 'deploy-pipeline')"
+- Creates: `components/cicd-api-pipeline/`, `components/cicd-deploy-pipeline/`, etc.
+
 **Naming Rules:**
 - Names must be lowercase
 - Use hyphens, not underscores
 - No spaces allowed
-- Examples: `api`, `worker`, `admin`, `public`, `background-jobs`
+- Prefer domain-specific names (e.g., `order-service`, `analytics-db`) over generic ones (e.g., `api`, `primary`)
+- `name` matching `type` is valid but discouraged -- be descriptive
+- Examples: `order-service`, `notification-worker`, `admin-portal`, `analytics-db`
 
 ### Step 5: Determine Project Type
 
@@ -217,7 +272,6 @@ Recommendation:
   - Backend API (to handle project/task management, Slack notifications)
   - Web Frontend (for project managers and team members)
   - Database (to persist teams, projects, tasks, users)
-  - Config (for Slack integration settings)
 
 [User confirms]
 
@@ -232,8 +286,6 @@ Output:
       name: webapp
     - type: database
       name: database
-    - type: config
-      name: config
     - type: testing
       name: testing
     - type: cicd
@@ -271,8 +323,6 @@ Output:
       name: merchant
     - type: database
       name: database
-    - type: config
-      name: config
     - type: testing
       name: testing
     - type: cicd
@@ -289,7 +339,6 @@ Discovery Results:
 
 Agent: Based on what you've described, I recommend:
 - Backend API - to handle your REST endpoints
-- Config - for environment settings
 
 No frontend needed since this is a backend-only project. Does this match?
 
@@ -304,8 +353,6 @@ Output:
       name: server
     - type: database
       name: database
-    - type: config
-      name: config
     - type: testing
       name: testing
     - type: cicd
@@ -340,8 +387,6 @@ Output:
       name: webapp
     - type: database
       name: database
-    - type: config
-      name: config
     - type: helm
       name: helm
     - type: testing

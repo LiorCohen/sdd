@@ -52,10 +52,11 @@ jobs:
     steps:
       - name: Deploy to test namespace
         run: |
-          helm upgrade --install myapp-${{ github.sha }} ./components/helm/myapp \
+          # Check sdd-settings.yaml for helm component path
+          helm upgrade --install myapp-${{ github.sha }} ./components/helm-myapp \
             --namespace test-${{ github.sha }} \
             --create-namespace \
-            -f ./components/helm/myapp/values-testing.yaml \
+            -f ./components/helm-myapp/values-testing.yaml \
             --set server.image.tag=${{ github.sha }} \
             --set webapp.image.tag=${{ github.sha }}
 

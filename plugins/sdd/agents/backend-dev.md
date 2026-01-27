@@ -24,7 +24,7 @@ For multi-instance projects, check `sdd-settings.yaml` for the actual server com
 
 ## Database Component
 
-If the project includes `components/database/`:
+Check `sdd-settings.yaml` for database component names and paths (e.g., `components/database/`, `components/database-analytics/`).
 
 | Directory | Purpose |
 |-----------|---------|
@@ -33,8 +33,8 @@ If the project includes `components/database/`:
 | `scripts/` | Management scripts (migrate.sh, seed.sh, reset.sh) |
 
 When implementing features that need database changes:
-1. Create migration file in `components/database/migrations/`
-2. Add seed data if needed in `components/database/seeds/`
+1. Create migration file in the database component's `migrations/` directory
+2. Add seed data if needed in the database component's `seeds/` directory
 3. Implement DAL layer in server component
 4. See `postgresql` skill for SQL patterns and best practices
 

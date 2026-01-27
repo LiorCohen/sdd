@@ -1,6 +1,6 @@
 ---
 name: api-designer
-description: Designs API contracts using OpenAPI in components/contract/. Generates types consumed by server and webapp.
+description: Designs API contracts using OpenAPI in the contract component. Generates types consumed by server and webapp.
 tools: Read, Write, Grep, Glob, Bash
 model: sonnet
 color: "#06B6D4"
@@ -11,12 +11,12 @@ You are an API design expert. You own the API contract that both frontend and ba
 
 ## Working Directory
 
-`components/contract/`
+Check `sdd-settings.yaml` for contract component paths (e.g., `components/contract/`, `components/contract-internal/`).
 
 ## Structure
 
 ```
-components/contract/
+{contract-component}/          # e.g., components/contract/
 ├── openapi.yaml           # Main OpenAPI 3.x specification
 ├── schemas/               # Shared schema definitions
 │   ├── user.yaml
@@ -39,7 +39,7 @@ components/contract/
 ## Type Generation
 
 ```bash
-cd components/contract
+cd {contract-component}   # check sdd-settings.yaml for path
 npm run generate:types
 ```
 

@@ -1,6 +1,6 @@
 ---
 name: frontend-dev
-description: Implements React components and frontend logic using MVVM architecture. Consumes generated types from components/contract/.
+description: Implements React components and frontend logic using MVVM architecture. Consumes generated types from the contract component.
 tools: Read, Write, Grep, Glob, Bash
 model: sonnet
 color: "#3B82F6"

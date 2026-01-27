@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "components/contract",
-    "components/server",
-    "components/webapp"
+    "components/*"
   ],
   "scripts": {
     "lint": "npm run lint --workspaces --if-present",

@@ -21,7 +21,7 @@
  *   "project_description": "My application",
  *   "primary_domain": "E-commerce",
  *   "target_dir": "/path/to/output",
- *   "components": ["contract", "server", "webapp", "config"],
+ *   "components": [{"type": "server", "name": "order-service"}],
  *   "skills_dir": "/path/to/skills"
  * }
  */
@@ -30,19 +30,18 @@ import * as fs from 'node:fs';
 import * as fsp from 'node:fs/promises';
 import * as path from 'node:path';
 
+interface ComponentEntry {
+  readonly type: string;
+  readonly name: string;
+}
+
 interface Config {
   readonly project_name: string;
   readonly project_description: string;
   readonly primary_domain: string;
   readonly target_dir: string;
-  readonly components: readonly string[];
+  readonly components: readonly ComponentEntry[];
   readonly skills_dir: string;
-}
-
-interface ParsedComponent {
-  readonly component_type: string;
-  readonly name: string | null;
-  readonly dir_name: string;
 }
 
 interface ScaffoldingResult {
@@ -55,36 +54,21 @@ interface ScaffoldingResult {
 }
 
 /**
- * Parse component specification into type, name, and directory name.
- *
- * Formats:
- * - Simple: "server" -> type=server, name=null, dir_name=server
- * - Named: "server:api" -> type=server, name=api, dir_name=server-api
+ * Derive the directory name for a component.
+ * When type = name: "components/{type}/"
+ * When type ≠ name: "components/{type}-{name}/"
  */
-const parseComponent = (component: string): ParsedComponent => {
-  if (component.includes(':')) {
-    const [componentType, name] = component.split(':', 2);
-    return {
-      component_type: componentType ?? component,
-      name: name ?? null,
-      dir_name: `${componentType}-${name}`,
-    };
-  }
-  return {
-    component_type: component,
-    name: null,
-    dir_name: component,
-  };
-};
+const componentDirName = (component: ComponentEntry): string =>
+  component.type === component.name ? component.type : `${component.type}-${component.name}`;
 
 /**
  * Get all components of a specific type.
  */
 const getComponentsByType = (
-  components: readonly string[],
+  components: readonly ComponentEntry[],
   componentType: string
-): readonly ParsedComponent[] =>
-  components.map(parseComponent).filter((c) => c.component_type === componentType);
+): readonly ComponentEntry[] =>
+  components.filter((c) => c.type === componentType);
 
 /**
  * Replace template variables with config values.
@@ -175,7 +159,7 @@ const walkDir = async (dir: string): Promise<readonly string[]> => {
 const scaffoldProject = async (config: Config): Promise<ScaffoldingResult> => {
   const target = config.target_dir;
   const skillsDir = config.skills_dir;
-  const componentsRaw = config.components;
+  const components = config.components;
 
   // Template locations (colocated with skills)
   const projectTemplates = path.join(skillsDir, 'project-scaffolding', 'templates');
@@ -184,9 +168,14 @@ const scaffoldProject = async (config: Config): Promise<ScaffoldingResult> => {
   const contractTemplates = path.join(skillsDir, 'contract-scaffolding', 'templates');
   const databaseTemplates = path.join(skillsDir, 'database-scaffolding', 'templates');
 
-  // Parse all components
-  const parsedComponents = componentsRaw.map(parseComponent);
-  const componentTypes = new Set(parsedComponents.map((pc) => pc.component_type));
+  // Group components by type
+  const contractComponents = getComponentsByType(components, 'contract');
+  const serverComponents = getComponentsByType(components, 'server');
+  const webappComponents = getComponentsByType(components, 'webapp');
+  const databaseComponents = getComponentsByType(components, 'database');
+  const helmComponents = getComponentsByType(components, 'helm');
+  const testingComponents = getComponentsByType(components, 'testing');
+  const cicdComponents = getComponentsByType(components, 'cicd');
 
   const createdFiles: string[] = [];
   const createdDirs: string[] = [];
@@ -195,8 +184,8 @@ const scaffoldProject = async (config: Config): Promise<ScaffoldingResult> => {
   await fsp.mkdir(target, { recursive: true });
 
   // Build display string for components
-  const componentDisplay = parsedComponents.map((pc) =>
-    pc.name ? `${pc.component_type}:${pc.name}` : pc.component_type
+  const componentDisplay = components.map((c) =>
+    c.type === c.name ? c.type : `${c.type}:${c.name}`
   );
 
   console.log(`\nScaffolding project: ${config.project_name}`);
@@ -241,23 +230,23 @@ dist/
     createdDirs.push(d);
   }
 
-  // Config is always created
-  const configDirs = ['components/config', 'components/config/schemas'];
+  // Config is always created at project root (not a component)
+  const configDirs = ['config', 'config/schemas'];
   for (const d of configDirs) {
     await createDirectory(path.join(target, d), config);
     createdDirs.push(d);
   }
 
-  // Component-specific directories
-  if (componentTypes.has('contract')) {
-    await createDirectory(path.join(target, 'components/contract'), config);
-    createdDirs.push('components/contract');
+  // Contract components
+  for (const contract of contractComponents) {
+    const dirName = componentDirName(contract);
+    await createDirectory(path.join(target, `components/${dirName}`), config);
+    createdDirs.push(`components/${dirName}`);
   }
 
-  // Server components (supports multiple instances)
-  const serverComponents = getComponentsByType(componentsRaw, 'server');
+  // Server components
   for (const server of serverComponents) {
-    const dirName = server.dir_name;
+    const dirName = componentDirName(server);
     const serverSubdirs = [
       `components/${dirName}/src/operator`,
       `components/${dirName}/src/config`,
@@ -272,10 +261,9 @@ dist/
     }
   }
 
-  // Webapp components (supports multiple instances)
-  const webappComponents = getComponentsByType(componentsRaw, 'webapp');
+  // Webapp components
   for (const webapp of webappComponents) {
-    const dirName = webapp.dir_name;
+    const dirName = componentDirName(webapp);
     const webappSubdirs = [
       `components/${dirName}/src/pages`,
       `components/${dirName}/src/components`,
@@ -292,17 +280,21 @@ dist/
     }
   }
 
-  if (componentTypes.has('helm')) {
-    await createDirectory(path.join(target, 'components/helm'), config);
-    createdDirs.push('components/helm');
+  // Helm components
+  for (const helm of helmComponents) {
+    const dirName = componentDirName(helm);
+    await createDirectory(path.join(target, `components/${dirName}`), config);
+    createdDirs.push(`components/${dirName}`);
   }
 
-  if (componentTypes.has('testing')) {
+  // Testing components
+  for (const testing of testingComponents) {
+    const dirName = componentDirName(testing);
     const testingDirs = [
-      'components/testing/tests/integration',
-      'components/testing/tests/component',
-      'components/testing/tests/e2e',
-      'components/testing/testsuites',
+      `components/${dirName}/tests/integration`,
+      `components/${dirName}/tests/component`,
+      `components/${dirName}/tests/e2e`,
+      `components/${dirName}/testsuites`,
     ];
     for (const d of testingDirs) {
       await createDirectory(path.join(target, d), config);
@@ -310,17 +302,24 @@ dist/
     }
   }
 
-  if (componentTypes.has('cicd')) {
+  // CI/CD components
+  for (const cicd of cicdComponents) {
+    const dirName = componentDirName(cicd);
+    await createDirectory(path.join(target, `components/${dirName}`), config);
+    createdDirs.push(`components/${dirName}`);
+    // Also create .github/workflows/ as deployment target
     await createDirectory(path.join(target, '.github/workflows'), config);
     createdDirs.push('.github/workflows');
   }
 
-  if (componentTypes.has('database')) {
+  // Database components
+  for (const database of databaseComponents) {
+    const dirName = componentDirName(database);
     const databaseDirs = [
-      'components/database',
-      'components/database/migrations',
-      'components/database/seeds',
-      'components/database/scripts',
+      `components/${dirName}`,
+      `components/${dirName}/migrations`,
+      `components/${dirName}/seeds`,
+      `components/${dirName}/scripts`,
     ];
     for (const d of databaseDirs) {
       await createDirectory(path.join(target, d), config);
@@ -370,49 +369,35 @@ This document describes the architecture of ${config.project_name}.
 
 ## Components
 
+- **Config** (\`config/\`): YAML-based configuration management
 `;
 
-  // Static component descriptions
-  const staticDescriptions: Record<string, string> = {
-    contract: '- **Contract** (`components/contract/`): OpenAPI specifications and type generation',
-    config: '- **Config** (`components/config/`): YAML-based configuration management',
-    database:
-      '- **Database** (`components/database/`): PostgreSQL migrations, seeds, and management scripts',
-    helm: '- **Helm** (`components/helm/`): Kubernetes deployment charts',
-    testing: '- **Testing** (`components/testing/`): Testkube test definitions',
+  // Add all components dynamically
+  const typeDescriptions: Record<string, string> = {
+    contract: 'OpenAPI specifications and type generation',
+    server: 'Node.js/TypeScript backend with CMDO architecture',
+    webapp: 'React/TypeScript frontend with MVVM pattern',
+    database: 'PostgreSQL migrations, seeds, and management scripts',
+    helm: 'Kubernetes deployment charts',
+    testing: 'Testkube test definitions',
+    cicd: 'CI/CD workflow definitions',
   };
 
-  // Add static components
-  for (const compType of ['contract', 'config', 'database', 'helm', 'testing']) {
-    if (componentTypes.has(compType)) {
-      archContent += staticDescriptions[compType] + '\n';
-    }
-  }
-
-  // Add server components (may be multiple)
-  for (const server of serverComponents) {
-    const dirName = server.dir_name;
-    const displayName = server.name ?? 'Server';
-    const titleCase = displayName.charAt(0).toUpperCase() + displayName.slice(1);
-    archContent += `- **${titleCase}** (\`components/${dirName}/\`): Node.js/TypeScript backend with CMDO architecture\n`;
-  }
-
-  // Add webapp components (may be multiple)
-  for (const webapp of webappComponents) {
-    const dirName = webapp.dir_name;
-    const displayName = webapp.name ?? 'Webapp';
-    const titleCase = displayName.charAt(0).toUpperCase() + displayName.slice(1);
-    archContent += `- **${titleCase}** (\`components/${dirName}/\`): React/TypeScript frontend with MVVM pattern\n`;
+  for (const component of components) {
+    const dirName = componentDirName(component);
+    const displayName = component.name.charAt(0).toUpperCase() + component.name.slice(1);
+    const description = typeDescriptions[component.type] ?? component.type;
+    archContent += `- **${displayName}** (\`components/${dirName}/\`): ${description}\n`;
   }
 
   await fsp.writeFile(archOverview, archContent);
   createdFiles.push('specs/architecture/overview.md');
   console.log('  Created: specs/architecture/overview.md');
 
-  // Config component (from project-scaffolding skill, always created)
+  // Config files (from project-scaffolding skill, always created at root config/)
   const configFilesDir = path.join(projectTemplates, 'config');
   if (directoryExists(configFilesDir)) {
-    const configFiles = [
+    const configFilesList = [
       'config.yaml',
       'config-local.yaml',
       'config-testing.yaml',
@@ -421,39 +406,40 @@ This document describes the architecture of ${config.project_name}.
       'schemas/ops-schema.json',
       'schemas/app-schema.json',
     ];
-    for (const cf of configFiles) {
+    for (const cf of configFilesList) {
       const src = path.join(configFilesDir, cf);
       if (fs.existsSync(src)) {
-        await copyTemplateFile(src, path.join(target, 'components/config', cf), config);
-        createdFiles.push(`components/config/${cf}`);
+        await copyTemplateFile(src, path.join(target, 'config', cf), config);
+        createdFiles.push(`config/${cf}`);
       }
     }
   }
 
-  // Contract component (from contract-scaffolding skill)
-  if (componentTypes.has('contract')) {
-    if (directoryExists(contractTemplates)) {
+  // Contract components (from contract-scaffolding skill)
+  if (directoryExists(contractTemplates)) {
+    for (const contract of contractComponents) {
+      const dirName = componentDirName(contract);
       const contractFiles = ['package.json', 'openapi.yaml'];
       for (const cf of contractFiles) {
         const src = path.join(contractTemplates, cf);
         if (fs.existsSync(src)) {
-          await copyTemplateFile(src, path.join(target, 'components/contract', cf), config);
-          createdFiles.push(`components/contract/${cf}`);
+          await copyTemplateFile(src, path.join(target, `components/${dirName}`, cf), config);
+          createdFiles.push(`components/${dirName}/${cf}`);
         }
       }
-    }
 
-    // Create contract .gitignore
-    const contractGitignore = path.join(target, 'components/contract/.gitignore');
-    await fsp.writeFile(contractGitignore, 'node_modules/\ngenerated/\n');
-    createdFiles.push('components/contract/.gitignore');
-    console.log('  Created: components/contract/.gitignore');
+      // Create contract .gitignore
+      const contractGitignore = path.join(target, `components/${dirName}/.gitignore`);
+      await fsp.writeFile(contractGitignore, 'node_modules/\ngenerated/\n');
+      createdFiles.push(`components/${dirName}/.gitignore`);
+      console.log(`  Created: components/${dirName}/.gitignore`);
+    }
   }
 
-  // Server components (from backend-scaffolding skill, supports multiple instances)
+  // Server components (from backend-scaffolding skill)
   if (directoryExists(backendTemplates)) {
     for (const server of serverComponents) {
-      const dirName = server.dir_name;
+      const dirName = componentDirName(server);
 
       // Walk through all server template files
       const srcFiles = await walkDir(backendTemplates);
@@ -466,10 +452,10 @@ This document describes the architecture of ${config.project_name}.
     }
   }
 
-  // Webapp components (from frontend-scaffolding skill, supports multiple instances)
+  // Webapp components (from frontend-scaffolding skill)
   if (directoryExists(frontendTemplates)) {
     for (const webapp of webappComponents) {
-      const dirName = webapp.dir_name;
+      const dirName = componentDirName(webapp);
 
       // Walk through all webapp template files
       const srcFiles = await walkDir(frontendTemplates);
@@ -482,23 +468,26 @@ This document describes the architecture of ${config.project_name}.
     }
   }
 
-  // Database component (from database-scaffolding skill)
-  if (componentTypes.has('database')) {
-    if (directoryExists(databaseTemplates)) {
+  // Database components (from database-scaffolding skill)
+  if (directoryExists(databaseTemplates)) {
+    for (const database of databaseComponents) {
+      const dirName = componentDirName(database);
+
       // Walk through all database template files
       const srcFiles = await walkDir(databaseTemplates);
       for (const srcFile of srcFiles) {
         const relPath = path.relative(databaseTemplates, srcFile);
-        const destFile = path.join(target, 'components/database', relPath);
+        const destFile = path.join(target, `components/${dirName}`, relPath);
         await copyTemplateFile(srcFile, destFile, config);
-        createdFiles.push(`components/database/${relPath}`);
+        createdFiles.push(`components/${dirName}/${relPath}`);
       }
     }
   }
 
   // CI/CD workflows
-  if (componentTypes.has('cicd')) {
-    const ciWorkflow = path.join(target, '.github/workflows/ci.yaml');
+  for (const cicd of cicdComponents) {
+    const dirName = componentDirName(cicd);
+    const ciWorkflow = path.join(target, `components/${dirName}/ci.yaml`);
 
     const ciContent = `name: CI
 
@@ -537,6 +526,12 @@ jobs:
         run: npm run build
 `;
     await fsp.writeFile(ciWorkflow, ciContent);
+    createdFiles.push(`components/${dirName}/ci.yaml`);
+    console.log(`  Created: components/${dirName}/ci.yaml`);
+
+    // Also copy to .github/workflows/ as deployment target
+    const deployedWorkflow = path.join(target, '.github/workflows/ci.yaml');
+    await fsp.writeFile(deployedWorkflow, ciContent);
     createdFiles.push('.github/workflows/ci.yaml');
     console.log('  Created: .github/workflows/ci.yaml');
   }
@@ -622,7 +617,7 @@ const main = async (): Promise<number> => {
       `A ${rawConfig['project_name']} project`,
     primary_domain: (rawConfig['primary_domain'] as string) ?? 'General',
     target_dir: rawConfig['target_dir'] as string,
-    components: rawConfig['components'] as string[],
+    components: rawConfig['components'] as ComponentEntry[],
     skills_dir: rawConfig['skills_dir'] as string,
   };
 

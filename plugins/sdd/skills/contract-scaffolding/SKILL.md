@@ -9,12 +9,14 @@ Creates an OpenAPI contract component that defines the API specification and gen
 
 ## When to Use
 
-This skill is called by the main `scaffolding` skill when creating the contract component. Unlike server and webapp, contract is always a single instance.
+This skill is called by the main `scaffolding` skill when creating a contract component. Contract components support multiple instances (e.g., `contract-customer-api/`, `contract-back-office-api/`).
 
 ## What It Creates
 
+The directory path depends on the component name as defined in `sdd-settings.yaml`: `components/{type}-{name}/` (when type and name differ). For example, `components/contract/` or `components/contract-customer-api/`.
+
 ```
-components/contract/
+components/contract[-<name>]/
 ├── package.json          # Build scripts for type generation
 ├── openapi.yaml          # OpenAPI 3.0 specification
 ├── .gitignore            # Ignores generated/ directory
@@ -36,7 +38,7 @@ The template `openapi.yaml` includes:
 The contract component generates TypeScript types from the OpenAPI spec:
 
 ```bash
-cd components/contract
+cd components/contract  # path depends on component name
 npm run generate:types
 ```
 

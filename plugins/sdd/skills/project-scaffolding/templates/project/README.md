@@ -8,30 +8,31 @@ Brief description of the project.
 # Install all dependencies
 npm install --workspaces
 
-# Generate types from API contract
-cd components/contract && npm run generate:types
+# Generate types from API contract (path depends on contract component name in sdd-settings.yaml)
+cd components/<contract-component> && npm run generate:types
 
 # Start local Kubernetes cluster
 minikube start
 
-# Deploy locally
-helm upgrade --install {{PROJECT_NAME}} ./components/helm/{{PROJECT_NAME}} -f ./components/helm/{{PROJECT_NAME}}/values-local.yaml
+# Deploy locally (path depends on helm component name in sdd-settings.yaml)
+helm upgrade --install {{PROJECT_NAME}} ./components/<helm-component>/{{PROJECT_NAME}} -f ./components/<helm-component>/{{PROJECT_NAME}}/values-local.yaml
 
-# Or run in development mode
-cd components/server && npm run dev
-cd components/webapp && npm run dev
+# Or run in development mode (paths depend on component names in sdd-settings.yaml)
+cd components/<server-component> && npm run dev
+cd components/<webapp-component> && npm run dev
 ```
 
 ## Project Structure
 
 ```
 ├── specs/                          # Product specifications
-├── components/
-│   ├── contract/                   # API contracts (OpenAPI)
-│   ├── server/                     # Node.js/TypeScript backend
-│   ├── webapp/                     # React/TypeScript frontend
-│   ├── helm/                       # Kubernetes deployment
-│   └── testing/                    # Testkube test definitions
+├── config/                         # Environment configuration
+├── components/                     # Component directories (names from sdd-settings.yaml)
+│   ├── <contract-component>/       # API contracts (OpenAPI)
+│   ├── <server-component>/         # Node.js/TypeScript backend
+│   ├── <webapp-component>/         # React/TypeScript frontend
+│   ├── <helm-component>/           # Kubernetes deployment
+│   └── <testing-component>/        # Testkube test definitions
 └── e2e/                            # E2E test source code
 ```
 
@@ -67,12 +68,12 @@ cd components/webapp && npm run dev
 ### Running Locally
 
 ```bash
-# Backend
-cd components/server
+# Backend (path depends on server component name in sdd-settings.yaml)
+cd components/<server-component>
 npm run dev
 
-# Frontend
-cd components/webapp
+# Frontend (path depends on webapp component name in sdd-settings.yaml)
+cd components/<webapp-component>
 npm run dev
 ```
 

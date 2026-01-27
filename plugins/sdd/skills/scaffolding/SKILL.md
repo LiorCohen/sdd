@@ -35,7 +35,13 @@ cat > /tmp/sdd-scaffold-config.json << 'EOF'
     "project_description": "<user-provided-description>",
     "primary_domain": "<user-provided-domain>",
     "target_dir": "<absolute-path-to-project-directory>",
-    "components": ["contract", "server", "webapp", "config", "testing", "cicd"],
+    "components": [
+        {"type": "contract", "name": "task-api"},
+        {"type": "server", "name": "task-service"},
+        {"type": "webapp", "name": "task-dashboard"},
+        {"type": "testing", "name": "testing"},
+        {"type": "cicd", "name": "cicd"}
+    ],
     "skills_dir": "<path-to-plugin>/skills"
 }
 EOF
@@ -65,15 +71,13 @@ Components are specified as a list of objects with `type` and `name` (both requi
 ```yaml
 components:
   - type: contract
-    name: contract                  # -> components/contract/
+    name: task-api                  # -> components/contract-task-api/
   - type: server
-    name: server                    # -> components/server/
+    name: task-service              # -> components/server-task-service/
   - type: webapp
-    name: webapp                    # -> components/webapp/
+    name: task-dashboard            # -> components/webapp-task-dashboard/
   - type: database
-    name: database                  # -> components/database/
-  - type: config
-    name: config                    # -> config/
+    name: task-db                   # -> components/database-task-db/
   - type: testing
     name: testing                   # -> testing config
   - type: cicd
@@ -84,13 +88,13 @@ components:
 ```yaml
 components:
   - type: server
-    name: api                       # -> components/server-api/
+    name: order-service             # -> components/server-order-service/
   - type: server
-    name: worker                    # -> components/server-worker/
+    name: notification-worker       # -> components/server-notification-worker/
   - type: webapp
-    name: admin                     # -> components/webapp-admin/
+    name: admin-portal              # -> components/webapp-admin-portal/
   - type: webapp
-    name: public                    # -> components/webapp-public/
+    name: customer-app              # -> components/webapp-customer-app/
 ```
 
 ### Directory Naming
@@ -98,8 +102,8 @@ components:
 | Component | Directory Created |
 |-----------|-------------------|
 | `{type: server, name: server}` | `components/server/` |
-| `{type: server, name: api}` | `components/server-api/` |
-| `{type: webapp, name: admin}` | `components/webapp-admin/` |
+| `{type: server, name: order-service}` | `components/server-order-service/` |
+| `{type: webapp, name: admin-portal}` | `components/webapp-admin-portal/` |
 
 ### Rules
 
@@ -112,72 +116,67 @@ components:
 
 | Component | Scaffolding Skill | Multiple Instances |
 |-----------|-------------------|-------------------|
-| `contract` | `contract-scaffolding` | No |
+| `contract` | `contract-scaffolding` | Yes |
 | `server` | `backend-scaffolding` | Yes |
 | `webapp` | `frontend-scaffolding` | Yes |
-| `database` | `database-scaffolding` | No |
-| `config` | `project-scaffolding` | No (always included) |
-| `helm` | (inline) | No |
-| `testing` | (inline) | No |
-| `cicd` | (inline) | No |
+| `database` | `database-scaffolding` | Yes |
+| `helm` | (inline) | Yes |
+| `testing` | (inline) | Yes |
+| `cicd` | (inline) | Yes |
+
+> **Note:** Config is not a component. It is always created at `config/` in the project root by `project-scaffolding`.
 
 ## Component Presets
 
 **Full-Stack Application (default):**
 ```yaml
-- {type: contract, name: contract}
-- {type: server, name: server}
-- {type: webapp, name: webapp}
-- {type: database, name: database}
-- {type: config, name: config}
+- {type: contract, name: task-api}
+- {type: server, name: task-service}
+- {type: webapp, name: task-dashboard}
+- {type: database, name: task-db}
 - {type: testing, name: testing}
 - {type: cicd, name: cicd}
 ```
 
 **Backend API Only:**
 ```yaml
-- {type: contract, name: contract}
-- {type: server, name: server}
-- {type: config, name: config}
+- {type: contract, name: task-api}
+- {type: server, name: task-service}
 - {type: testing, name: testing}
 - {type: cicd, name: cicd}
 ```
 
 **Frontend Only:**
 ```yaml
-- {type: webapp, name: webapp}
-- {type: config, name: config}
+- {type: webapp, name: task-dashboard}
 - {type: testing, name: testing}
 - {type: cicd, name: cicd}
 ```
 
 **Multi-Backend:**
 ```yaml
-- {type: contract, name: contract}
-- {type: server, name: api}
-- {type: server, name: worker}
-- {type: config, name: config}
+- {type: contract, name: order-api}
+- {type: server, name: order-service}
+- {type: server, name: notification-worker}
 - {type: testing, name: testing}
 - {type: cicd, name: cicd}
 ```
 
 **Multi-Frontend:**
 ```yaml
-- {type: contract, name: contract}
-- {type: server, name: server}
-- {type: webapp, name: admin}
-- {type: webapp, name: public}
-- {type: config, name: config}
+- {type: contract, name: storefront-api}
+- {type: server, name: storefront-service}
+- {type: webapp, name: admin-portal}
+- {type: webapp, name: customer-app}
 - {type: testing, name: testing}
 - {type: cicd, name: cicd}
 ```
 
 **Backend with Database:**
 ```yaml
-- {type: contract, name: contract}
-- {type: server, name: server}
-- {type: database, name: database}
-- {type: config, name: config}
+- {type: contract, name: inventory-api}
+- {type: server, name: inventory-service}
+- {type: database, name: inventory-db}
 - {type: testing, name: testing}
 - {type: cicd, name: cicd}
 ```
@@ -186,7 +185,7 @@ components:
 
 The script executes in this order:
 
-1. **Project scaffolding** - Root files, specs, config (always first)
+1. **Project scaffolding** - Root files, specs, `config/` directory (always first)
 2. **Contract scaffolding** - OpenAPI spec (if selected)
 3. **Backend scaffolding** - Server components (for each instance)
 4. **Frontend scaffolding** - Webapp components (for each instance)

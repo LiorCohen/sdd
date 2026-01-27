@@ -6,6 +6,8 @@ description: Integration testing patterns - database setup/teardown, API testing
 
 # Integration Testing Skill
 
+> **Dynamic path:** All paths below use `components/<testing-component>/` as a placeholder. The actual directory depends on the testing component defined in `sdd-settings.yaml`: it is `components/{type}-{name}/` when the type and name differ (e.g., `components/testing-platform-tests/`), or `components/{type}/` when they match (e.g., `components/<testing-component>/`).
+
 Tests that verify multiple components working together with real infrastructure. Integration tests run in Kubernetes via Testkube for environment parity.
 
 ---
@@ -14,7 +16,7 @@ Tests that verify multiple components working together with real infrastructure.
 
 | Aspect | Details |
 |--------|---------|
-| Location | `components/testing/tests/integration/` |
+| Location | `components/<testing-component>/tests/integration/` |
 | Framework | Vitest |
 | Executor | Testkube |
 | Runs In | Kubernetes cluster |
@@ -27,7 +29,7 @@ Tests that verify multiple components working together with real infrastructure.
 ### Directory Organization
 
 ```
-components/testing/
+components/<testing-component>/
 ├── tests/
 │   └── integration/
 │       ├── api/
@@ -53,7 +55,7 @@ components/testing/
 ### Test Database Initialization
 
 ```typescript
-// components/testing/tests/integration/helpers/database.ts
+// components/<testing-component>/tests/integration/helpers/database.ts
 import { Pool } from 'pg';
 
 let pool: Pool | null = null;
@@ -107,7 +109,7 @@ describe('User API', () => {
 #### Truncate Tables (Clean State)
 
 ```typescript
-// components/testing/tests/integration/helpers/cleanup.ts
+// components/<testing-component>/tests/integration/helpers/cleanup.ts
 const TABLES_TO_TRUNCATE = [
   'plan_items',
   'plans',
@@ -150,7 +152,7 @@ export const cleanupTestData = async (pool: Pool, testRunId: string): Promise<vo
 ### HTTP Client Setup
 
 ```typescript
-// components/testing/tests/integration/helpers/client.ts
+// components/<testing-component>/tests/integration/helpers/client.ts
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 export interface TestClient {
@@ -183,7 +185,7 @@ export const createTestClient = (): TestClient => {
 ### API Test Pattern
 
 ```typescript
-// components/testing/tests/integration/api/users.test.ts
+// components/<testing-component>/tests/integration/api/users.test.ts
 import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { createTestClient, TestClient } from '../helpers/client';
 import { truncateTables, getTestDatabase } from '../helpers/database';
@@ -303,7 +305,7 @@ describe('Feature: User Management API', () => {
 ### Login Helper
 
 ```typescript
-// components/testing/tests/integration/helpers/auth.ts
+// components/<testing-component>/tests/integration/helpers/auth.ts
 import { TestClient } from './client';
 
 export interface AuthenticatedUser {
@@ -380,7 +382,7 @@ describe('Protected endpoints', () => {
 ### SQL Seed Files
 
 ```sql
--- components/testing/fixtures/seed-data.sql
+-- components/<testing-component>/fixtures/seed-data.sql
 INSERT INTO users (id, email, name, role, client_id, password_hash, created_at)
 VALUES
   ('seed-admin-1', 'admin@test.com', 'Test Admin', 'admin', 'test-client', '$2b$10$...', NOW()),
@@ -394,7 +396,7 @@ VALUES
 ### Programmatic Seeding
 
 ```typescript
-// components/testing/tests/integration/helpers/seed.ts
+// components/<testing-component>/tests/integration/helpers/seed.ts
 import { Pool } from 'pg';
 import { hashPassword } from './auth';
 
@@ -417,7 +419,7 @@ export const seedTestUsers = async (pool: Pool): Promise<void> => {
 ### Test Definition
 
 ```yaml
-# components/testing/tests/integration/integration-tests.yaml
+# components/<testing-component>/tests/integration/integration-tests.yaml
 apiVersion: tests.testkube.io/v3
 kind: Test
 metadata:
@@ -433,7 +435,7 @@ spec:
     repository:
       uri: https://github.com/org/repo
       branch: main
-      path: components/testing/tests/integration
+      path: components/<testing-component>/tests/integration
   executionRequest:
     envConfigMaps:
       - name: test-config
@@ -446,7 +448,7 @@ spec:
 ### Test Suite
 
 ```yaml
-# components/testing/testsuites/integration-suite.yaml
+# components/<testing-component>/testsuites/integration-suite.yaml
 apiVersion: tests.testkube.io/v3
 kind: TestSuite
 metadata:

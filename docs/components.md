@@ -13,16 +13,17 @@ Components are the building blocks of an SDD project. Each component lives under
 
 ## Available Components
 
-| Component | Description | Multi-Instance |
-|-----------|-------------|----------------|
-| `contract` | OpenAPI specification | No |
-| `server` | Node.js backend (CMDO pattern) | Yes |
-| `webapp` | React frontend (MVVM pattern) | Yes |
-| `database` | PostgreSQL migrations and seeds | No |
-| `config` | YAML configuration schemas | No |
-| `helm` | Kubernetes Helm charts | No |
-| `testing` | Testkube test setup and definitions | No |
-| `cicd` | GitHub Actions CI/CD workflows | No |
+| Component | Description |
+|-----------|-------------|
+| `contract` | OpenAPI specification |
+| `server` | Node.js backend (CMDO pattern) |
+| `webapp` | React frontend (MVVM pattern) |
+| `database` | PostgreSQL migrations and seeds |
+| `helm` | Kubernetes Helm charts |
+| `testing` | Testkube test setup and definitions |
+| `cicd` | GitHub Actions CI/CD workflows |
+
+All component types support multiple instances. See [Multi-Instance Components](#multi-instance-components) below.
 
 ## Component Details
 
@@ -30,58 +31,56 @@ Components are the building blocks of an SDD project. Each component lives under
 
 API-first design using OpenAPI specifications. Defines the shared interface between server and client components. Generated TypeScript types ensure type safety across the stack.
 
-**Directory:** `components/contract/`
+**Directory:** `components/<name>/` (e.g., `components/contract/`, `components/contract-task-api/`)
 
 ### Server
 
 Node.js/TypeScript backend following the CMDO (Controller, Model, Data, Operator) architecture pattern. Implements the API contract and contains business logic.
 
-**Directory:** `components/server/` (or `components/server-{name}/` for multi-instance)
+**Directory:** `components/<name>/` (e.g., `components/server/`, `components/server-api/`)
 
 ### Webapp
 
 React/TypeScript frontend following the MVVM (Model-View-ViewModel) architecture pattern. Consumes the API contract for type-safe client calls.
 
-**Directory:** `components/webapp/` (or `components/webapp-{name}/` for multi-instance)
+**Directory:** `components/<name>/` (e.g., `components/webapp/`, `components/webapp-admin/`)
 
 ### Database
 
 PostgreSQL database component with migrations, seeds, and management scripts. Handles schema evolution and test data.
 
-**Directory:** `components/database/`
+**Directory:** `components/<name>/` (e.g., `components/database/`, `components/database-analytics/`)
 
 ### Config
 
-YAML-based configuration management with validation schemas. Always included in every project.
-
-**Directory:** `components/config/`
+YAML-based configuration management with validation schemas. Always included in every project. Config lives at `config/` in the project root and is **not** a component.
 
 ### Helm
 
 Kubernetes Helm deployment charts and container definitions for production deployment.
 
-**Directory:** `components/helm/`
+**Directory:** `components/<name>/` (e.g., `components/helm/`, `components/helm-services/`)
 
 ### Testing
 
 Testkube test setup and definitions for integration and end-to-end testing.
 
-**Directory:** `components/testing/`
+**Directory:** `components/<name>/` (e.g., `components/testing/`, `components/testing-e2e/`)
 
 ### CI/CD
 
 GitHub Actions workflows for continuous integration and deployment, including PR checks and release pipelines.
 
-**Directory:** `components/cicd/`
+**Directory:** `components/<name>/` (e.g., `components/cicd/`, `components/cicd-deploy/`)
 
 ## Multi-Instance Components
 
-Server and webapp components support multiple instances for projects that need separate backends or frontends. For example:
+All component types support multiple instances. Each component is listed in `sdd-settings.yaml` with a `type` and `name`. The directory is always `components/<name>/`. Examples:
 
+- `contract` and `contract-task-api` for separate API contracts
 - `server-api` and `server-worker` for separate API and background processing services
 - `webapp-admin` and `webapp-public` for separate admin and public-facing interfaces
-
-When a component's name matches its type, the directory is `components/{type}/`. When the name differs, the directory is `components/{type}-{name}/`.
+- `database` and `database-analytics` for separate database schemas
 
 ## Dependencies
 
@@ -91,7 +90,6 @@ When a component's name matches its type, the directory is `components/{type}/`.
 | Server | Contract |
 | Webapp | - |
 | Database | Server |
-| Config | - |
 | Helm | Server |
 | Testing | Server or Webapp |
 | CI/CD | Server or Webapp |

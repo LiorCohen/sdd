@@ -8,6 +8,16 @@ All notable changes to the SDD plugin and marketplace infrastructure.
 
 ---
 
+## [4.4.0] - 2026-01-27
+
+### Changed
+
+- **All component types now multi-instance**: contract, database, helm, testing, cicd join server/webapp with full multi-instance support using unified `[{type, name}]` list format
+- **Config moved to project root**: Config is no longer a component type; it always lives at `config/` in the project root
+- **Unified component schema**: All components use `{type, name}` objects in `sdd-settings.yaml`, with directory derivation `components/{type}/` (when name = type) or `components/{type}-{name}/` (when they differ)
+- **Updated scaffolding engine**: Rewrote `scaffolding.ts` with `ComponentEntry` interface and unified iteration over all component types
+- **Updated 25 files**: Skills, agents, commands, templates, docs, and tests updated for new component format
+
 ## [4.3.1] - 2026-01-27
 
 ### Changed
