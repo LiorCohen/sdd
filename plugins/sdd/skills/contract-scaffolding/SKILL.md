@@ -42,9 +42,13 @@ cd components/contract  # path depends on component name
 npm run generate:types
 ```
 
-This creates `generated/types.ts` which is consumed by:
-- Server components (request/response types)
-- Webapp components (API client types)
+This creates `generated/types.ts` inside the contract component. The contract is published as a workspace package — server and webapp components consume types by declaring a workspace dependency and importing:
+
+```typescript
+import type { components } from '@project-name/contract';
+
+type Greeting = components['schemas']['Greeting'];
+```
 
 ## Template Variables
 
@@ -95,12 +99,15 @@ skills/contract-scaffolding/templates/
                     ┌────────▼────────┐
                     │   generated/    │
                     │    types.ts     │
+                    │ (workspace pkg) │
                     └────────┬────────┘
+                             │
+              import type from '@project/contract'
                              │
               ┌──────────────┴──────────────┐
               │                             │
     ┌─────────▼─────────┐       ┌───────────▼───────────┐
     │      server/      │       │        webapp/        │
-    │  imports types    │       │    imports types      │
+    │  "workspace:*"    │       │    "workspace:*"      │
     └───────────────────┘       └───────────────────────┘
 ```

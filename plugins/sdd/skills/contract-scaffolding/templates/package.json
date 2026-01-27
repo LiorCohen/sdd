@@ -2,10 +2,15 @@
   "name": "@{{PROJECT_NAME}}/contract",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./generated/types.ts",
+      "default": "./generated/types.ts"
+    }
+  },
   "scripts": {
-    "generate:types": "npm run generate:server && npm run generate:client",
-    "generate:server": "openapi-typescript openapi.yaml -o ../server/src/types/generated.ts",
-    "generate:client": "openapi-typescript openapi.yaml -o ../webapp/src/types/generated.ts",
+    "generate:types": "openapi-typescript openapi.yaml -o generated/types.ts",
     "validate": "spectral lint openapi.yaml"
   },
   "devDependencies": {

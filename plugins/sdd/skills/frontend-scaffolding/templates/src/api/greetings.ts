@@ -1,23 +1,14 @@
 // Model: Greetings API
-// API layer for greeting operations - matches OpenAPI contract
+// API layer for greeting operations - types from OpenAPI contract
+import type { components } from '{{CONTRACT_PACKAGE}}';
+
 const API_BASE = '/api/v1';
 
-export type Greeting = {
-  readonly id: string;
-  readonly name: string;
-  readonly message: string;
-  readonly createdAt: string;
-};
-
-export type CreateGreetingInput = {
-  readonly name: string;
-};
+export type Greeting = components['schemas']['Greeting'];
+export type CreateGreetingInput = components['schemas']['CreateGreetingInput'];
 
 export type ApiError = {
-  readonly error: {
-    readonly code: string;
-    readonly message: string;
-  };
+  readonly error: components['schemas']['Error'];
 };
 
 export const greetingsApi = {

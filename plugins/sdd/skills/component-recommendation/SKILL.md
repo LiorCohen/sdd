@@ -52,8 +52,10 @@ components:
     name: contract
   - type: server
     name: server
+    depends_on: [contract]
   - type: webapp
     name: webapp
+    depends_on: [contract]
   - type: database
     name: database
   - type: testing
@@ -66,14 +68,22 @@ components:
 
 ```yaml
 components:
+  - type: contract
+    name: public-api          # -> components/contract-public-api/
+  - type: contract
+    name: internal-api        # -> components/contract-internal-api/
   - type: server
     name: order-service       # -> components/server-order-service/
+    depends_on: [contract-public-api, contract-internal-api]
   - type: server
     name: notification-service # -> components/server-notification-service/
+    depends_on: [contract-internal-api]
   - type: webapp
     name: admin-portal        # -> components/webapp-admin-portal/
+    depends_on: [contract-internal-api]
   - type: webapp
     name: customer-portal     # -> components/webapp-customer-portal/
+    depends_on: [contract-public-api]
   - type: database
     name: analytics-db        # -> components/database-analytics-db/
   - type: database
@@ -83,6 +93,9 @@ components:
 - Both `type` and `name` are ALWAYS required
 - When `name` matches `type`, directory is `components/{type}/`
 - When `name` differs from `type`, directory is `components/{type}-{name}/`
+- `depends_on` lists the directory names of contract components this component imports types from
+- Server and webapp components MUST include `depends_on` with at least one contract component
+- The `depends_on` values become workspace package dependencies (e.g., `depends_on: [contract]` → `"@project/contract": "workspace:*"`)
 
 ## Available Components
 
@@ -282,8 +295,10 @@ Output:
       name: contract
     - type: server
       name: server
+      depends_on: [contract]
     - type: webapp
       name: webapp
+      depends_on: [contract]
     - type: database
       name: database
     - type: testing
@@ -317,10 +332,13 @@ Output:
       name: contract
     - type: server
       name: server
+      depends_on: [contract]
     - type: webapp
       name: storefront
+      depends_on: [contract]
     - type: webapp
       name: merchant
+      depends_on: [contract]
     - type: database
       name: database
     - type: testing
@@ -351,6 +369,7 @@ Output:
       name: contract
     - type: server
       name: server
+      depends_on: [contract]
     - type: database
       name: database
     - type: testing
@@ -379,12 +398,16 @@ Output:
       name: contract
     - type: server
       name: api
+      depends_on: [contract]
     - type: server
       name: worker
+      depends_on: [contract]
     - type: server
       name: scheduler
+      depends_on: [contract]
     - type: webapp
       name: webapp
+      depends_on: [contract]
     - type: database
       name: database
     - type: helm

@@ -40,7 +40,16 @@ When implementing features that need database changes:
 
 ## Type Consumption
 
-Consume generated types from contract via `import type { User, CreateUserRequest } from '../types/generated';`
+Consume generated types from the contract workspace package:
+
+```typescript
+import type { components } from '@project-name/contract';
+
+type User = components['schemas']['User'];
+type CreateUserRequest = components['schemas']['CreateUserRequest'];
+```
+
+Check `sdd-settings.yaml` for the actual contract package name (e.g., `@project/contract`, `@project/contract-public-api`).
 
 ---
 

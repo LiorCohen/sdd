@@ -24,8 +24,7 @@ Check `sdd-settings.yaml` for contract component paths (e.g., `components/contra
 │   └── common.yaml
 ├── package.json           # Type generation scripts
 └── generated/             # Generated output (gitignored)
-    ├── server-types.ts
-    └── client-types.ts
+    └── types.ts           # Exported as workspace package
 ```
 
 ## Responsibilities
@@ -43,11 +42,13 @@ cd {contract-component}   # check sdd-settings.yaml for path
 npm run generate:types
 ```
 
-This generates types consumed by all server and webapp components:
-- `components/server*/src/types/generated.ts`
-- `components/webapp*/src/types/generated.ts`
+This creates `generated/types.ts` inside the contract component. Server and webapp components consume these types via workspace package imports:
 
-For multi-instance projects, check `sdd-settings.yaml` for actual component names.
+```typescript
+import type { components } from '@project-name/contract';
+```
+
+For multi-instance projects, check `sdd-settings.yaml` for actual contract package names.
 
 ## HTTP Conventions
 
@@ -125,7 +126,7 @@ paths:
 - **Every endpoint MUST have a unique `operationId` in camelCase**
 - Operation names become controller handler names (e.g., `createUser` → `handleCreateUser`)
 - Contract is the source of truth for API shape
-- Both server and webapp consume generated types
+- Both server and webapp consume types via workspace package imports from contract
 - All error responses documented
 - Use `$ref` for reusable schemas
 - **Never include health check endpoints in the contract**

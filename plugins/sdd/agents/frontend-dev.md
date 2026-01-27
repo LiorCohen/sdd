@@ -99,7 +99,7 @@ Follow all rules defined in the `typescript-standards` and `frontend-standards` 
 
 **Code Quality:**
 - All filenames use `lowercase_with_underscores`
-- Never hand-write API types - use generated types
+- Never hand-write API types - import from contract workspace package
 - All props and return types use `readonly`
 - No implicit global code
 - **YOU write unit tests** - Tester agent handles integration/E2E only

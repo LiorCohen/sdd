@@ -8,6 +8,20 @@ All notable changes to the SDD plugin and marketplace infrastructure.
 
 ---
 
+## [4.5.0] - 2026-01-27
+
+### Changed
+
+- **Contract types as workspace packages**: Contract components now publish generated types as npm workspace packages instead of writing directly into sibling directories
+  - Contract `package.json` exports `generated/types.ts` via `exports` field
+  - Server and webapp templates declare `"workspace:*"` dependency on their contract
+  - Template types import from contract package: `import type { components } from '@project/contract'`
+  - Removed hardcoded `../server/` and `../webapp/` output paths from contract generate scripts
+- **Component `depends_on` field**: Server and webapp components declare which contract(s) they depend on, enabling multi-contract architectures
+  - Scaffolding engine resolves `{{CONTRACT_PACKAGE}}` template variable from `depends_on`
+  - `substituteVariables` and `copyTemplateFile` now accept component context
+- **Updated agents**: api-designer, backend-dev, frontend-dev updated for workspace package import pattern
+
 ## [4.4.0] - 2026-01-27
 
 ### Changed

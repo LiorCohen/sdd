@@ -33,6 +33,7 @@ import * as path from 'node:path';
 interface ComponentEntry {
   readonly type: string;
   readonly name: string;
+  readonly depends_on?: readonly string[];
 }
 
 interface Config {
@@ -73,12 +74,17 @@ const getComponentsByType = (
 /**
  * Replace template variables with config values.
  */
-const substituteVariables = (content: string, config: Config): string => {
+const substituteVariables = (content: string, config: Config, component?: ComponentEntry): string => {
   const replacements: Record<string, string> = {
     '{{PROJECT_NAME}}': config.project_name,
     '{{PROJECT_DESCRIPTION}}': config.project_description,
     '{{PRIMARY_DOMAIN}}': config.primary_domain,
   };
+
+  if (component?.depends_on) {
+    const contractPackages = component.depends_on.map((dep) => `@${config.project_name}/${dep}`);
+    replacements['{{CONTRACT_PACKAGE}}'] = contractPackages[0] ?? '';
+  }
 
   let result = content;
   for (const [variable, value] of Object.entries(replacements)) {
@@ -96,6 +102,7 @@ const copyTemplateFile = async (
   src: string,
   dest: string,
   config: Config,
+  component?: ComponentEntry,
   substitute = true
 ): Promise<void> => {
   await fsp.mkdir(path.dirname(dest), { recursive: true });
@@ -103,7 +110,7 @@ const copyTemplateFile = async (
   const ext = path.extname(src);
   if (substitute && SUBSTITUTABLE_EXTENSIONS.includes(ext)) {
     const content = await fsp.readFile(src, 'utf-8');
-    const substituted = substituteVariables(content, config);
+    const substituted = substituteVariables(content, config, component);
     await fsp.writeFile(dest, substituted);
   } else {
     await fsp.copyFile(src, dest);
@@ -423,7 +430,7 @@ This document describes the architecture of ${config.project_name}.
       for (const cf of contractFiles) {
         const src = path.join(contractTemplates, cf);
         if (fs.existsSync(src)) {
-          await copyTemplateFile(src, path.join(target, `components/${dirName}`, cf), config);
+          await copyTemplateFile(src, path.join(target, `components/${dirName}`, cf), config, contract);
           createdFiles.push(`components/${dirName}/${cf}`);
         }
       }
@@ -446,7 +453,7 @@ This document describes the architecture of ${config.project_name}.
       for (const srcFile of srcFiles) {
         const relPath = path.relative(backendTemplates, srcFile);
         const destFile = path.join(target, `components/${dirName}`, relPath);
-        await copyTemplateFile(srcFile, destFile, config);
+        await copyTemplateFile(srcFile, destFile, config, server);
         createdFiles.push(`components/${dirName}/${relPath}`);
       }
     }
@@ -462,7 +469,7 @@ This document describes the architecture of ${config.project_name}.
       for (const srcFile of srcFiles) {
         const relPath = path.relative(frontendTemplates, srcFile);
         const destFile = path.join(target, `components/${dirName}`, relPath);
-        await copyTemplateFile(srcFile, destFile, config);
+        await copyTemplateFile(srcFile, destFile, config, webapp);
         createdFiles.push(`components/${dirName}/${relPath}`);
       }
     }

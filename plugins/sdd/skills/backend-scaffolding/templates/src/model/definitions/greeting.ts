@@ -1,13 +1,14 @@
 // Model Definition: Greeting
-// Domain type representing a personalized greeting
+// Domain types imported from contract and adapted for the domain layer
 
-export type Greeting = {
-  readonly id: string;
-  readonly name: string;
-  readonly message: string;
+import type { components } from '{{CONTRACT_PACKAGE}}';
+
+type GreetingSchema = components['schemas']['Greeting'];
+type CreateGreetingInputSchema = components['schemas']['CreateGreetingInput'];
+
+// Domain layer uses Date objects instead of ISO strings from the API
+export type Greeting = Omit<GreetingSchema, 'createdAt'> & {
   readonly createdAt: Date;
 };
 
-export type CreateGreetingInput = {
-  readonly name: string;
-};
+export type CreateGreetingInput = CreateGreetingInputSchema;
