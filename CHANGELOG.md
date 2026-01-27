@@ -8,6 +8,15 @@ All notable changes to the SDD plugin and marketplace infrastructure.
 
 ---
 
+## [4.3.1] - 2026-01-27
+
+### Changed
+
+- **sdd-init**: Initialize git before writing project files (moved from Phase 7 to Phase 5)
+  - Git init now runs right after user approval, before any files are created
+  - Separate commit phase (Phase 8) stages and commits all created files
+  - Added missing `helm` component type to Phase 2 example and Phase 3 summary
+
 ## [4.3.0] - 2026-01-27
 
 ### Added

@@ -39,12 +39,13 @@ This command orchestrates multiple skills to complete initialization:
 | 2     | `component-recommendation`  | Recommend technical components |
 | 3     | (inline)                    | Display configuration summary |
 | 4     | (inline)                    | Get user approval |
-| 5.1   | `project-settings`          | Create sdd-settings.yaml |
-| 5.2   | `scaffolding`               | Create project structure |
-| 5.3   | `domain-population`         | Populate specs from discovery |
-| 6     | `external-spec-integration` | Process external spec (if provided) |
-| 7     | (inline)                    | Initialize git   |
-| 8     | (inline)                    | Display completion report |
+| 5     | (inline)                    | Initialize git   |
+| 6.1   | `project-settings`          | Create sdd-settings.yaml |
+| 6.2   | `scaffolding`               | Create project structure |
+| 6.3   | `domain-population`         | Populate specs from discovery |
+| 7     | `external-spec-integration` | Process external spec (if provided) |
+| 8     | (inline)                    | Commit initial project files |
+| 9     | (inline)                    | Display completion report |
 
 ---
 
@@ -142,6 +143,8 @@ components:
     name: database
   - type: config
     name: config
+  - type: helm
+    name: helm
   - type: testing
     name: testing
   - type: cicd
@@ -187,6 +190,7 @@ Display a summary combining product context and technical configuration:
 - Webapp (React frontend) - for <user types>
 - Database (PostgreSQL) - to persist <entities>
 - Config (YAML configuration)
+- Helm (Kubernetes deployment)
 - Testing setup
 - CI/CD workflows
 
@@ -215,9 +219,23 @@ If the user says no, ask what they'd like to change and return to Phase 1 or Pha
 
 ---
 
-### Phase 5: Project Creation (Only After Approval)
+### Phase 5: Initialize Git Repository
 
-#### Step 5.1: Create Project Settings
+Create the project directory (if it doesn't already exist) and initialize git before writing any project files:
+
+If not already in a git repository:
+```bash
+mkdir -p ${TARGET_DIR} && cd ${TARGET_DIR} && git init
+```
+
+If already in a git repository (current directory case):
+- Skip this phase (git is already initialized)
+
+---
+
+### Phase 6: Project Creation (Only After Approval)
+
+#### Step 6.1: Create Project Settings
 
 **INVOKE the `project-settings` skill** with operation `create`:
 
@@ -232,7 +250,7 @@ components: <from Phase 2>
 
 Creates `sdd-settings.yaml` in the project root.
 
-#### Step 5.2: Scaffold Project Structure
+#### Step 6.2: Scaffold Project Structure
 
 **INVOKE the `scaffolding` skill** with:
 
@@ -244,7 +262,7 @@ target_dir: <absolute path to target>
 components: <from Phase 2>
 ```
 
-#### Step 5.3: Populate Domain Knowledge
+#### Step 6.3: Populate Domain Knowledge
 
 **INVOKE the `domain-population` skill** with:
 
@@ -259,7 +277,7 @@ domain_entities: <from Phase 1>
 
 ---
 
-### Phase 6: External Spec Integration (if --spec provided)
+### Phase 7: External Spec Integration (if --spec provided)
 
 **Only if external spec was provided via `--spec` argument.**
 
@@ -280,21 +298,16 @@ The skill:
 
 ---
 
-### Phase 7: Initialize Git Repository
+### Phase 8: Commit Initial Project Files
 
-If not already in a git repository:
+Stage and commit all created files:
 ```bash
-cd ${TARGET_DIR} && git init && git add . && git commit -m "Initial project setup from spec-driven template"
-```
-
-If already in a git repository (current directory case):
-```bash
-git add . && git commit -m "Initial project setup from spec-driven template"
+cd ${TARGET_DIR} && git add . && git commit -m "Initial project setup from spec-driven template"
 ```
 
 ---
 
-### Phase 8: Completion Report
+### Phase 9: Completion Report
 
 1. List the created structure:
    ```bash
