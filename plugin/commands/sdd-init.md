@@ -49,6 +49,35 @@ This command orchestrates multiple skills to complete initialization:
 
 ---
 
+## Phase Tracking (CRITICAL)
+
+**You MUST complete ALL phases before declaring initialization complete.** Use this checklist to track progress:
+
+```
+[ ] Phase 0: Arguments parsed, spec outline extracted (if --spec)
+[ ] Phase 1: Product discovery completed, results stored
+[ ] Phase 2: Component recommendation completed
+[ ] Phase 3: Configuration summary displayed
+[ ] Phase 4: User approval received
+[ ] Phase 5: Git repository initialized
+[ ] Phase 6.1: sdd-settings.yaml created
+[ ] Phase 6.2: Project structure scaffolded
+[ ] Phase 6.3: Domain knowledge populated
+[ ] Phase 7: External spec integrated (if --spec provided)
+[ ] Phase 8: Initial commit created
+[ ] Phase 9: Completion report displayed
+```
+
+**DO NOT:**
+- Stop after Phase 4 (approval) without completing Phases 5-9
+- Skip Phase 7 when `--spec` was provided
+- Declare "initialization complete" until Phase 9 is finished
+- Ask the user "should I continue?" between phases - just proceed
+
+**If interrupted**, resume from the last incomplete phase. The user should never need to ask "is init done?" - you must complete all phases in a single flow.
+
+---
+
 ### Phase 0: Parse Arguments
 
 1. **If no arguments provided**, display usage and exit:
@@ -341,28 +370,46 @@ cd ${TARGET_DIR} && git add . && git commit -m "Initial project setup from spec-
 
 **If external spec was provided:**
 ```
-Project initialized: <project-name>
+═══════════════════════════════════════════════════════════════
+ PROJECT INITIALIZED: <project-name>
+═══════════════════════════════════════════════════════════════
+
 Location: <absolute-path-to-target-dir>
 Description: <project-description>
 Primary Domain: <primary-domain>
-Components created: <list>
-External spec: specs/external/<filename>
+
+External spec archived: specs/external/<filename>
 Changes created: N
 
-Changes (in implementation order):
-  1. change-1 (feature): Brief description
-  2. change-2 (feature): Brief description
+┌─────────────────────────────────────────────────────────────┐
+│ CHANGES TO REVIEW (in implementation order)                 │
+├─────────────────────────────────────────────────────────────┤
+│ 1. change-1 (feature): Brief description                    │
+│    → specs/changes/YYYY/MM/DD/change-1/SPEC.md              │
+│                                                             │
+│ 2. change-2 (feature): Brief description                    │
+│    → specs/changes/YYYY/MM/DD/change-2/SPEC.md              │
+└─────────────────────────────────────────────────────────────┘
 
-Next steps:
-  1. cd <project-name> (if not current directory)
-  2. npm install --workspaces
-  3. Review: specs/INDEX.md, specs/domain/glossary.md
-  4. Start: /sdd-implement-change specs/changes/YYYY/MM/DD/<first-change>
+NEXT: Review the first change specification
+
+I recommend reviewing the generated change specs to ensure they
+accurately capture your requirements before implementation.
+
+Would you like me to:
+  [R] Review the first change spec (specs/changes/YYYY/MM/DD/<first-change>/SPEC.md)
+  [L] List all change specs with summaries
+  [I] Start implementing the first change (/sdd-implement-change)
 ```
+
+**IMPORTANT:** After displaying this report, wait for user input. Do NOT proceed to implement changes without user direction.
 
 **If standard initialization:**
 ```
-Project initialized: <project-name>
+═══════════════════════════════════════════════════════════════
+ PROJECT INITIALIZED: <project-name>
+═══════════════════════════════════════════════════════════════
+
 Location: <absolute-path-to-target-dir>
 Description: <project-description>
 Primary Domain: <primary-domain>
@@ -376,7 +423,11 @@ Next steps:
   5. Create first change: /sdd-new-change --type feature --name <name>
 ```
 
-**DO NOT STOP until you have completed every phase and verified the structure.**
+**VERIFICATION:** Before displaying the completion report, confirm:
+- [ ] All phases 0-9 completed (check the Phase Tracking checklist)
+- [ ] Git commit was successful (Phase 8)
+- [ ] Tree structure displays correctly
+- [ ] If --spec was provided: changes were created and paths are correct
 
 ---
 
@@ -387,3 +438,5 @@ Next steps:
 - Product discovery enables pre-populated glossary, use-cases, and component recommendations
 - External spec support includes multi-change decomposition with user adjustment
 - All skills are invoked in sequence with proper data passing between phases
+- **When --spec is provided**: After init, guide user to review changes (not install dependencies)
+- **Completion means Phase 9**: Never declare "done" before the completion report is displayed

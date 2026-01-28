@@ -43,6 +43,12 @@ All notable changes to the SDD plugin and marketplace infrastructure.
   - Only outline and path stored (never full spec content)
   - Spec copied to project in Phase 7 before decomposition
 
+- **sdd-init command**: Improved phase tracking and completion behavior
+  - Added Phase Tracking checklist to ensure all phases complete
+  - Explicit instructions to not stop early or ask "should I continue?"
+  - External spec completion report now guides to review changes (not install dependencies)
+  - Added [R]eview, [L]ist, [I]mplement options for external spec workflows
+
 ---
 
 ## Infrastructure - 2026-01-28
