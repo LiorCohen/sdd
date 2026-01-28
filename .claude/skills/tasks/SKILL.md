@@ -17,9 +17,13 @@ Task data files live in `tasks/` at the project root:
 tasks/
 ├── TASKS.md      # Main backlog with all tasks
 └── plans/        # Implementation plans for tasks
-    ├── PLAN-task-2-npm-lifecycle-scripts.md
-    ├── PLAN-task-4-permission-prompts.md
-    └── PLAN-task-7-external-spec-handling.md
+    ├── pending/  # Plans being drafted (not yet ready)
+    ├── planned/  # Plans ready for implementation
+    │   └── PLAN-task-9-ready-to-work-components.md
+    └── complete/ # Plans for completed tasks
+        ├── PLAN-task-2-npm-lifecycle-scripts.md
+        ├── PLAN-task-4-permission-prompts.md
+        └── PLAN-task-7-external-spec-handling.md
 ```
 
 ## Files
@@ -27,7 +31,9 @@ tasks/
 | File/Directory | Purpose |
 |----------------|---------|
 | `tasks/TASKS.md` | Main backlog file with all tasks organized by priority/status |
-| `tasks/plans/` | Directory containing implementation plans for tasks |
+| `tasks/plans/pending/` | Plans being drafted - not yet ready for implementation |
+| `tasks/plans/planned/` | Plans ready for implementation - task is in Planned section |
+| `tasks/plans/complete/` | Plans for completed tasks - kept for reference |
 
 ## TASKS.md Structure
 
@@ -37,6 +43,11 @@ tasks/
 ## High Priority
 ### N. Task title [CRITICAL]
 Description...
+
+## Planned
+### N. Task title
+Description...
+**Plan:** [plans/planned/PLAN-task-N-slug.md](plans/planned/PLAN-task-N-slug.md)
 
 ## Pending
 ### N. Task title
@@ -53,8 +64,12 @@ Description...
 ### N. Task title ✓
 **Completed: YYYY-MM-DD**
 Description of what was done...
-**Plan:** [plans/PLAN-task-N-slug.md](plans/PLAN-task-N-slug.md)
+**Plan:** [plans/complete/PLAN-task-N-slug.md](plans/complete/PLAN-task-N-slug.md)
 ```
+
+**Section Order:** High Priority → Planned → Pending → Low Priority → Merged → Completed
+
+**Planned Section:** Tasks that have implementation plans created but work hasn't started yet. These are "ready to implement" - the thinking is done, just needs execution.
 
 ---
 
@@ -74,6 +89,10 @@ Output format:
 ```
 ## High Priority (N items)
 - #9: sdd-init should produce ready-to-work components [CRITICAL]
+
+## Planned (N items) - Ready to implement
+- #7: External spec handling (has plan)
+...
 
 ## Pending (N items)
 - #10: Missing /sdd-help command
@@ -131,7 +150,7 @@ User: task 7 is complete
 1. Find task N in TASKS.md
 2. Move task to ## Completed section
 3. Add completion date and ✓ marker
-4. If a plan exists in `plans/`, link it
+4. If a plan exists in `plans/planned/`, move it to `plans/complete/` and link it
 5. Summarize what was accomplished (ask user if needed)
 
 Format:
@@ -141,7 +160,7 @@ Format:
 
 Summary of what was done...
 
-**Plan:** [plans/PLAN-task-N-slug.md](plans/PLAN-task-N-slug.md)
+**Plan:** [plans/complete/PLAN-task-N-slug.md](plans/complete/PLAN-task-N-slug.md)
 ```
 
 ### Merge Tasks
@@ -180,12 +199,15 @@ User: create a plan for task 19
 **Workflow:**
 1. Read the task from TASKS.md
 2. Analyze codebase to understand scope
-3. Create `tasks/plans/PLAN-task-N-slug.md` with:
+3. Create `tasks/plans/planned/PLAN-task-N-slug.md` with:
    - Problem summary
    - Files to modify
    - Implementation steps
    - Verification steps
-4. Link plan from task entry (optional, until completed)
+4. Move task from current section to **## Planned** section
+5. Add plan link to task entry
+
+**Note:** If plan needs iteration before it's ready, create in `plans/pending/` first, then move to `plans/planned/` when finalized.
 
 Plan template:
 ```markdown
@@ -224,6 +246,21 @@ Details...
 ...
 ```
 
+### Move to Planned
+
+```
+User: /tasks planned 19
+User: task 19 has a plan now
+User: move task 19 to planned
+```
+
+**Workflow:**
+1. Find task N in TASKS.md
+2. Verify a plan exists at `tasks/plans/pending/PLAN-task-N-*.md` or `tasks/plans/planned/PLAN-task-N-*.md`
+3. If plan is in `pending/`, move it to `planned/`
+4. Move task to ## Planned section
+5. Add plan link if not already present
+
 ### Review Plans
 
 ```
@@ -231,7 +268,20 @@ User: /tasks plans
 User: show me all plans
 ```
 
-**Action:** List all files in `tasks/plans/` directory with their status.
+**Action:** List all files in `tasks/plans/` subdirectories grouped by status:
+
+```
+## Pending (drafts in progress)
+- PLAN-task-15-planner-rules.md
+
+## Planned (ready to implement)
+- PLAN-task-9-ready-to-work-components.md
+
+## Complete (reference)
+- PLAN-task-2-npm-lifecycle-scripts.md
+- PLAN-task-4-permission-prompts.md
+- PLAN-task-7-external-spec-handling.md
+```
 
 ---
 
@@ -278,7 +328,7 @@ Fixed all issues with external spec processing:
 - External specs with 3+ changes produce epic structures
 - Generated specs embed full content making them self-sufficient
 
-**Plan:** [plans/PLAN-task-7-external-spec-handling.md](plans/PLAN-task-7-external-spec-handling.md)
+**Plan:** [plans/complete/PLAN-task-7-external-spec-handling.md](plans/complete/PLAN-task-7-external-spec-handling.md)
 ```
 
 ### Creating a Plan
@@ -290,7 +340,7 @@ Agent: Reading task #19: Create task management skill in marketplace
 
 Analyzing what's needed...
 
-Creating plan at tasks/plans/PLAN-task-19-task-management-skill.md
+Creating plan at tasks/plans/planned/PLAN-task-19-task-management-skill.md
 
 ✓ Plan created. Key points:
 - Add task management at tasks/
@@ -315,5 +365,18 @@ View the plan? (yes/no)
 2. **Merge related tasks** - Don't duplicate effort
 3. **Link plans** - Always link implementation plans when completing
 4. **Update status** - Move tasks through sections as work progresses
-5. **Add context** - When completing, summarize what was actually done
-6. **Date everything** - Completion dates help track velocity
+5. **Move to Planned** - When a plan is created, move task from Pending to Planned
+6. **Add context** - When completing, summarize what was actually done
+7. **Date everything** - Completion dates help track velocity
+
+## Task Lifecycle
+
+```
+Pending → [create plan] → Planned → [implement] → Completed
+                ↓
+         High Priority (if urgent)
+                ↓
+         Low Priority (if deprioritized)
+                ↓
+         Merged (if combined with another)
+```
