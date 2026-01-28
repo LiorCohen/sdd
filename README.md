@@ -18,8 +18,8 @@ claude plugin install sdd
 ```
 /sdd-init --name my-app          # Initialize a new project
 /sdd-new-change --type feature --name user-auth   # Create a spec and plan
-/sdd-implement-change specs/changes/.../user-auth # Execute the plan
-/sdd-verify-change specs/changes/.../user-auth    # Verify it matches the spec
+/sdd-implement-change changes/.../user-auth # Execute the plan
+/sdd-verify-change changes/.../user-auth    # Verify it matches the spec
 ```
 
 **[Get started with the tutorial →](./docs/getting-started.md)**
@@ -33,7 +33,7 @@ claude plugin install sdd
 Every change lives in a markdown specification before it lives in code:
 
 ```
-specs/changes/2026/01/15/user-auth/
+changes/2026/01/15/user-auth/
 ├── SPEC.md    # What you're building (acceptance criteria)
 └── PLAN.md    # How to build it (phased implementation)
 ```
@@ -85,9 +85,11 @@ SDD commands create many files. To reduce permission prompts, add this to your `
 {
   "permissions": {
     "allow": [
+      "Write(changes/**)",
       "Write(specs/**)",
       "Write(components/**)",
       "Write(config/**)",
+      "Edit(changes/**)",
       "Edit(specs/**)",
       "Edit(components/**)",
       "Bash(git *)",
@@ -122,14 +124,14 @@ When you run `/sdd-init`, you get:
 
 ```
 your-project/
+├── changes/                  # Change specifications (YYYY/MM/DD/<name>/)
 ├── specs/
 │   ├── INDEX.md              # Registry of all specifications
 │   ├── SNAPSHOT.md           # Current product state
 │   ├── domain/
 │   │   ├── glossary.md       # Domain terminology
 │   │   └── definitions/      # Domain definitions
-│   ├── architecture/         # Architecture decisions
-│   └── changes/              # Change specifications
+│   └── architecture/         # Architecture decisions
 ├── components/
 │   ├── contract/             # OpenAPI specs (workspace package)
 │   ├── server/               # Node.js backend

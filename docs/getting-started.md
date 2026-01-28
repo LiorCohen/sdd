@@ -35,7 +35,8 @@ After initialization, you'll have:
 
 ```
 my-app/
-├── specs/                    # All specifications live here
+├── changes/                 # Change specifications (YYYY/MM/DD/<name>/)
+├── specs/                   # Domain and architecture specs
 │   ├── INDEX.md             # Registry of all specs
 │   ├── SNAPSHOT.md          # Current product state
 │   ├── domain/              # Business terminology and definitions
@@ -45,10 +46,10 @@ my-app/
 │   ├── server/              # Backend code
 │   ├── webapp/              # Frontend code
 │   ├── database/            # Database migrations and seeds
-│   ├── config/              # YAML configuration
 │   ├── helm/                # Kubernetes Helm charts
 │   ├── testing/             # Test setup and definitions
 │   └── cicd/                # CI/CD workflows
+├── config/                  # YAML configuration
 └── sdd-settings.yaml        # Project configuration
 ```
 

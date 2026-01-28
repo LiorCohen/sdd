@@ -48,7 +48,7 @@ Start a new feature, bugfix, refactor, or epic.
 1. Collects information about the change
 2. Creates a spec (`SPEC.md`) with acceptance criteria
 3. Creates an implementation plan (`PLAN.md`)
-4. Places files in `specs/changes/YYYY/MM/DD/<name>/`
+4. Places files in `changes/YYYY/MM/DD/<name>/`
 
 **Example:**
 ```
@@ -75,7 +75,7 @@ Execute an implementation plan.
 
 **Example:**
 ```
-/sdd-implement-change specs/changes/2026/01/15/user-preferences
+/sdd-implement-change changes/2026/01/15/user-preferences
 ```
 
 ---
@@ -98,7 +98,7 @@ Verify implementation matches the spec.
 
 **Example:**
 ```
-/sdd-verify-change specs/changes/2026/01/15/user-preferences
+/sdd-verify-change changes/2026/01/15/user-preferences
 ```
 
 ---

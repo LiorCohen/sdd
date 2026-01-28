@@ -42,7 +42,7 @@ Review both. This is your last chance to catch misunderstandings before code is 
 ### 3. Implement
 
 ```
-/sdd-implement-change specs/changes/2026/01/15/checkout-flow
+/sdd-implement-change changes/2026/01/15/checkout-flow
 ```
 
 Specialized agents execute each phase of the plan:
@@ -54,7 +54,7 @@ Specialized agents execute each phase of the plan:
 ### 4. Verify
 
 ```
-/sdd-verify-change specs/changes/2026/01/15/checkout-flow
+/sdd-verify-change changes/2026/01/15/checkout-flow
 ```
 
 The `reviewer` agent checks that the implementation matches the spec.
@@ -109,7 +109,7 @@ The command creates an epic directory with a parent SPEC.md and PLAN.md, plus a 
 Each child change is implemented as an independent PR:
 
 ```
-/sdd-implement-change specs/changes/2026/01/27/checkout-system
+/sdd-implement-change changes/2026/01/27/checkout-system
 ```
 
 The command reads the epic PLAN.md for dependency order and implements child changes sequentially, creating a branch per child change (`epic/checkout-system/shopping-cart`, etc.).
@@ -117,7 +117,7 @@ The command reads the epic PLAN.md for dependency order and implements child cha
 ### Verification
 
 ```
-/sdd-verify-change specs/changes/2026/01/27/checkout-system
+/sdd-verify-change changes/2026/01/27/checkout-system
 ```
 
 Verifies each child change individually, then checks that the combined implementation satisfies all epic-level acceptance criteria.
