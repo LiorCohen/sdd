@@ -145,6 +145,7 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 - **Remove**: Deletion
 - **Refactor**: Code restructuring without behavior change
 - **Docs**: Documentation only
+- **Tasks**: Task management changes (adding, completing, updating tasks in `tasks/`)
 
 ### Step 6: Review and Confirm
 
