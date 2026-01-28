@@ -13,6 +13,16 @@ After running `sdd-init`, all components should be in a ready-to-work state with
 
 **Plan:** [plans/planned/PLAN-task-9-ready-to-work-components.md](plans/planned/PLAN-task-9-ready-to-work-components.md)
 
+### 51. Add GitHub Actions workflow for automated releases
+Add marketplace-level GitHub Actions that create a release in the repo (LiorCohen/claude-code-plugins) for every plugin change that requires a version change:
+- Trigger on push to main branch
+- Detect if plugin version changed (compare current vs previous commit)
+- Extract changelog entry for the new version from CHANGELOG.md
+- Create GitHub release with version tag and changelog as release notes
+- Only create release when version actually changes (not for infrastructure-only commits)
+
+**Plan:** [plans/planned/PLAN-task-51-github-actions-releases.md](plans/planned/PLAN-task-51-github-actions-releases.md)
+
 ---
 
 ## Pending

@@ -22,6 +22,10 @@ All notable changes to the SDD plugin and marketplace infrastructure.
   - 9 files to delete, 6 to create, 39 to modify
   - Remove greetings example, use PostgreSQL via k8s, restructure specs directory
 
+- **Task 51 plan**: GitHub Actions workflow for automated releases
+  - Create releases on plugin version changes
+  - Extract changelog entry as release notes
+
 ### Changed
 
 - **Commit skill**: Added Step 4 "Tasks & Plans Check" to verify tasks and plans are updated before committing
