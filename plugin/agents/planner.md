@@ -23,7 +23,7 @@ For `type: epic` changes, use the `epic-planning` skill. Epics contain multiple 
 
 Plans are stored alongside their specs:
 
-`specs/changes/YYYY/MM/DD/<change-name>/PLAN.md`
+`changes/YYYY/MM/DD/<change-name>/PLAN.md`
 
 **Important:**
 - Plans live in the same directory as their corresponding SPEC.md

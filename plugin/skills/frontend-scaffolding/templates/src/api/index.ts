@@ -1,3 +1,3 @@
-// API index - exports only
-export { greetingsApi } from './greetings';
-export type { Greeting, CreateGreetingInput } from './greetings';
+// API index
+// Add API client exports here as features are implemented
+// Example: export { usersApi } from './users';

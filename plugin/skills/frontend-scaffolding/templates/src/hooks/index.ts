@@ -1,2 +1,3 @@
-// Hooks index - exports only
-export { useGreeting, useCreateGreeting } from './use-greetings';
+// Hooks index
+// Add hook exports here as features are implemented
+// Example: export { useUser, useCreateUser } from './use-users';

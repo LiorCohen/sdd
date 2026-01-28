@@ -6,13 +6,6 @@
 
 ## Planned
 
-### 9. sdd-init should produce ready-to-work components [CRITICAL]
-After running `sdd-init`, all components should be in a ready-to-work state without additional setup or configuration needed. The initial template generated for new components is currently sparse and doesn't include enough content/guidance for the different component types.
-
-**Includes:** Task #42 (restructure specs directory)
-
-**Plan:** [plans/planned/PLAN-task-9-ready-to-work-components.md](plans/planned/PLAN-task-9-ready-to-work-components.md)
-
 ### 51. Add GitHub Actions workflow for automated releases
 Add marketplace-level GitHub Actions that create a release in the repo (LiorCohen/claude-code-plugins) for every plugin change that requires a version change:
 - Trigger on push to main branch
@@ -301,6 +294,21 @@ Investigate if there's a way to show a welcome prompt/message after plugin insta
 ---
 
 ## Completed
+
+### 9. sdd-init should produce ready-to-work components ✓
+**Completed: 2026-01-28 (v5.0.0)**
+
+BREAKING CHANGE: Restructured project scaffolding for clean-slate approach:
+- Removed all greetings example code (9 files deleted)
+- Directory restructure: `specs/changes/` → `changes/`, `specs/external/` → `archive/`
+- Added PostgreSQL database support (replaced in-memory hack)
+- Added `.gitkeep` files for empty directories, `.claudeignore` for archive/
+- Simplified completion reports to focus on next steps
+- Empty barrels with helpful comments guide users to add their own features
+
+**Includes:** Task #42 (restructure specs directory)
+
+**Plan:** [plans/complete/PLAN-task-9-ready-to-work-components.md](plans/complete/PLAN-task-9-ready-to-work-components.md)
 
 ### 19. Create task management skill in marketplace ✓
 **Completed: 2026-01-28**

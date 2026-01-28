@@ -30,7 +30,7 @@ Validates spec frontmatter and format.
 
 ```bash
 # Validate single spec
-python scripts/validate-spec.py specs/changes/2026/01/21/my-change/SPEC.md
+python scripts/validate-spec.py changes/2026/01/21/my-change/SPEC.md
 
 # Validate all specs
 python scripts/validate-spec.py --all --specs-dir specs/

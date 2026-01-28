@@ -1,3 +1,3 @@
-// Use cases index - exports only
-export { createGreeting } from './create_greeting';
-export { getGreeting } from './get_greeting';
+// Use cases index
+// Add use case exports here as features are implemented
+// Example: export { createUser } from './create_user';

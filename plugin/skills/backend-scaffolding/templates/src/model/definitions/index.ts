@@ -1,2 +1,3 @@
-// Model Definitions: Re-export all domain types
-export type { Greeting, CreateGreetingInput } from './greeting';
+// Model Definitions: Domain types
+// Add type exports here as entities are defined
+// Example: export type { User, CreateUserInput } from './user';

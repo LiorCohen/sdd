@@ -6,8 +6,6 @@ Canonical terminology for {{PROJECT_NAME}}.
 
 | Term | Definition |
 |------|------------|
-| User | A registered account in the system |
-| | |
 
 ## Conventions
 

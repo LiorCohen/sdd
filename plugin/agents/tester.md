@@ -93,7 +93,7 @@ Every test file must reference its spec and issue:
 
 ```typescript
 /**
- * @spec specs/changes/user-auth/SPEC.md
+ * @spec changes/user-auth/SPEC.md
  * @issue PROJ-123
  */
 describe('Feature: User Authentication', () => {

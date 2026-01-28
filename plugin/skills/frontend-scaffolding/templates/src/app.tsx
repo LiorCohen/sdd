@@ -1,23 +1,19 @@
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Sidebar } from './components';
-import { HomePage, GreeterPage } from './pages';
+import { HomePage } from './pages';
 
-// Create a single QueryClient instance for the app
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
       retry: 1,
     },
   },
 });
 
-// Simple page router based on current page state
 const PageRouter = ({ currentPage }: { currentPage: string }): JSX.Element => {
   switch (currentPage) {
-    case 'greeter':
-      return <GreeterPage />;
     case 'home':
     default:
       return <HomePage />;

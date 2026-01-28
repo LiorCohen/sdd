@@ -10,7 +10,7 @@ description: Templates for implementation plans.
 
 Plans are stored alongside their specs:
 
-`specs/changes/YYYY/MM/DD/<change-name>/PLAN.md`
+`changes/YYYY/MM/DD/<change-name>/PLAN.md`
 
 This keeps all change documentation (spec + plan) together in one location.
 

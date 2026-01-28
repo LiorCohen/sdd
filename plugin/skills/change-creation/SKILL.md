@@ -8,7 +8,7 @@ description: Create change specification and implementation plan with proper str
 ## Purpose
 
 Create a complete change specification package consisting of:
-- Change directory: `specs/changes/YYYY/MM/DD/<change-name>/`
+- Change directory: `changes/YYYY/MM/DD/<change-name>/`
 - Specification: `SPEC.md` with proper frontmatter and type-specific sections
 - Implementation plan: `PLAN.md` with 6-phase structure
 - INDEX.md update with new change entry
@@ -61,7 +61,7 @@ Returns a result with:
 
 1. Get current date
 2. Format as `YYYY/MM/DD`
-3. Full path: `specs/changes/YYYY/MM/DD/<name>/`
+3. Full path: `changes/YYYY/MM/DD/<name>/`
 
 ### Step 3: Read Plugin Version
 
@@ -71,12 +71,12 @@ Returns a result with:
 ### Step 4: Create Change Directory
 
 ```bash
-mkdir -p specs/changes/YYYY/MM/DD/<name>/
+mkdir -p changes/YYYY/MM/DD/<name>/
 ```
 
 ### Step 5: Create SPEC.md
 
-Create `specs/changes/YYYY/MM/DD/<name>/SPEC.md` using type-specific template.
+Create `changes/YYYY/MM/DD/<name>/SPEC.md` using type-specific template.
 
 #### Common Frontmatter (all types)
 
@@ -328,7 +328,7 @@ decomposition_id: <uuid>  # Only if provided
 After creating the epic's own SPEC.md and PLAN.md, create child change directories:
 
 ```
-specs/changes/YYYY/MM/DD/<epic-name>/
+changes/YYYY/MM/DD/<epic-name>/
 ├── SPEC.md
 ├── PLAN.md
 └── changes/
@@ -344,7 +344,7 @@ Each child change uses the standard feature spec template with `parent_epic: ../
 
 ### Step 6: Create PLAN.md
 
-Create `specs/changes/YYYY/MM/DD/<name>/PLAN.md`:
+Create `changes/YYYY/MM/DD/<name>/PLAN.md`:
 
 #### Frontmatter
 
@@ -599,8 +599,8 @@ Add entry to `specs/INDEX.md`:
 
 Return:
 ```yaml
-spec_path: specs/changes/YYYY/MM/DD/<name>/SPEC.md
-plan_path: specs/changes/YYYY/MM/DD/<name>/PLAN.md
+spec_path: changes/YYYY/MM/DD/<name>/SPEC.md
+plan_path: changes/YYYY/MM/DD/<name>/PLAN.md
 index_updated: true
 ```
 
@@ -618,8 +618,8 @@ Input:
   issue: PROJ-123
 
 Output:
-  spec_path: specs/changes/2026/01/21/user-authentication/SPEC.md
-  plan_path: specs/changes/2026/01/21/user-authentication/PLAN.md
+  spec_path: changes/2026/01/21/user-authentication/SPEC.md
+  plan_path: changes/2026/01/21/user-authentication/PLAN.md
   index_updated: true
 ```
 
@@ -639,8 +639,8 @@ Input:
     - src/middleware/auth.ts
 
 Output:
-  spec_path: specs/changes/2026/01/21/fix-session-timeout/SPEC.md
-  plan_path: specs/changes/2026/01/21/fix-session-timeout/PLAN.md
+  spec_path: changes/2026/01/21/fix-session-timeout/SPEC.md
+  plan_path: changes/2026/01/21/fix-session-timeout/PLAN.md
   index_updated: true
 ```
 
@@ -663,8 +663,8 @@ Input:
     - src/validation/ (new)
 
 Output:
-  spec_path: specs/changes/2026/01/21/extract-validation-layer/SPEC.md
-  plan_path: specs/changes/2026/01/21/extract-validation-layer/PLAN.md
+  spec_path: changes/2026/01/21/extract-validation-layer/SPEC.md
+  plan_path: changes/2026/01/21/extract-validation-layer/PLAN.md
   index_updated: true
 ```
 
@@ -684,16 +684,16 @@ Input:
     - order-management
 
 Output:
-  spec_path: specs/changes/2026/01/27/checkout-system/SPEC.md
-  plan_path: specs/changes/2026/01/27/checkout-system/PLAN.md
+  spec_path: changes/2026/01/27/checkout-system/SPEC.md
+  plan_path: changes/2026/01/27/checkout-system/PLAN.md
   index_updated: true
   # Also creates:
-  # specs/changes/2026/01/27/checkout-system/changes/shopping-cart/SPEC.md
-  # specs/changes/2026/01/27/checkout-system/changes/shopping-cart/PLAN.md
-  # specs/changes/2026/01/27/checkout-system/changes/payment-processing/SPEC.md
-  # specs/changes/2026/01/27/checkout-system/changes/payment-processing/PLAN.md
-  # specs/changes/2026/01/27/checkout-system/changes/order-management/SPEC.md
-  # specs/changes/2026/01/27/checkout-system/changes/order-management/PLAN.md
+  # changes/2026/01/27/checkout-system/changes/shopping-cart/SPEC.md
+  # changes/2026/01/27/checkout-system/changes/shopping-cart/PLAN.md
+  # changes/2026/01/27/checkout-system/changes/payment-processing/SPEC.md
+  # changes/2026/01/27/checkout-system/changes/payment-processing/PLAN.md
+  # changes/2026/01/27/checkout-system/changes/order-management/SPEC.md
+  # changes/2026/01/27/checkout-system/changes/order-management/PLAN.md
 ```
 
 ## Error Handling

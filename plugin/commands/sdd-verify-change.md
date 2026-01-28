@@ -111,4 +111,4 @@ Generate verification report:
 ## Example
 
 ```
-User: /sdd-verify-change specs/changes/2026/01/11/user-auth
+User: /sdd-verify-change changes/2026/01/11/user-auth

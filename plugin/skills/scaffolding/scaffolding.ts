@@ -229,13 +229,42 @@ dist/
     'specs/domain/definitions',
     'specs/domain/use-cases',
     'specs/architecture',
-    'specs/changes',
-    'specs/external',
   ];
   for (const d of specsDirs) {
     await createDirectory(path.join(target, d), config);
     createdDirs.push(d);
   }
+
+  // Separate directories at project root
+  const rootDirs = [
+    'changes',   // Change specs (not inside specs/)
+    'archive',   // External specs (audit only, never read again)
+  ];
+  for (const d of rootDirs) {
+    await createDirectory(path.join(target, d), config);
+    createdDirs.push(d);
+  }
+
+  // Create .gitkeep files for empty directories that need to exist
+  const emptyDirs = [
+    'specs/domain/definitions',
+    'specs/domain/use-cases',
+    'specs/architecture',
+    'changes',
+    'archive',
+  ];
+  for (const dir of emptyDirs) {
+    const gitkeepPath = path.join(target, dir, '.gitkeep');
+    await fsp.writeFile(gitkeepPath, '# This file ensures the directory is tracked by git\n');
+    createdFiles.push(`${dir}/.gitkeep`);
+    console.log(`  Created: ${dir}/.gitkeep`);
+  }
+
+  // Create .claudeignore with archive/ ignored
+  const claudeignore = path.join(target, '.claudeignore');
+  await fsp.writeFile(claudeignore, 'archive/\n');
+  createdFiles.push('.claudeignore');
+  console.log('  Created: .claudeignore');
 
   // Config is always created at project root (not a component)
   const configDirs = ['config', 'config/schemas'];

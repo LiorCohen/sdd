@@ -1,3 +1,3 @@
-// HTTP handlers index - re-exports all routers
-export { createGreetingsRouter } from './greetings';
-export type { GreetingsHandlerDeps } from './greetings';
+// HTTP handlers index
+// Add router exports here as features are implemented
+// Example: export { createUsersRouter } from './users';

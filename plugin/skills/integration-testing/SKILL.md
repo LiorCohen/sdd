@@ -191,7 +191,7 @@ import { createTestClient, TestClient } from '../helpers/client';
 import { truncateTables, getTestDatabase } from '../helpers/database';
 
 /**
- * @spec specs/changes/user-management/SPEC.md
+ * @spec changes/user-management/SPEC.md
  * @issue PROJ-123
  */
 describe('Feature: User Management API', () => {

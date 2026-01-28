@@ -57,8 +57,8 @@ Run `scripts/validate-spec.py <path>` to check:
 
 | Type | Location |
 |------|----------|
-| Change specs | `specs/changes/YYYY/MM/DD/<change-name>/SPEC.md` |
-| Implementation plans | `specs/changes/YYYY/MM/DD/<change-name>/PLAN.md` |
+| Change specs | `changes/YYYY/MM/DD/<change-name>/SPEC.md` |
+| Implementation plans | `changes/YYYY/MM/DD/<change-name>/PLAN.md` |
 | Domain definitions | `specs/domain/definitions/<definition-name>.md` |
 | API contracts | `specs/architecture/api-contracts.md` |
 
@@ -267,7 +267,7 @@ The `parent_epic` field links the child back to the epic spec.
 ### Epic Directory Structure
 
 ```
-specs/changes/YYYY/MM/DD/<epic-name>/
+changes/YYYY/MM/DD/<epic-name>/
 ├── SPEC.md                    # Epic-level spec
 ├── PLAN.md                    # Epic-level plan (change ordering)
 └── changes/

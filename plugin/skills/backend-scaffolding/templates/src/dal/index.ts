@@ -1,6 +1,3 @@
-// DAL index - exports only
-export { findGreetingById } from './find_greeting_by_id';
-export type { FindGreetingByIdDeps } from './find_greeting_by_id';
-
-export { insertGreeting } from './insert_greeting';
-export type { InsertGreetingDeps } from './insert_greeting';
+// DAL index
+// Add DAL function exports here as data access is implemented
+// Example: export { findUserById } from './find_user_by_id';

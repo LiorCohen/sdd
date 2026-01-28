@@ -44,7 +44,7 @@ import { createUser } from './create_user';
 import type { Dependencies } from '../dependencies';
 
 /**
- * @spec specs/changes/user-management/SPEC.md
+ * @spec changes/user-management/SPEC.md
  * @issue PROJ-123
  */
 describe('createUser', () => {

@@ -13,7 +13,7 @@ Epics are a change type that groups multiple feature-type changes under a single
 ## Epic Structure
 
 ```
-specs/changes/YYYY/MM/DD/<epic-name>/
+changes/YYYY/MM/DD/<epic-name>/
 ├── SPEC.md                    # Epic specification (overall goals, all ACs)
 ├── PLAN.md                    # Epic plan (change ordering, dependencies)
 └── changes/

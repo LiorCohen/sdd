@@ -17,8 +17,8 @@ Use the `spec-writing` skill for templates and validation.
 
 | Type | Location |
 |------|----------|
-| Change specs | `specs/changes/YYYY/MM/DD/<change-name>/SPEC.md` |
-| Implementation plans | `specs/changes/YYYY/MM/DD/<change-name>/PLAN.md` |
+| Change specs | `changes/YYYY/MM/DD/<change-name>/SPEC.md` |
+| Implementation plans | `changes/YYYY/MM/DD/<change-name>/PLAN.md` |
 | Domain definitions | `specs/domain/definitions/<definition-name>.md` |
 | Business use cases | `specs/domain/use-cases/<use-case-name>.md` |
 | Glossary | `specs/domain/glossary.md` |

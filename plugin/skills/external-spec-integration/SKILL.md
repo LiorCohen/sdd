@@ -10,7 +10,7 @@ Processes external specification files into the SDD change structure, with optio
 ## Purpose
 
 When a user provides an external specification via `--spec`:
-- Copy the external spec to the archive (`specs/external/`) for audit trail only
+- Copy the external spec to the archive (`archive/`) for audit trail only
 - Analyze the spec for potential decomposition into multiple changes
 - Present decomposition options to user for adjustment
 - Create **self-sufficient** change specifications that embed all relevant content
@@ -18,7 +18,7 @@ When a user provides an external specification via `--spec`:
 
 **CRITICAL: External specs are consumed ONCE during import, then NEVER read again.**
 
-Generated SPEC.md files must be completely self-sufficient. Implementation agents, planning skills, and any downstream processes must NEVER read from `specs/external/`. The archived external spec exists solely for audit/compliance purposes - it is not part of the working specification.
+Generated SPEC.md files must be completely self-sufficient. Implementation agents, planning skills, and any downstream processes must NEVER read from `archive/`. The archived external spec exists solely for audit/compliance purposes - it is not part of the working specification.
 
 ## When to Use
 
@@ -38,18 +38,18 @@ Generated SPEC.md files must be completely self-sufficient. Implementation agent
 
 ```yaml
 success: true
-external_spec_archived: "specs/external/original-spec.md"
+external_spec_archived: "archive/original-spec.md"
 is_epic: false  # true if created as epic structure
 changes_created:
   - name: "user-authentication"
-    path: "specs/changes/2026/01/25/user-authentication/"
-    spec_path: "specs/changes/2026/01/25/user-authentication/SPEC.md"
-    plan_path: "specs/changes/2026/01/25/user-authentication/PLAN.md"
+    path: "changes/2026/01/25/user-authentication/"
+    spec_path: "changes/2026/01/25/user-authentication/SPEC.md"
+    plan_path: "changes/2026/01/25/user-authentication/PLAN.md"
     type: "feature"
   - name: "password-reset"
-    path: "specs/changes/2026/01/25/password-reset/"
-    spec_path: "specs/changes/2026/01/25/password-reset/SPEC.md"
-    plan_path: "specs/changes/2026/01/25/password-reset/PLAN.md"
+    path: "changes/2026/01/25/password-reset/"
+    spec_path: "changes/2026/01/25/password-reset/SPEC.md"
+    plan_path: "changes/2026/01/25/password-reset/PLAN.md"
     type: "feature"
 suggested_order: ["user-authentication", "password-reset"]
 shared_concepts_added: ["User", "Session", "Token"]
@@ -63,15 +63,15 @@ shared_concepts_added: ["User", "Session", "Token"]
 
 **If spec is a single file:**
 1. Determine the original filename from the spec path
-2. Copy to: `specs/external/<original-filename>`
-3. Store: `archived_spec_path = {target_dir}/specs/external/<filename>`
-4. Display: "Archived external spec to: specs/external/<filename> (audit only - will not be read after import)"
+2. Copy to: `archive/<original-filename>`
+3. Store: `archived_spec_path = {target_dir}/archive/<filename>`
+4. Display: "Archived external spec to: archive/<filename> (audit only - will not be read after import)"
 
 **If spec is a directory:**
 1. Determine the directory name from the spec path
-2. Copy entire directory to: `specs/external/<directory-name>/`
-3. Store: `archived_spec_dir = {target_dir}/specs/external/<directory-name>/`
-4. Display: "Archived external spec directory to: specs/external/<directory-name>/ ({N} files) (audit only - will not be read after import)"
+2. Copy entire directory to: `archive/<directory-name>/`
+3. Store: `archived_spec_dir = {target_dir}/archive/<directory-name>/`
+4. Display: "Archived external spec directory to: archive/<directory-name>/ ({N} files) (audit only - will not be read after import)"
 
 **Important:**
 - All section reads during THIS import use the archived path, not the original `spec_path`
@@ -245,7 +245,7 @@ After user accepts the decomposition (before creating changes), check if an epic
    organizing them as an Epic for better tracking and organization.
 
    Epic structure:
-     specs/changes/YYYY/MM/DD/<epic-name>/
+     changes/YYYY/MM/DD/<epic-name>/
      ├── SPEC.md          (epic overview)
      ├── PLAN.md          (change ordering)
      └── changes/
@@ -379,9 +379,9 @@ Display completion summary:
 ✅ EXTERNAL SPEC PROCESSED SUCCESSFULLY
 ═══════════════════════════════════════════════════════════════
 
-Archived to: specs/external/<filename> (audit only - will not be read after import)
+Archived to: archive/<filename> (audit only - will not be read after import)
 
-Created Epic: specs/changes/YYYY/MM/DD/<epic-name>/
+Created Epic: changes/YYYY/MM/DD/<epic-name>/
 ├── SPEC.md
 ├── PLAN.md
 └── changes/
@@ -398,10 +398,10 @@ Created Epic: specs/changes/YYYY/MM/DD/<epic-name>/
 Implementation order: 01-change-1 → 02-change-2 → 03-change-3
 
 ⚠️  IMPORTANT: Implementation must use the generated SPEC.md files only.
-    Do NOT reference specs/external/ - it exists for audit purposes only.
+    Do NOT reference archive/ - it exists for audit purposes only.
 
 Next step: Start with the first child change:
-  /sdd-implement-change specs/changes/YYYY/MM/DD/<epic-name>/changes/01-<change-1>
+  /sdd-implement-change changes/YYYY/MM/DD/<epic-name>/changes/01-<change-1>
 ```
 
 **For individual changes:**
@@ -410,23 +410,23 @@ Next step: Start with the first child change:
 ✅ EXTERNAL SPEC PROCESSED SUCCESSFULLY
 ═══════════════════════════════════════════════════════════════
 
-Archived to: specs/external/<filename> (audit only - will not be read after import)
+Archived to: archive/<filename> (audit only - will not be read after import)
 
 Created N change specifications:
-  specs/changes/YYYY/MM/DD/change-1/
+  changes/YYYY/MM/DD/change-1/
   ├── SPEC.md
   └── PLAN.md
-  specs/changes/YYYY/MM/DD/change-2/
+  changes/YYYY/MM/DD/change-2/
   ├── SPEC.md
   └── PLAN.md
 
 Implementation order: change-1 → change-2 → ...
 
 ⚠️  IMPORTANT: Implementation must use the generated SPEC.md files only.
-    Do NOT reference specs/external/ - it exists for audit purposes only.
+    Do NOT reference archive/ - it exists for audit purposes only.
 
 Next step: Start with the first change:
-  /sdd-implement-change specs/changes/YYYY/MM/DD/change-1
+  /sdd-implement-change changes/YYYY/MM/DD/change-1
 ```
 
 ## Examples
@@ -476,12 +476,12 @@ User: A
 
 Output:
   success: true
-  external_spec_archived: "specs/external/user-management-spec.md"
+  external_spec_archived: "archive/user-management-spec.md"
   changes_created:
-    - {name: "user-registration", path: "specs/changes/2026/01/25/user-registration/", type: "feature"}
-    - {name: "user-authentication", path: "specs/changes/2026/01/25/user-authentication/", type: "feature"}
-    - {name: "password-reset", path: "specs/changes/2026/01/25/password-reset/", type: "feature"}
-    - {name: "profile-management", path: "specs/changes/2026/01/25/profile-management/", type: "feature"}
+    - {name: "user-registration", path: "changes/2026/01/25/user-registration/", type: "feature"}
+    - {name: "user-authentication", path: "changes/2026/01/25/user-authentication/", type: "feature"}
+    - {name: "password-reset", path: "changes/2026/01/25/password-reset/", type: "feature"}
+    - {name: "profile-management", path: "changes/2026/01/25/profile-management/", type: "feature"}
   suggested_order: ["user-registration", "user-authentication", "password-reset", "profile-management"]
   shared_concepts_added: ["User", "Session", "Token", "Email"]
 ```
@@ -525,9 +525,9 @@ Agent: Keeping as single change. Creating unified change spec...
 
 Output:
   success: true
-  external_spec_archived: "specs/external/user-management-spec.md"
+  external_spec_archived: "archive/user-management-spec.md"
   changes_created:
-    - {name: "user-management", path: "specs/changes/2026/01/25/user-management/", type: "feature"}
+    - {name: "user-management", path: "changes/2026/01/25/user-management/", type: "feature"}
   suggested_order: ["user-management"]
 ```
 
@@ -540,10 +540,10 @@ This skill orchestrates:
 ## Notes
 
 - This skill is conversational and handles user interaction
-- Archives the original external spec in `specs/external/` for audit/compliance only
+- Archives the original external spec in `archive/` for audit/compliance only
 - **CRITICAL:** External specs are consumed ONCE during import, then NEVER read again
 - Generated SPEC.md files embed all relevant content and are completely self-sufficient
-- Implementation agents must NEVER read from `specs/external/`
+- Implementation agents must NEVER read from `archive/`
 - Decomposition is optional - user can always keep as single spec
 - Dependencies between changes are tracked and affect suggested order
 - When 3+ changes are identified, epic structure is recommended for better organization

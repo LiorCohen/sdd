@@ -13,7 +13,8 @@ type NavItem = {
 
 const navItems: readonly NavItem[] = [
   { id: 'home', label: 'Home', icon: '🏠' },
-  { id: 'greeter', label: 'Greeter', icon: '👋' },
+  // Add navigation items here as pages are implemented
+  // Example: { id: 'users', label: 'Users', icon: '👥' },
 ];
 
 export const Sidebar = ({ currentPage, onNavigate }: SidebarProps): JSX.Element => {

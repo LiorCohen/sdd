@@ -29,9 +29,10 @@ components/contract[-<name>]/
 The template `openapi.yaml` includes:
 
 - Basic info section with project name and description
-- `/health` endpoint (standard lifecycle probe)
-- `/greetings` endpoints (example CRUD operations)
-- Reusable schemas (Greeting, Error)
+- Placeholder for paths (add endpoints as features are implemented)
+- Reusable Error schema and standard error responses
+
+Note: Health check endpoints (`/health`, `/readiness`, `/liveness`) are NOT defined in the OpenAPI spec. They are infrastructure endpoints implemented directly in the controller.
 
 ## Type Generation
 

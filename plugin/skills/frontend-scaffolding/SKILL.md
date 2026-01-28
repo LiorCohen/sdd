@@ -28,12 +28,11 @@ components/<webapp-name>/
     ├── app.tsx               # Root app component
     ├── index.css             # Global styles (Tailwind)
     ├── pages/
-    │   ├── index.ts
-    │   ├── home.tsx          # Example page
-    │   └── greeter.tsx       # Example page
+    │   ├── index.ts          # Empty barrel (add pages as features are implemented)
+    │   └── home.tsx          # Home page
     ├── components/
     │   ├── index.ts
-    │   └── sidebar.tsx       # Example component
+    │   └── sidebar.tsx       # Navigation sidebar
     ├── viewmodels/           # ViewModel hooks (empty, for user)
     ├── models/               # Domain models (empty, for user)
     ├── services/             # API services (empty, for user)
@@ -41,11 +40,9 @@ components/<webapp-name>/
     ├── types/                # Type definitions (empty, for user)
     ├── utils/                # Utilities (empty, for user)
     ├── hooks/
-    │   ├── index.ts
-    │   └── use-greetings.ts  # Example hook
+    │   └── index.ts          # Empty barrel (add hooks as features are implemented)
     └── api/
-        ├── index.ts
-        └── greetings.ts      # Example API client
+        └── index.ts          # Empty barrel (add API clients as features are implemented)
 ```
 
 ## MVVM Architecture

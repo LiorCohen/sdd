@@ -1,34 +1,26 @@
 // Controller: Assembles routers and creates Dependencies for Model
-// Imports routers from http_handlers and wires them together
 import type { Router } from 'express';
 import { Router as createRouter } from 'express';
-import type { Dependencies } from '../model';
-import { createGreetingsRouter } from './http_handlers';
 
 export type ControllerDependencies = {
-  readonly dal: {
-    readonly findGreetingById: Dependencies['findGreetingById'];
-    readonly insertGreeting: Dependencies['insertGreeting'];
-  };
+  // Add DAL dependencies here as features are implemented
+  // Example:
+  // readonly dal: {
+  //   readonly findUserById: Dependencies['findUserById'];
+  // };
 };
 
 export type Controller = {
   readonly router: Router;
 };
 
-export const createController = (deps: ControllerDependencies): Controller => {
-  // Create Dependencies object for Model use cases
-  const modelDeps: Dependencies = {
-    findGreetingById: deps.dal.findGreetingById,
-    insertGreeting: deps.dal.insertGreeting,
-  };
-
-  // Create main router and mount namespace routers
+export const createController = (_deps: ControllerDependencies): Controller => {
   const router = createRouter();
 
-  // Mount namespace routers from http_handlers
-  const greetingsRouter = createGreetingsRouter({ modelDeps });
-  router.use('/greetings', greetingsRouter);
+  // Mount feature routers here
+  // Example:
+  // const usersRouter = createUsersRouter({ modelDeps });
+  // router.use('/users', usersRouter);
 
   return { router };
 };

@@ -133,7 +133,7 @@ affected_files: <collected files/modules>
 ```
 
 The `change-creation` skill will:
-1. Create change directory: `specs/changes/YYYY/MM/DD/<change-name>/`
+1. Create change directory: `changes/YYYY/MM/DD/<change-name>/`
 2. Create SPEC.md with proper frontmatter and type-specific sections
 3. Create PLAN.md with type-appropriate phases
 4. Update INDEX.md with the new change entry (includes type indicator)
@@ -192,8 +192,8 @@ User: Allow users to authenticate using email and password
 
 Agent: [Creates spec and plan using change-creation skill...]
 
-Agent: ✓ Created specs/changes/2026/01/21/user-authentication/SPEC.md
-Agent: ✓ Created specs/changes/2026/01/21/user-authentication/PLAN.md
+Agent: ✓ Created changes/2026/01/21/user-authentication/SPEC.md
+Agent: ✓ Created changes/2026/01/21/user-authentication/PLAN.md
 Agent: ✓ Updated INDEX.md
 ```
 
@@ -232,8 +232,8 @@ User: Sessions should remain valid for 30 minutes of inactivity
 
 Agent: [Creates bugfix spec and plan...]
 
-Agent: ✓ Created specs/changes/2026/01/21/fix-session-timeout/SPEC.md
-Agent: ✓ Created specs/changes/2026/01/21/fix-session-timeout/PLAN.md
+Agent: ✓ Created changes/2026/01/21/fix-session-timeout/SPEC.md
+Agent: ✓ Created changes/2026/01/21/fix-session-timeout/PLAN.md
 Agent: ✓ Updated INDEX.md
 ```
 
@@ -278,8 +278,8 @@ User: src/controllers/*.ts, will create new src/validation/ directory
 
 Agent: [Creates refactor spec and plan...]
 
-Agent: ✓ Created specs/changes/2026/01/21/extract-validation-layer/SPEC.md
-Agent: ✓ Created specs/changes/2026/01/21/extract-validation-layer/PLAN.md
+Agent: ✓ Created changes/2026/01/21/extract-validation-layer/SPEC.md
+Agent: ✓ Created changes/2026/01/21/extract-validation-layer/PLAN.md
 Agent: ✓ Updated INDEX.md
 ```
 

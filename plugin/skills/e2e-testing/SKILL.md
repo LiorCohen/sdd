@@ -299,7 +299,7 @@ import { DashboardPage } from '../../pages/dashboard.page';
 import { testUsers } from '../../fixtures/users';
 
 /**
- * @spec specs/changes/authentication/SPEC.md
+ * @spec changes/authentication/SPEC.md
  * @issue PROJ-100
  */
 test.describe('Feature: User Login', () => {
@@ -351,7 +351,7 @@ import { PlanEditorPage } from '../../pages/plan-editor.page';
 import { testUsers } from '../../fixtures/users';
 
 /**
- * @spec specs/changes/planning-workflow/SPEC.md
+ * @spec changes/planning-workflow/SPEC.md
  * @issue PROJ-200
  */
 test.describe('Feature: Plan Creation', () => {

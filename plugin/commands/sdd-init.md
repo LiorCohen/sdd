@@ -343,11 +343,11 @@ primary_domain: <from Phase 1>
 ```
 
 The skill:
-1. Copies external spec to `specs/external/`
+1. Copies external spec to `archive/`
 2. Presents outline to user for boundary level selection
 3. Analyzes each section individually (using outline line ranges)
 4. Presents combined decomposition for user adjustment
-5. Creates change specifications
+5. Creates change specifications in `changes/`
 6. Updates INDEX.md and glossary
 
 ---
@@ -377,55 +377,47 @@ cd ${TARGET_DIR} && git add . && git commit -m "Initial project setup from spec-
 ═══════════════════════════════════════════════════════════════
 
 Location: <absolute-path-to-target-dir>
-Description: <project-description>
-Primary Domain: <primary-domain>
+Domain: <primary-domain>
 
-External spec archived: specs/external/<filename> (audit only)
-Changes created: N
+WHAT'S INCLUDED:
 
-┌─────────────────────────────────────────────────────────────┐
-│ CHANGES TO REVIEW (in implementation order)                 │
-├─────────────────────────────────────────────────────────────┤
-│ 1. change-1 (feature): Brief description                    │
-│    → specs/changes/YYYY/MM/DD/change-1/SPEC.md              │
-│                                                             │
-│ 2. change-2 (feature): Brief description                    │
-│    → specs/changes/YYYY/MM/DD/change-2/SPEC.md              │
-└─────────────────────────────────────────────────────────────┘
+  ✓ Full project structure (backend, frontend, contract)
+  ✓ CMDO architecture ready for your features
+  ✓ External spec archived in archive/ (audit only)
 
-⚠️  IMPORTANT: Implementation must use the generated SPEC.md files only.
-    Do NOT reference specs/external/ - it exists for audit purposes only.
+CHANGES CREATED FROM EXTERNAL SPEC:
 
-NEXT: Review the first change specification
+  [List of changes created from external spec]
 
-I recommend reviewing the generated change specs to ensure they
-accurately capture your requirements before implementation.
+NEXT STEPS:
 
-Would you like me to:
-  [R] Review the first change spec (specs/changes/YYYY/MM/DD/<first-change>/SPEC.md)
-  [L] List all change specs with summaries
-  [I] Start implementing the first change (/sdd-implement-change)
+  1. Review the generated change specs in changes/
+  2. Run /sdd-implement-change to begin implementation
 ```
 
-**IMPORTANT:** After displaying this report, wait for user input. Do NOT proceed to implement changes without user direction.
-
-**If standard initialization:**
+**If standard initialization (no external spec):**
 ```
 ═══════════════════════════════════════════════════════════════
  PROJECT INITIALIZED: <project-name>
 ═══════════════════════════════════════════════════════════════
 
 Location: <absolute-path-to-target-dir>
-Description: <project-description>
-Primary Domain: <primary-domain>
-Components created: <list>
+Domain: <primary-domain>
 
-Next steps:
-  1. cd <project-name> (if not current directory)
-  2. npm install --workspaces
-  3. cd components/<contract-component-name> && npm run generate:types
-  4. Review: specs/domain/glossary.md, components/<contract-component-name>/openapi.yaml
-  5. Create first change: /sdd-new-change --type feature --name <name>
+WHAT'S INCLUDED:
+
+  ✓ Full project structure (backend, frontend, contract)
+  ✓ CMDO architecture ready for your features
+  ✓ Empty specs directory (ready for your first feature)
+
+NEXT STEP:
+
+  /sdd-new-change --type feature --name <your-first-feature>
+
+  This will guide you through:
+  1. Creating a specification for your feature
+  2. Planning the implementation
+  3. Building it step by step
 ```
 
 **VERIFICATION:** Before displaying the completion report, confirm:

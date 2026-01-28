@@ -26,7 +26,7 @@ components/<server-name>/
     ├── operator/
     │   ├── index.ts
     │   ├── create_operator.ts      # Operator factory
-    │   ├── create_database.ts      # Database setup
+    │   ├── create_database.ts      # PostgreSQL database setup
     │   ├── create_http_server.ts   # HTTP server setup
     │   ├── lifecycle_probes.ts     # Health/ready endpoints
     │   ├── logger.ts               # Structured logging
@@ -36,22 +36,16 @@ components/<server-name>/
     │   ├── index.ts
     │   ├── create_controller.ts    # Controller factory
     │   └── http_handlers/
-    │       ├── index.ts
-    │       └── greetings.ts        # Example handler
+    │       └── index.ts            # Empty barrel (add handlers as features are implemented)
     ├── model/
     │   ├── index.ts
-    │   ├── dependencies.ts         # Dependency injection
+    │   ├── dependencies.ts         # Dependency injection interface
     │   ├── definitions/
-    │   │   ├── index.ts
-    │   │   └── greeting.ts         # Example definition
+    │   │   └── index.ts            # Empty barrel (add types as entities are defined)
     │   └── use-cases/
-    │       ├── index.ts
-    │       ├── create_greeting.ts  # Example use case
-    │       └── get_greeting.ts     # Example use case
+    │       └── index.ts            # Empty barrel (add use cases as features are implemented)
     └── dal/
-        ├── index.ts
-        ├── find_greeting_by_id.ts  # Example DAL function
-        └── insert_greeting.ts      # Example DAL function
+        └── index.ts                # Empty barrel (add DAL functions as features are implemented)
 ```
 
 ## CMDO Architecture

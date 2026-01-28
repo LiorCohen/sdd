@@ -1,3 +1,4 @@
-// Pages index - exports only
+// Pages index
 export { HomePage } from './home';
-export { GreeterPage } from './greeter';
+// Add page exports here as features are implemented
+// Example: export { UsersPage } from './users';

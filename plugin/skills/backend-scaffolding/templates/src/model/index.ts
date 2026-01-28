@@ -1,4 +1,3 @@
-// Model index - exports only
-export type { Greeting, CreateGreetingInput } from './definitions';
+// Model index
 export type { Dependencies } from './dependencies';
-export { createGreeting, getGreeting } from './use-cases';
+// Add type and use case exports here as features are implemented

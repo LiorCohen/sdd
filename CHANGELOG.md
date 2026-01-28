@@ -8,6 +8,36 @@ All notable changes to the SDD plugin and marketplace infrastructure.
 
 ---
 
+## [5.0.0] - 2026-01-28
+
+### Changed
+
+- **BREAKING: Directory restructure (Task 9)**: Change specs now live at project root
+  - `specs/changes/` → `changes/` (change specifications)
+  - `specs/external/` → `archive/` (archived external specs, audit only)
+  - Added `.claudeignore` with `archive/` ignored
+  - Added `.gitkeep` files for empty directories
+
+- **BREAKING: Remove greetings example**: Clean slate approach for new projects
+  - Deleted all greeting-related files from backend, frontend, and contract templates
+  - Empty barrel exports with helpful comments guide users to add their own features
+  - User's first feature IS the example
+
+- **Backend templates**: PostgreSQL database support
+  - Replaced in-memory database hack with real PostgreSQL using `pg` package
+  - Added `databaseUrl` to config
+  - Added `pg` and `@types/pg` dependencies
+
+- **Simplified completion reports**: Focus on next steps
+  - Without external spec: guides to `/sdd-new-change`
+  - With external spec: lists created changes and guides to `/sdd-implement-change`
+
+### Rationale
+
+The greetings example violated SDD principles (code with no spec) and the in-memory database masked real requirements. A clean skeleton with helpful comments is more honest and practical - the user's first feature becomes the learning example.
+
+---
+
 ## Infrastructure - 2026-01-28
 
 ### Added
