@@ -127,16 +127,10 @@ Identify the different assumptions we've made with our agents and evaluate wheth
 - Are there agents that should pause for feedback but don't?
 - Are there agents that block unnecessarily when they could proceed?
 
-### 35. Checksumming skill for component/spec snapshots
-Create a skill that takes a snapshot of existing components and domain specs:
-- Compute checksums of current state
-- Store snapshot data in `.sdd/` directory in the project
-- `.sdd/` directory should be committed to version control
-- Enables detecting drift, validating consistency, and tracking changes over time
-
-### 36. Drift detection for direct code changes
-Developers often change code directly, bypassing the spec/plan workflow. Need a mechanism to detect when implementation has drifted from specs:
-- New command like `/sdd-check-drift` or hook that runs on commit
+### 35. Checksumming and drift detection for specs/components
+Create a skill for snapshot management and drift detection:
+- **Snapshots**: Compute checksums of components and domain specs, store in `.sdd/` (committed to VCS)
+- **Drift detection**: New command `/sdd-check-drift` or commit hook to detect when code drifts from specs
 - Compare current code state against:
   - `specs/domain/` (domain concepts, glossary)
   - `specs/architecture/` (architectural decisions)
@@ -163,6 +157,8 @@ Integration tests and end-to-end tests should be distinct component types, not l
 - Dependencies
 
 ### 39. Capture ad-hoc code changes and sync specs
+**Depends on:** #35 (checksumming and drift detection)
+
 When users instruct Claude to make code changes directly (outside the SDD workflow), we need to:
 - Detect that code was changed outside of a spec/plan
 - Prompt to update relevant specs accordingly
@@ -264,6 +260,8 @@ Investigate if there's a way to show a welcome prompt/message after plugin insta
 ### 6. Large external specs should produce epics, not changes → merged into #7
 
 ### 46. Missing Helm chart template → merged into #44
+
+### 36. Drift detection for direct code changes → merged into #35
 
 ---
 
