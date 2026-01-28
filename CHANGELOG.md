@@ -8,6 +8,24 @@ All notable changes to the SDD plugin and marketplace infrastructure.
 
 ---
 
+## Infrastructure - 2026-01-28
+
+### Added
+
+- **Task management skill (Task 19)**: New marketplace skill at `.claude/skills/tasks/`
+  - Commands: `/tasks`, `/tasks add`, `/tasks complete`, `/tasks merge`, `/tasks prioritize`, `/tasks plan`, `/tasks plans`
+  - Manage backlog, track progress, create implementation plans
+  - Reorganized task data into `tasks/` directory (TASKS.md + plans/)
+
+### Changed
+
+- **Commit skill**: Added Step 4 "Tasks & Plans Check" to verify tasks and plans are updated before committing
+  - Checks if commit completes a task
+  - Verifies plan status is updated
+  - Prompts for new tasks when follow-up work is needed
+
+---
+
 ## [4.9.0] - 2026-01-28
 
 ### Fixed

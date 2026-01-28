@@ -88,7 +88,46 @@ Why this change was made (for significant changes).
 - `Fixed` - Bug fixes
 - `Removed` - Removed features
 
-### Step 4: Generate Commit Message
+### Step 4: Tasks & Plans Check
+
+**IMPORTANT:** Before committing, verify that tasks and plans are up to date.
+
+**Check for task-related work:**
+
+1. **Is this commit completing a task?**
+   - Search `tasks/TASKS.md` for related task numbers
+   - If completing a task, ensure it will be moved to `## Completed` with:
+     - Completion date (`**Completed: YYYY-MM-DD**`)
+     - Summary of what was accomplished
+     - Link to plan if one exists (`**Plan:** [plans/PLAN-task-N-slug.md](...)`)
+
+2. **Does a plan exist for this work?**
+   - Check `tasks/plans/` directory for related `PLAN-task-N-*.md` files
+   - If a plan exists and work is complete, update plan status to `## Status: COMPLETED ✓`
+   - If a plan exists and work is partial, leave status as `IN PROGRESS`
+
+3. **Should a new task be created?**
+   - If this commit reveals follow-up work needed, prompt to add a new task
+   - If this commit is part of ongoing work not yet tracked, prompt to add a task
+
+**Verification checklist:**
+
+```
+□ If completing a task → tasks/TASKS.md updated (moved to Completed, date added)
+□ If plan exists → Plan status updated (COMPLETED or still IN PROGRESS)
+□ If follow-up needed → New task added to tasks/TASKS.md
+□ If work not tracked → Consider adding a task for traceability
+```
+
+**Skip conditions:**
+- Trivial changes (typos, formatting) don't need task tracking
+- Changes already tracked in an existing task don't need new tasks
+
+**If tasks/plans need updating:**
+- Update them BEFORE proceeding to commit
+- Include `tasks/TASKS.md` and/or `tasks/plans/*.md` in the staged files
+
+### Step 5: Generate Commit Message
 
 Format:
 ```
@@ -107,17 +146,18 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 - **Refactor**: Code restructuring without behavior change
 - **Docs**: Documentation only
 
-### Step 5: Review and Confirm
+### Step 6: Review and Confirm
 
 Present to the user:
 - Summary of files to be committed
 - Proposed commit message
 - Version changes (if any)
 - Changelog additions (if any)
+- Task/plan updates (if any)
 
 **Wait for user confirmation before proceeding.**
 
-### Step 6: Execute Commit
+### Step 7: Execute Commit
 
 After confirmation:
 1. Stage all related files (code + version files + CHANGELOG)
@@ -195,8 +235,9 @@ Agent: ✓ Committed: abc1234 "Fix backend-dev agent: Improve error handling, bu
 ## Quick Reference
 
 ```
-Plugin file changed? → Bump version → Add versioned entry to CHANGELOG.md → Stage all → Commit
-Infrastructure file changed? → Add Infrastructure entry to CHANGELOG.md → Stage all → Commit
+Plugin file changed? → Bump version → CHANGELOG → Check tasks/ → Stage all → Commit
+Infrastructure file changed? → CHANGELOG → Check tasks/ → Stage all → Commit
+Completing a task? → Update tasks/TASKS.md → Update plan status → Stage all → Commit
 ```
 
 ## Common Mistakes to Avoid
@@ -210,6 +251,9 @@ Infrastructure file changed? → Add Infrastructure entry to CHANGELOG.md → St
 7. **Wrong date in CHANGELOG** - Use today's date
 8. **Amending pushed commits** - NEVER amend commits that have been pushed to remote
 9. **Multiple changelog entries per commit** - Each commit = one changelog entry. Split if needed
+10. **Forgetting to update tasks/TASKS.md** - When completing a task, move it to Completed section before committing
+11. **Stale plan status** - Update plan status to COMPLETED when work is done
+12. **Untracked work** - Significant work should have a corresponding task for traceability
 
 ## One Commit = One Changelog Entry
 

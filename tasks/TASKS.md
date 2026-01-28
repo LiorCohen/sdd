@@ -50,13 +50,6 @@ Currently the generated plans don't follow Test-Driven Development. Plans should
 ### 18. Add commit standards skill inside plugin
 The commit skill currently lives at the marketplace level (`.claude/skills/commit/`). Need to add commit standards as a skill inside the plugin itself so users of the plugin get consistent commit guidance.
 
-### 19. Create task management skill in marketplace
-Add a new skill at `.claude/skills/` for managing tasks/backlog processes like the one used in this session. Should help with:
-- Adding new task items
-- Organizing/categorizing tasks
-- Marking tasks complete
-- Reviewing the backlog
-
 ### 20. Plugin installation debugging skill + workflow fix
 Currently forced to delete `~/.claude/plugins` to use the marketplace/plugin in a new project. This is broken. Need:
 - A debugging skill to diagnose plugin installation issues
@@ -205,11 +198,13 @@ Need to figure out how to handle separate CI/CD components and how they integrat
 - How to handle component-specific vs shared workflows
 - Relationship between component specs and actual `.github/workflows/` files
 
-### 44. Add Victoria Logs and Metrics to Helm chart
-Add observability stack to the generated Helm chart:
-- Victoria Logs for log aggregation
-- Victoria Metrics for metrics collection
-- Integrate with existing k8s infrastructure templates
+### 44. Helm chart template + observability stack
+Need a Helm chart template for component scaffolding:
+- Generate proper Helm chart structure for k8s deployments
+- Include standard templates (deployment, service, configmap, etc.)
+- Integrate with existing infrastructure component types
+- Add Victoria Logs for log aggregation
+- Add Victoria Metrics for metrics collection
 
 ### 45. TypeScript standards: ban mutable array/object operations
 Add to typescript-standards skill a ban against mutable state operations:
@@ -218,6 +213,14 @@ Add to typescript-standards skill a ban against mutable state operations:
 - No `.pop()`, `.shift()`, `.unshift()`, `.splice()`
 - Prefer immutable patterns: spread operator, `.concat()`, `.filter()`, `.map()`
 - Enforce functional/immutable approach to data manipulation
+
+### 47. Local environment create/start/stop workflow
+Missing a way to manage local development environments:
+- Create a local environment (spin up k8s, databases, services)
+- Start/stop the local environment
+- Consistent commands across projects (e.g., `npm run env:up`, `npm run env:down`)
+- Integrate with docker-compose or local k8s (minikube, kind, k3d)
+- Handle dependencies between services
 
 ---
 
@@ -253,9 +256,19 @@ Investigate if there's a way to show a welcome prompt/message after plugin insta
 
 ### 6. Large external specs should produce epics, not changes → merged into #7
 
+### 46. Missing Helm chart template → merged into #44
+
 ---
 
 ## Completed
+
+### 19. Create task management skill in marketplace ✓
+**Completed: 2026-01-28**
+
+Added task management skill at `.claude/skills/tasks/` with:
+- Commands: `/tasks`, `/tasks add`, `/tasks complete`, `/tasks merge`, `/tasks prioritize`, `/tasks plan`, `/tasks plans`
+- Reorganized task data into `tasks/` directory (TASKS.md + plans/)
+- Updated commit skill to verify tasks/plans are updated before committing
 
 ### 7. External spec handling is broken ✓
 **Completed: 2026-01-28**
