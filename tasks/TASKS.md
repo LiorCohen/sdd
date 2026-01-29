@@ -6,6 +6,11 @@
 
 ## Planned
 
+### 18. Add commit standards skill inside plugin
+The commit skill currently lives at the marketplace level (`.claude/skills/commit/`). Need to add commit standards as a skill inside the plugin itself so users of the plugin get consistent commit guidance.
+
+**Plan:** [plans/planned/PLAN-task-18-commit-standards-plugin-skill.md](plans/planned/PLAN-task-18-commit-standards-plugin-skill.md)
+
 ---
 
 ## Pending
@@ -47,9 +52,6 @@ Currently the generated plans don't follow Test-Driven Development. Plans should
 - Tests are written/reviewed first
 - Implementation is guided by test expectations
 - True TDD workflow is enforced
-
-### 18. Add commit standards skill inside plugin
-The commit skill currently lives at the marketplace level (`.claude/skills/commit/`). Need to add commit standards as a skill inside the plugin itself so users of the plugin get consistent commit guidance.
 
 ### 20. Plugin installation debugging skill + workflow fix
 Currently forced to delete `~/.claude/plugins` to use the marketplace/plugin in a new project. This is broken. Need:
@@ -298,6 +300,15 @@ Investigate if there's a way to show a welcome prompt/message after plugin insta
 ---
 
 ## Completed
+
+### 55. Split CHANGELOG.md into per-major-version files ✓
+**Completed: 2026-01-29**
+
+Split the oversized `CHANGELOG.md` (2,685 lines) into per-major-version files:
+- Created `changelog/` directory with `index.md`, `v1.md`, `v2.md`, `v3.md`, `v4.md`, `v5.md`
+- Root `CHANGELOG.md` now serves as index with version table + latest entries only
+- Updated commit skill to document the two-file update requirement
+- GitHub Actions release workflow continues to work (extracts from root file)
 
 ### 51. Add GitHub Actions workflow for automated releases ✓
 **Completed: 2026-01-29**

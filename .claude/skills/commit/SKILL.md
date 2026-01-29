@@ -60,12 +60,18 @@ Update BOTH files:
 
 ### Step 3: Changelog Check
 
-**Single consolidated CHANGELOG** (`CHANGELOG.md` at root):
+**Changelog structure:**
+- `CHANGELOG.md` (root) - Index file with version history table + latest entries
+- `changelog/v{N}.md` - Per-major-version files (v1.md, v2.md, v3.md, v4.md, v5.md)
 
-- **Plugin changes**: Format `## [x.y.z] - YYYY-MM-DD` (versioned releases)
-- **Infrastructure changes**: Format `## Infrastructure - YYYY-MM-DD` (date-based)
+**Plugin changes**: Format `## [x.y.z] - YYYY-MM-DD` (versioned releases)
+**Infrastructure changes**: Format `## Infrastructure - YYYY-MM-DD` (date-based)
 
-If plugin version was bumped, ensure CHANGELOG.md has a versioned entry:
+**Update BOTH files:**
+1. **Version-specific file** (`changelog/v{major}.md`): Add entry at the top (after the header)
+2. **Root CHANGELOG.md**: Add entry after the version history table
+
+If plugin version was bumped, ensure BOTH changelog files have the versioned entry:
 
 ```markdown
 ## [x.y.z] - YYYY-MM-DD
@@ -87,6 +93,10 @@ Why this change was made (for significant changes).
 - `Enhanced` - Improvements to existing features
 - `Fixed` - Bug fixes
 - `Removed` - Removed features
+
+**Determining the version file:**
+- Extract major version from new version (e.g., `5.0.2` → `v5.md`)
+- File path: `changelog/v{major}.md`
 
 ### Step 4: Documentation Check
 
@@ -273,12 +283,13 @@ Completing a task? → Update tasks/TASKS.md → Update plan status → Stage al
 5. **Wrong commit format** - Must include Co-Authored-By
 6. **Staging incomplete** - Must include all version files in same commit
 7. **Wrong date in CHANGELOG** - Use today's date
-8. **Amending pushed commits** - NEVER amend commits that have been pushed to remote
-9. **Multiple changelog entries per commit** - Each commit = one changelog entry. Split if needed
-10. **Forgetting to update tasks/TASKS.md** - When completing a task, move it to Completed section before committing
-11. **Stale plan status** - Update plan status to COMPLETED when work is done
-12. **Untracked work** - Significant work should have a corresponding task for traceability
-13. **Outdated documentation** - Plugin changes may require docs updates; run docs-writer agent to check
+8. **Updating only one changelog file** - Must update BOTH root `CHANGELOG.md` AND `changelog/v{N}.md`
+9. **Amending pushed commits** - NEVER amend commits that have been pushed to remote
+10. **Multiple changelog entries per commit** - Each commit = one changelog entry. Split if needed
+11. **Forgetting to update tasks/TASKS.md** - When completing a task, move it to Completed section before committing
+12. **Stale plan status** - Update plan status to COMPLETED when work is done
+13. **Untracked work** - Significant work should have a corresponding task for traceability
+14. **Outdated documentation** - Plugin changes may require docs updates; run docs-writer agent to check
 
 ## One Commit = One Changelog Entry
 
@@ -329,9 +340,30 @@ cat plugin/.claude-plugin/plugin.json | grep version
 echo "Marketplace version:"
 cat .claude-plugin/marketplace.json | grep version
 
-# Check CHANGELOG has entry for new version
-head -20 CHANGELOG.md
+# Check CHANGELOG has entry for new version (check both files)
+head -30 CHANGELOG.md
+head -20 changelog/v5.md  # Adjust version number as needed
 
 # Check staged files
 git status
 ```
+
+## Changelog File Structure
+
+The changelog is split by major version to stay within Claude's file size limits:
+
+```
+CHANGELOG.md           # Index + latest version entries
+changelog/
+├── v1.md              # All 1.x releases
+├── v2.md              # All 2.x releases
+├── v3.md              # All 3.x releases
+├── v4.md              # All 4.x releases
+└── v5.md              # All 5.x releases (current)
+```
+
+When adding a new entry:
+1. Identify the major version (e.g., `5.1.0` → major version `5`)
+2. Add entry to `changelog/v5.md` after the header section
+3. Add entry to root `CHANGELOG.md` after the version history table
+4. Both files must have identical entries for the new version
