@@ -2,6 +2,24 @@
 
 ## High Priority
 
+### 60. Standardize TypeScript imports and tsconfig across codebase
+Ensure consistent TypeScript configuration and import style:
+- Remove file extensions from all imports (no `.js`, `.ts` extensions)
+- Audit all `tsconfig.json` files for consistency
+- Establish and enforce unified tsconfig standards (module resolution, target, strict settings)
+- Update typescript-standards skill with import rules if not already present
+- Fix any existing imports that violate the standard
+
+### 59. Audit and update all agents for compatibility
+Agents are severely outdated and lacking depth. Need comprehensive review:
+- Audit each agent in `plugin/agents/` one by one
+- Update agent instructions to reflect recent changes (new directory structure, commands, workflows)
+- Ensure agents are compatible with current plugin architecture
+- Add depth where agents are too shallow or generic
+- Verify agents reference correct paths (`changes/` not `specs/changes/`, etc.)
+- Update any outdated tool usage patterns or assumptions
+- Test each agent to ensure it works correctly with current plugin state
+
 ---
 
 ## Planned
@@ -247,6 +265,22 @@ Add a command to view and manage SDD settings:
 - Allow editing settings interactively
 - Show available configuration options with descriptions
 - Validate settings on save
+
+### 61. Consolidate plugin TypeScript files into single directory
+Consider consolidating all plugin-level TypeScript files into a single directory to simplify the structure:
+- Audit current TS file locations across the plugin
+- Evaluate benefits: simpler imports, unified tsconfig, easier navigation
+- Determine target structure (e.g., `plugin/src/` with subdirectories)
+- Plan migration path to avoid breaking changes
+- Update any build/tooling configurations accordingly
+
+### 58. Replace shell scripts with TypeScript
+Replace all shell scripts (`.sh` files) with TypeScript equivalents where possible:
+- Audit all shell scripts in the plugin (hooks, templates, utilities)
+- Convert to TypeScript using appropriate libraries (e.g., execa, fs-extra)
+- Benefits: type safety, better error handling, cross-platform compatibility
+- Keep shell scripts only where truly necessary (e.g., hook entry points that must be shell)
+- Ensure all existing functionality is preserved
 
 ### 52. Clean up .gitkeep and placeholder content during implementation
 When changes are implemented and actual content is added to directories, ensure that:
