@@ -34,7 +34,7 @@ claude-code-plugins/
 ├── tasks/                               # Task data (TASKS.md + plans/)
 │   ├── TASKS.md                         # Backlog with all tasks
 │   └── plans/                           # Implementation plans
-├── plugin/                              # SDD plugin (see plugin/README.md)
+├── plugin/                              # SDD plugin
 ├── tests/                               # Plugin tests
 ├── README.md
 ├── CLAUDE.md

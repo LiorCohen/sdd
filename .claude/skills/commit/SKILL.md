@@ -34,7 +34,6 @@ For each affected plugin, check if version bump is needed:
 | `plugin/templates/` | All template files |
 | `plugin/scripts/` | All script files |
 | `plugin/.claude-plugin/` | Plugin manifest |
-| `plugin/README.md` | Plugin documentation |
 | `plugin/QUICKSTART.md` | Plugin getting started guide |
 | `plugin/CLAUDE.md` | Plugin guidance for Claude |
 
