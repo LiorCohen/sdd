@@ -7,7 +7,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { SKILLS_DIR, joinPath, fileExists, isDirectory, readFile } from '../../../lib';
+import { SKILLS_DIR, joinPath, fileExists, isDirectory, readFile } from '@/lib';
 
 const DATABASE_TEMPLATES_DIR = joinPath(SKILLS_DIR, 'database-scaffolding', 'templates');
 

@@ -6,12 +6,12 @@
  */
 
 import * as path from 'node:path';
-import type { CommandResult } from '../../lib/args.js';
-import { parseNamedArgs } from '../../lib/args.js';
-import { extractOverview } from '../../lib/frontmatter.js';
-import { findSpecFiles, directoryExists } from '../../lib/spec-utils.js';
-import { writeText } from '../../lib/fs.js';
-import type { ActiveSpec } from '../../types/spec.js';
+import type { CommandResult } from '@/lib/args';
+import { parseNamedArgs } from '@/lib/args';
+import { extractOverview } from '@/lib/frontmatter';
+import { findSpecFiles, directoryExists } from '@/lib/spec-utils';
+import { writeText } from '@/lib/fs';
+import type { ActiveSpec } from '@/types/spec';
 
 /**
  * Generate SNAPSHOT.md content.

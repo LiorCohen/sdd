@@ -15,7 +15,7 @@ import {
   statAsync,
   readFileAsync,
   type TestProject,
-} from '../../../lib';
+} from '@/lib';
 
 const DEPLOY_DOCKER_PROMPT = `Using the postgresql skill, create a Docker Compose configuration for local PostgreSQL development.
 

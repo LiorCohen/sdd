@@ -6,9 +6,9 @@
  *   validate         Validate OpenAPI spec with Spectral
  */
 
-import type { CommandResult, GlobalOptions } from '../../lib/args.js';
-import type { CommandSchema } from '../../lib/schema-validator.js';
-import { validateArgs, formatValidationErrors } from '../../lib/schema-validator.js';
+import type { CommandResult, GlobalOptions } from '@/lib/args';
+import type { CommandSchema } from '@/lib/schema-validator';
+import { validateArgs, formatValidationErrors } from '@/lib/schema-validator';
 
 const ACTIONS = ['generate-types', 'validate'] as const;
 type Action = (typeof ACTIONS)[number];
@@ -67,11 +67,11 @@ export const handleContract = async (
 
   switch (validatedArgs.action) {
     case 'generate-types':
-      const { generateTypes } = await import('./generate-types.js');
+      const { generateTypes } = await import('./generate-types');
       return generateTypes(validatedArgs.name, args.slice(1));
 
     case 'validate':
-      const { validate } = await import('./validate.js');
+      const { validate } = await import('./validate');
       return validate(validatedArgs.name, args.slice(1));
 
     default:

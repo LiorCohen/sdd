@@ -8,8 +8,8 @@
  */
 
 import { execSync } from 'node:child_process';
-import type { CommandResult } from '../../lib/args.js';
-import { parseNamedArgs } from '../../lib/args.js';
+import type { CommandResult } from '@/lib/args';
+import { parseNamedArgs } from '@/lib/args';
 
 export const teardown = async (
   componentName: string,

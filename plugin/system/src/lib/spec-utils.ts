@@ -2,8 +2,8 @@
  * Spec file utilities for finding and processing spec files.
  */
 
-import { walkDir, readText, isDirectory } from './fs.js';
-import { parseFrontmatter, type Frontmatter } from './frontmatter.js';
+import { walkDir, readText, isDirectory } from './fs';
+import { parseFrontmatter, type Frontmatter } from './frontmatter';
 import * as path from 'node:path';
 
 export const EXCLUDED_FILES = ['INDEX.md', 'SNAPSHOT.md', 'glossary.md'] as const;

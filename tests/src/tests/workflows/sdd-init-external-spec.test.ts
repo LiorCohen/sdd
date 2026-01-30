@@ -25,7 +25,7 @@ import {
   recordBenchmark,
   getTestFilePath,
   type TestProject,
-} from '../../lib';
+} from '@/lib';
 
 const TEST_FILE = getTestFilePath(import.meta.url.replace('file://', ''));
 

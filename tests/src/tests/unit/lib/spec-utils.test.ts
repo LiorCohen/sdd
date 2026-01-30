@@ -15,7 +15,7 @@ import {
   rmdir,
   writeFileAsync,
   mkdtemp,
-} from '../../../lib';
+} from '@/lib';
 
 const SPEC_UTILS_PATH = joinPath(PLUGIN_DIR, 'system', 'src', 'lib', 'spec-utils.ts');
 

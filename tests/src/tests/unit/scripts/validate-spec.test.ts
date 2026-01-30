@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { PLUGIN_DIR, joinPath, readFile } from '../../../lib';
+import { PLUGIN_DIR, joinPath, readFile } from '@/lib';
 
 const VALIDATE_SPEC_PATH = joinPath(PLUGIN_DIR, 'system', 'src', 'commands', 'spec', 'validate.ts');
 

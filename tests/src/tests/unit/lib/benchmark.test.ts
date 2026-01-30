@@ -17,7 +17,7 @@ import {
   rmdir,
   mkdtemp,
   type BenchmarkData,
-} from '../../../lib';
+} from '@/lib';
 
 /**
  * WHY: parseTokenUsage extracts token counts from Claude's stream-json output.

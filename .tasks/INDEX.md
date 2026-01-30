@@ -7,7 +7,6 @@ Task details in [issues/](issues/) | Plans in [plans/](plans/)
 ## Inbox (unsorted)
 
 - [#10](issues/inbox/10.md): Missing /sdd-help command
-- [#11](issues/inbox/11.md): Missing deeper config integration
 - [#12](issues/inbox/12.md): User onboarding and process state tracking
 - [#13](issues/inbox/13.md): sdd-init should provide thorough repo guide
 - [#14](issues/inbox/14.md): Unclear when to run type generation
@@ -44,7 +43,7 @@ Task details in [issues/](issues/) | Plans in [plans/](plans/)
 
 ## High Priority
 
-- [#60](issues/high/60.md): Standardize TypeScript imports and tsconfig
+- [#11](issues/high/11.md): Missing deeper config integration
 - [#59](issues/high/59.md): Audit and update all agents for compatibility
 
 ---
@@ -83,6 +82,7 @@ Task details in [issues/](issues/) | Plans in [plans/](plans/)
 
 ## Complete
 
+- [#60](issues/complete/60.md): Standardize TypeScript imports and tsconfig ✓ (2026-01-30)
 - [#62](issues/complete/62.md): Unified CLI system ✓ (2026-01-30)
 - [#49](issues/complete/49.md): Auto-commit hook ✓ (2026-01-29)
 - [#18](issues/complete/18.md): Commit standards skill ✓ (2026-01-29)

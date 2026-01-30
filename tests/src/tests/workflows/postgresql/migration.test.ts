@@ -16,7 +16,7 @@ import {
   listDirWithTypes,
   runCommand,
   type TestProject,
-} from '../../../lib';
+} from '@/lib';
 
 // Container name for tests
 const PG_CONTAINER = 'sdd-postgres-migration-test';

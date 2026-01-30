@@ -7,11 +7,11 @@
  *   sdd-system database reset <component-name>
  */
 
-import type { CommandResult } from '../../lib/args.js';
-import { teardown } from './teardown.js';
-import { setup } from './setup.js';
-import { migrate } from './migrate.js';
-import { seed } from './seed.js';
+import type { CommandResult } from '@/lib/args';
+import { teardown } from './teardown';
+import { setup } from './setup';
+import { migrate } from './migrate';
+import { seed } from './seed';
 
 export const reset = async (
   componentName: string,

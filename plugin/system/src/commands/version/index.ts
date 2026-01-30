@@ -5,9 +5,9 @@
  *   bump   Bump version (major|minor|patch)
  */
 
-import type { CommandResult, GlobalOptions } from '../../lib/args.js';
-import type { CommandSchema } from '../../lib/schema-validator.js';
-import { validateArgs, formatValidationErrors } from '../../lib/schema-validator.js';
+import type { CommandResult, GlobalOptions } from '@/lib/args';
+import type { CommandSchema } from '@/lib/schema-validator';
+import { validateArgs, formatValidationErrors } from '@/lib/schema-validator';
 
 const ACTIONS = ['bump'] as const;
 type Action = (typeof ACTIONS)[number];
@@ -62,7 +62,7 @@ export const handleVersion = async (
 
   switch (validatedArgs.action) {
     case 'bump':
-      const { bumpVersion } = await import('./bump.js');
+      const { bumpVersion } = await import('./bump');
       return bumpVersion(args);
 
     default:

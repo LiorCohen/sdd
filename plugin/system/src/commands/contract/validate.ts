@@ -9,10 +9,10 @@
 
 import { execSync } from 'node:child_process';
 import * as path from 'node:path';
-import type { CommandResult } from '../../lib/args.js';
-import { parseNamedArgs } from '../../lib/args.js';
-import { exists } from '../../lib/fs.js';
-import { findProjectRoot } from '../../lib/config.js';
+import type { CommandResult } from '@/lib/args';
+import { parseNamedArgs } from '@/lib/args';
+import { exists } from '@/lib/fs';
+import { findProjectRoot } from '@/lib/config';
 
 export const validate = async (
   componentName: string,

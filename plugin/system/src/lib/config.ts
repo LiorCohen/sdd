@@ -3,7 +3,7 @@
  */
 
 import * as path from 'node:path';
-import { readJson, exists } from './fs.js';
+import { readJson, exists } from './fs';
 
 /**
  * SDD project configuration from sdd-settings.yaml or package.json.

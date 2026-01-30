@@ -8,7 +8,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { runCommand, PLUGIN_DIR, joinPath } from '../../../lib';
+import { runCommand, PLUGIN_DIR, joinPath } from '@/lib';
 
 const HOOK_PATH = joinPath(PLUGIN_DIR, 'hooks', 'hook-runner.sh');
 

@@ -6,9 +6,9 @@
  *   domain    Populate domain specs from config
  */
 
-import type { CommandResult, GlobalOptions } from '../../lib/args.js';
-import type { CommandSchema } from '../../lib/schema-validator.js';
-import { validateArgs, formatValidationErrors } from '../../lib/schema-validator.js';
+import type { CommandResult, GlobalOptions } from '@/lib/args';
+import type { CommandSchema } from '@/lib/schema-validator';
+import { validateArgs, formatValidationErrors } from '@/lib/schema-validator';
 
 const ACTIONS = ['project', 'domain'] as const;
 type Action = (typeof ACTIONS)[number];
@@ -55,11 +55,11 @@ export const handleScaffolding = async (
 
   switch (validatedArgs.action) {
     case 'project':
-      const { scaffoldProject } = await import('./project.js');
+      const { scaffoldProject } = await import('./project');
       return scaffoldProject(args);
 
     case 'domain':
-      const { populateDomain } = await import('./domain.js');
+      const { populateDomain } = await import('./domain');
       return populateDomain(args);
 
     default:

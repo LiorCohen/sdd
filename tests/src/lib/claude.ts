@@ -4,7 +4,7 @@
  */
 
 import { spawn, type ChildProcess } from 'node:child_process';
-import { MARKETPLACE_DIR, TEST_OUTPUT_DIR } from './paths';
+import { REPO_ROOT, TEST_OUTPUT_DIR } from './paths';
 import { mkdir, writeFile, joinPath } from './fs';
 
 export interface ClaudeResult {
@@ -59,7 +59,7 @@ export const runClaude = async (
     '-p',
     prompt,
     '--add-dir',
-    MARKETPLACE_DIR,
+    REPO_ROOT,
     '--permission-mode',
     'bypassPermissions',
     '--output-format',

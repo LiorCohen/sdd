@@ -8,10 +8,10 @@
  */
 
 import * as path from 'node:path';
-import type { CommandResult } from '../../lib/args.js';
-import { exists, readJson, writeJson } from '../../lib/fs.js';
-import { getPluginRoot } from '../../lib/config.js';
-import type { PluginJson, MarketplaceJson, VersionInfo } from '../../types/config.js';
+import type { CommandResult } from '@/lib/args';
+import { exists, readJson, writeJson } from '@/lib/fs';
+import { getPluginRoot } from '@/lib/config';
+import type { PluginJson, MarketplaceJson, VersionInfo } from '@/types/config';
 
 const BUMP_TYPES = ['major', 'minor', 'patch'] as const;
 type BumpType = (typeof BUMP_TYPES)[number];

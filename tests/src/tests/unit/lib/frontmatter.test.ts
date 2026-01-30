@@ -7,7 +7,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { PLUGIN_DIR, joinPath, readFile } from '../../../lib';
+import { PLUGIN_DIR, joinPath, readFile } from '@/lib';
 
 // Import the actual functions from the plugin's system/src/lib
 const FRONTMATTER_PATH = joinPath(PLUGIN_DIR, 'system', 'src', 'lib', 'frontmatter.ts');

@@ -6,9 +6,9 @@
  *   prompt-commit    PostToolUse hook: commit prompts
  */
 
-import type { CommandResult, GlobalOptions } from '../../lib/args.js';
-import type { CommandSchema } from '../../lib/schema-validator.js';
-import { validateArgs, formatValidationErrors } from '../../lib/schema-validator.js';
+import type { CommandResult, GlobalOptions } from '@/lib/args';
+import type { CommandSchema } from '@/lib/schema-validator';
+import { validateArgs, formatValidationErrors } from '@/lib/schema-validator';
 
 const ACTIONS = ['validate-write', 'prompt-commit'] as const;
 type Action = (typeof ACTIONS)[number];
@@ -55,11 +55,11 @@ export const handleHook = async (
 
   switch (validatedArgs.action) {
     case 'validate-write':
-      const { validateWrite } = await import('./validate-write.js');
+      const { validateWrite } = await import('./validate-write');
       return validateWrite();
 
     case 'prompt-commit':
-      const { promptCommit } = await import('./prompt-commit.js');
+      const { promptCommit } = await import('./prompt-commit');
       return promptCommit();
 
     default:

@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { PLUGIN_DIR, joinPath, readFile } from '../../../lib';
+import { PLUGIN_DIR, joinPath, readFile } from '@/lib';
 
 const GENERATE_INDEX_PATH = joinPath(PLUGIN_DIR, 'system', 'src', 'commands', 'spec', 'generate-index.ts');
 
@@ -22,7 +22,7 @@ describe('generate-index.ts source file', () => {
 
   it('imports SpecEntry type from types module', () => {
     const content = readFile(GENERATE_INDEX_PATH);
-    expect(content).toContain("import type { SpecEntry } from '../../types/spec.js'");
+    expect(content).toContain("import type { SpecEntry } from '@/types/spec'");
   });
 
   it('defines generateIndex function', () => {
@@ -285,9 +285,9 @@ describe('INDEX.md generation logic', () => {
  * WHY: Test fallback behavior for missing frontmatter fields.
  */
 describe('missing frontmatter defaults', () => {
-  it('uses filename as title fallback', () => {
+  it('uses filename as title fallback', async () => {
     const path = 'changes/2026/01/24/user-auth/SPEC.md';
-    const { basename } = require('node:path');
+    const { basename } = await import('node:path');
     const fallbackTitle = basename(path, '.md');
 
     expect(fallbackTitle).toBe('SPEC');

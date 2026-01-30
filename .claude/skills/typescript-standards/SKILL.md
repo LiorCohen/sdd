@@ -1,3 +1,9 @@
+---
+name: typescript-standards
+description: Shared TypeScript coding standards for strict, immutable, type-safe code.
+---
+
+
 # TypeScript Standards Skill
 
 Shared standards for all TypeScript code in this methodology (backend and frontend).
@@ -31,17 +37,17 @@ All projects must use these TypeScript compiler options:
 ## Immutability (Non-Negotiable)
 
 ```typescript
-// GOOD: Readonly everything
+// ✅ GOOD: Readonly everything
 interface User {
   readonly id: string;
   readonly email: string;
   readonly createdAt: Date;
 }
 
-// GOOD: ReadonlyArray
+// ✅ GOOD: ReadonlyArray
 const users: ReadonlyArray<User> = [];
 
-// GOOD: Readonly generic types
+// ✅ GOOD: Readonly generic types
 type Config = Readonly<{
   port: number;
   host: string;
@@ -50,10 +56,10 @@ type Config = Readonly<{
 const settings: ReadonlyMap<string, string> = new Map();
 const tags: ReadonlySet<string> = new Set();
 
-// GOOD: Spread for updates
+// ✅ GOOD: Spread for updates
 const updated = { ...user, email: newEmail };
 
-// BAD: Mutation
+// ❌ BAD: Mutation
 user.email = newEmail;
 users.push(newUser);
 ```
@@ -85,13 +91,13 @@ users.push(newUser);
 | `.fill()` | Mutates array | `Array.from()` with mapping |
 
 ```typescript
-// BAD: Mutable operations
+// ❌ BAD: Mutable operations
 const items: string[] = [];
 items.push('new');           // Mutates!
 items.splice(1, 1);          // Mutates!
 items.sort();                // Mutates!
 
-// GOOD: Immutable alternatives
+// ✅ GOOD: Immutable alternatives
 const items: ReadonlyArray<string> = [];
 const withNew = [...items, 'new'];
 const withoutSecond = [...items.slice(0, 1), ...items.slice(2)];
@@ -108,13 +114,13 @@ const sorted = [...items].sort();  // Or items.toSorted() in ES2023+
 | `Object.assign(target, ...)` | Mutates target | `{ ...target, ...source }` |
 
 ```typescript
-// BAD: Mutable operations
+// ❌ BAD: Mutable operations
 const user = { name: 'Alice', age: 30 };
 user.age = 31;               // Mutates!
 user['role'] = 'admin';      // Mutates!
 delete user.age;             // Mutates!
 
-// GOOD: Immutable alternatives
+// ✅ GOOD: Immutable alternatives
 const user: Readonly<User> = { name: 'Alice', age: 30 };
 const older = { ...user, age: 31 };
 const withRole = { ...user, role: 'admin' };
@@ -133,12 +139,12 @@ const { age, ...withoutAge } = user;
 | `set.clear()` | Mutates set | `new Set()` |
 
 ```typescript
-// BAD: Mutable operations
+// ❌ BAD: Mutable operations
 const cache = new Map<string, number>();
 cache.set('key', 42);        // Mutates!
 cache.delete('key');         // Mutates!
 
-// GOOD: Immutable alternatives
+// ✅ GOOD: Immutable alternatives
 const cache: ReadonlyMap<string, number> = new Map();
 const withEntry = new Map([...cache, ['key', 42]]);
 const withoutKey = new Map([...cache].filter(([k]) => k !== 'key'));
@@ -149,7 +155,7 @@ const withoutKey = new Map([...cache].filter(([k]) => k !== 'key'));
 ## Arrow Functions Only
 
 ```typescript
-// GOOD: Arrow functions
+// ✅ GOOD: Arrow functions
 const createUser = async (deps: Dependencies, args: CreateUserArgs): Promise<CreateUserResult> => {
   // ...
 };
@@ -158,7 +164,7 @@ const handleClick = () => {
   // ...
 };
 
-// BAD: function keyword
+// ❌ BAD: function keyword
 async function createUser(deps: Dependencies, args: CreateUserArgs): Promise<CreateUserResult> {
   // ...
 }
@@ -177,7 +183,7 @@ function handleClick() {
 **CRITICAL:** Never use classes or inheritance unless creating a subclass of Error.
 
 ```typescript
-// GOOD: Types and functions
+// ✅ GOOD: Types and functions
 type User = {
   readonly id: string;
   readonly email: string;
@@ -190,7 +196,7 @@ const createUser = (args: CreateUserArgs): User => ({
   createdAt: new Date(),
 });
 
-// GOOD: Error subclass (only valid use of class)
+// ✅ GOOD: Error subclass (only valid use of class)
 class ValidationError extends Error {
   constructor(
     message: string,
@@ -209,7 +215,7 @@ class NotFoundError extends Error {
   }
 }
 
-// BAD: Classes for domain objects
+// ❌ BAD: Classes for domain objects
 class User {
   constructor(
     public id: string,
@@ -221,11 +227,11 @@ class User {
   }
 }
 
-// BAD: Inheritance hierarchies
+// ❌ BAD: Inheritance hierarchies
 class Animal { /* ... */ }
 class Dog extends Animal { /* ... */ }
 
-// BAD: Service classes
+// ❌ BAD: Service classes
 class UserService {
   constructor(private db: Database) {}
 
@@ -244,14 +250,14 @@ class UserService {
 ## Native JavaScript Only
 
 ```typescript
-// GOOD: Native methods
+// ✅ GOOD: Native methods
 const filtered = users.filter(u => u.active);
 const updated = { ...user, email: newEmail };
 const mapped = Object.fromEntries(
   Object.entries(obj).map(([k, v]) => [k, v * 2])
 );
 
-// BAD: External utility libraries
+// ❌ BAD: External utility libraries
 import { map } from 'lodash';      // Never
 import { produce } from 'immer';   // Never
 import * as R from 'ramda';        // Never
@@ -270,7 +276,7 @@ import * as R from 'ramda';        // Never
 **CRITICAL:** Never use default exports. Always use named exports.
 
 ```typescript
-// GOOD: Named exports
+// ✅ GOOD: Named exports
 export const createUser = async (deps: Dependencies, args: CreateUserArgs): Promise<User> => {
   // ...
 };
@@ -282,7 +288,7 @@ export interface User {
 
 export type UserRole = 'admin' | 'user' | 'guest';
 
-// BAD: Default exports
+// ❌ BAD: Default exports
 export default createUser;           // NEVER
 export default function createUser() { /* ... */ }  // NEVER
 export default class User { /* ... */ }             // NEVER
@@ -299,12 +305,12 @@ export default class User { /* ... */ }             // NEVER
 **CRITICAL:** Never use CommonJS modules. Always use ES module syntax.
 
 ```typescript
-// GOOD: ES modules
-import { createUser } from './user.js';
-import type { User } from './types.js';
-export { updateUser } from './user.js';
+// ✅ GOOD: ES modules
+import { createUser } from './user';
+import type { User } from './types';
+export { updateUser } from './user';
 
-// BAD: CommonJS
+// ❌ BAD: CommonJS
 const { createUser } = require('./user');           // NEVER
 module.exports = createUser;                         // NEVER
 exports.createUser = createUser;                     // NEVER
@@ -322,15 +328,15 @@ module.exports.createUser = createUser;              // NEVER
 **CRITICAL:** All `index.ts` files must contain ONLY imports and exports. Never put actual code or logic in index files.
 
 ```typescript
-// GOOD: index.ts with only exports
-export { createUser } from './createUser.js';
-export { updateUser } from './updateUser.js';
-export { deleteUser } from './deleteUser.js';
+// ✅ GOOD: index.ts with only exports
+export { createUser } from './createUser';
+export { updateUser } from './updateUser';
+export { deleteUser } from './deleteUser';
 
-export type { CreateUserArgs, CreateUserResult } from './createUser.js';
-export type { UpdateUserArgs, UpdateUserResult } from './updateUser.js';
+export type { CreateUserArgs, CreateUserResult } from './createUser';
+export type { UpdateUserArgs, UpdateUserResult } from './updateUser';
 
-// BAD: Logic in index.ts
+// ❌ BAD: Logic in index.ts
 export const createUser = async (deps, args) => {
   // Implementation here - WRONG!
 };
@@ -345,14 +351,14 @@ const helper = () => { /* ... */ }; // WRONG!
 **CRITICAL:** Never bypass a module's `index.ts` file. Always import from the module's public API.
 
 ```typescript
-// GOOD: Import from module's public API
+// ✅ GOOD: Import from module's public API
 import { createUser, updateUser } from '../user';
 import type { User, UserRole } from '../user';
 
-// BAD: Bypassing index.ts
-import { createUser } from '../user/createUser.js';      // NEVER
-import { User } from '../user/types.js';                 // NEVER
-import { helper } from '../user/internal/helper.js';     // NEVER
+// ❌ BAD: Bypassing index.ts
+import { createUser } from '../user/createUser';      // NEVER
+import { User } from '../user/types';                 // NEVER
+import { helper } from '../user/internal/helper';     // NEVER
 ```
 
 **Why:** This enforces:
@@ -372,6 +378,60 @@ user/
     └── validator.ts
 ```
 
+### No File Extensions in Imports
+
+**CRITICAL:** Never include file extensions in import statements.
+
+```typescript
+// GOOD: No extensions
+import { createUser } from './user';
+import { config } from '@/lib/config';
+
+// BAD: Extensions in imports
+import { createUser } from './user.js';    // NEVER
+import { Component } from './Component.tsx'; // NEVER
+```
+
+### Path Aliases for Deep Imports
+
+**CRITICAL:** Use `@/` path alias instead of long relative paths.
+
+```typescript
+// GOOD: Path alias for deep imports
+import { createLogger } from '@/lib/logger';
+import { parseArgs } from '@/lib/args';
+import { handleSpec } from '@/commands/spec';
+
+// BAD: Deep relative imports
+import { createLogger } from '../../../lib/logger';  // NEVER
+import { parseArgs } from '../../lib/args';          // NEVER
+```
+
+**When to use path aliases:**
+- Crossing 2+ directory levels: use `@/`
+- Same directory or parent: relative is fine
+
+```typescript
+// GOOD: Relative for nearby files
+import { validate } from './validate';
+import { types } from '../types';
+
+// GOOD: Alias for distant files
+import { logger } from '@/lib/logger';
+```
+
+**tsconfig.json setup:**
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
+```
+
 ---
 
 ## Prefer Readonly Types
@@ -379,18 +439,18 @@ user/
 When defining function parameters, return types, and variables, default to readonly:
 
 ```typescript
-// GOOD: Readonly parameters
+// ✅ GOOD: Readonly parameters
 const processUsers = (users: ReadonlyArray<User>): ReadonlyArray<User> => {
   return users.filter(u => u.active);
 };
 
-// GOOD: Readonly in interfaces
+// ✅ GOOD: Readonly in interfaces
 interface UserCardProps {
   readonly user: User;
   readonly onEdit: (id: string) => void;
 }
 
-// GOOD: Const with readonly types
+// ✅ GOOD: Const with readonly types
 const config: Readonly<Config> = loadConfig();
 ```
 
@@ -415,5 +475,7 @@ Before committing TypeScript code, verify:
 - [ ] **No CommonJS** - only ES modules (`import`/`export`, never `require`/`module.exports`)
 - [ ] All `index.ts` files contain only imports/exports (no logic)
 - [ ] **All imports go through `index.ts`** - never import implementation files directly
+- [ ] **No file extensions in imports** - never `.js`, `.ts`, `.tsx`
+- [ ] **Path aliases for deep imports** - use `@/` instead of `../../../`
 - [ ] No `any` types without justification
 - [ ] All `const` declarations (no `let` unless absolutely necessary, never `var`)

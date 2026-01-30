@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { PLUGIN_DIR, joinPath, readFile } from '../../../lib';
+import { PLUGIN_DIR, joinPath, readFile } from '@/lib';
 
 const GENERATE_SNAPSHOT_PATH = joinPath(PLUGIN_DIR, 'system', 'src', 'commands', 'spec', 'generate-snapshot.ts');
 
@@ -22,7 +22,7 @@ describe('generate-snapshot.ts source file', () => {
 
   it('imports ActiveSpec type from types module', () => {
     const content = readFile(GENERATE_SNAPSHOT_PATH);
-    expect(content).toContain("import type { ActiveSpec } from '../../types/spec.js'");
+    expect(content).toContain("import type { ActiveSpec } from '@/types/spec'");
   });
 
   it('defines generateSnapshot function', () => {

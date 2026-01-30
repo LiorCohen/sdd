@@ -6,17 +6,17 @@
  *   sdd-system spec validate --all --specs-dir specs/
  */
 
-import type { CommandResult } from '../../lib/args.js';
-import { parseNamedArgs } from '../../lib/args.js';
-import { parseFrontmatter } from '../../lib/frontmatter.js';
-import { findSpecFiles, directoryExists } from '../../lib/spec-utils.js';
-import { exists, readText } from '../../lib/fs.js';
+import type { CommandResult } from '@/lib/args';
+import { parseNamedArgs } from '@/lib/args';
+import { parseFrontmatter } from '@/lib/frontmatter';
+import { findSpecFiles, directoryExists } from '@/lib/spec-utils';
+import { exists, readText } from '@/lib/fs';
 import {
   REQUIRED_FIELDS,
   VALID_STATUSES,
   PLACEHOLDER_ISSUES,
   type ValidationError,
-} from '../../types/spec.js';
+} from '@/types/spec';
 
 /**
  * Validate a single spec file. Returns list of errors.

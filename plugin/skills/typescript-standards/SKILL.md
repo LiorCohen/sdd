@@ -306,9 +306,9 @@ export default class User { /* ... */ }             // NEVER
 
 ```typescript
 // ✅ GOOD: ES modules
-import { createUser } from './user.js';
-import type { User } from './types.js';
-export { updateUser } from './user.js';
+import { createUser } from './user';
+import type { User } from './types';
+export { updateUser } from './user';
 
 // ❌ BAD: CommonJS
 const { createUser } = require('./user');           // NEVER
@@ -329,12 +329,12 @@ module.exports.createUser = createUser;              // NEVER
 
 ```typescript
 // ✅ GOOD: index.ts with only exports
-export { createUser } from './createUser.js';
-export { updateUser } from './updateUser.js';
-export { deleteUser } from './deleteUser.js';
+export { createUser } from './createUser';
+export { updateUser } from './updateUser';
+export { deleteUser } from './deleteUser';
 
-export type { CreateUserArgs, CreateUserResult } from './createUser.js';
-export type { UpdateUserArgs, UpdateUserResult } from './updateUser.js';
+export type { CreateUserArgs, CreateUserResult } from './createUser';
+export type { UpdateUserArgs, UpdateUserResult } from './updateUser';
 
 // ❌ BAD: Logic in index.ts
 export const createUser = async (deps, args) => {
@@ -356,9 +356,9 @@ import { createUser, updateUser } from '../user';
 import type { User, UserRole } from '../user';
 
 // ❌ BAD: Bypassing index.ts
-import { createUser } from '../user/createUser.js';      // NEVER
-import { User } from '../user/types.js';                 // NEVER
-import { helper } from '../user/internal/helper.js';     // NEVER
+import { createUser } from '../user/createUser';      // NEVER
+import { User } from '../user/types';                 // NEVER
+import { helper } from '../user/internal/helper';     // NEVER
 ```
 
 **Why:** This enforces:
@@ -376,6 +376,60 @@ user/
 ├── types.ts           # Types - don't import directly
 └── internal/          # Internal helpers - definitely don't import directly
     └── validator.ts
+```
+
+### No File Extensions in Imports
+
+**CRITICAL:** Never include file extensions in import statements.
+
+```typescript
+// GOOD: No extensions
+import { createUser } from './user';
+import { config } from '@/lib/config';
+
+// BAD: Extensions in imports
+import { createUser } from './user.js';    // NEVER
+import { Component } from './Component.tsx'; // NEVER
+```
+
+### Path Aliases for Deep Imports
+
+**CRITICAL:** Use `@/` path alias instead of long relative paths.
+
+```typescript
+// GOOD: Path alias for deep imports
+import { createLogger } from '@/lib/logger';
+import { parseArgs } from '@/lib/args';
+import { handleSpec } from '@/commands/spec';
+
+// BAD: Deep relative imports
+import { createLogger } from '../../../lib/logger';  // NEVER
+import { parseArgs } from '../../lib/args';          // NEVER
+```
+
+**When to use path aliases:**
+- Crossing 2+ directory levels: use `@/`
+- Same directory or parent: relative is fine
+
+```typescript
+// GOOD: Relative for nearby files
+import { validate } from './validate';
+import { types } from '../types';
+
+// GOOD: Alias for distant files
+import { logger } from '@/lib/logger';
+```
+
+**tsconfig.json setup:**
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
 ```
 
 ---
@@ -421,5 +475,7 @@ Before committing TypeScript code, verify:
 - [ ] **No CommonJS** - only ES modules (`import`/`export`, never `require`/`module.exports`)
 - [ ] All `index.ts` files contain only imports/exports (no logic)
 - [ ] **All imports go through `index.ts`** - never import implementation files directly
+- [ ] **No file extensions in imports** - never `.js`, `.ts`, `.tsx`
+- [ ] **Path aliases for deep imports** - use `@/` instead of `../../../`
 - [ ] No `any` types without justification
 - [ ] All `const` declarations (no `let` unless absolutely necessary, never `var`)

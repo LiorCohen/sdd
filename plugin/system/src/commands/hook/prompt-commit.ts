@@ -5,8 +5,8 @@
  * Reads JSON input from stdin and outputs JSON message.
  */
 
-import type { CommandResult } from '../../lib/args.js';
-import type { HookInput, PostToolUseHookOutput } from '../../types/config.js';
+import type { CommandResult } from '@/lib/args';
+import type { HookInput, PostToolUseHookOutput } from '@/types/config';
 
 // SDD-managed directories that should trigger commit prompts
 const SDD_DIRS = ['changes/', 'specs/', 'components/', 'config/', 'tests/'] as const;

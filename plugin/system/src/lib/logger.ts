@@ -2,7 +2,7 @@
  * Logging utilities for the CLI.
  */
 
-import type { GlobalOptions } from './args.js';
+import type { GlobalOptions } from './args';
 
 // ANSI color codes
 const COLORS = {

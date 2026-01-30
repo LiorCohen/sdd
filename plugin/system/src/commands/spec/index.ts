@@ -7,9 +7,9 @@
  *   snapshot   Create project snapshot
  */
 
-import type { CommandResult, GlobalOptions } from '../../lib/args.js';
-import type { CommandSchema } from '../../lib/schema-validator.js';
-import { validateArgs, formatValidationErrors } from '../../lib/schema-validator.js';
+import type { CommandResult, GlobalOptions } from '@/lib/args';
+import type { CommandSchema } from '@/lib/schema-validator';
+import { validateArgs, formatValidationErrors } from '@/lib/schema-validator';
 
 const ACTIONS = ['validate', 'index', 'snapshot'] as const;
 type Action = (typeof ACTIONS)[number];
@@ -57,15 +57,15 @@ export const handleSpec = async (
   switch (validatedArgs.action) {
     case 'validate':
       // Dynamically import to avoid loading all commands upfront
-      const { validateSpec } = await import('./validate.js');
+      const { validateSpec } = await import('./validate');
       return validateSpec(args);
 
     case 'index':
-      const { generateIndex } = await import('./generate-index.js');
+      const { generateIndex } = await import('./generate-index');
       return generateIndex(args);
 
     case 'snapshot':
-      const { generateSnapshot } = await import('./generate-snapshot.js');
+      const { generateSnapshot } = await import('./generate-snapshot');
       return generateSnapshot(args);
 
     default:

@@ -13,16 +13,16 @@
  *   contract      Contract component operations
  */
 
-import { parseArgs, type CommandResult, type GlobalOptions, outputResult } from './lib/args.js';
-import { createLogger } from './lib/logger.js';
+import { parseArgs, type CommandResult, type GlobalOptions, outputResult } from '@/lib/args';
+import { createLogger } from '@/lib/logger';
 
 // Command imports
-import { handleSpec } from './commands/spec/index.js';
-import { handleScaffolding } from './commands/scaffolding/index.js';
-import { handleVersion } from './commands/version/index.js';
-import { handleHook } from './commands/hook/index.js';
-import { handleDatabase } from './commands/database/index.js';
-import { handleContract } from './commands/contract/index.js';
+import { handleSpec } from '@/commands/spec';
+import { handleScaffolding } from '@/commands/scaffolding';
+import { handleVersion } from '@/commands/version';
+import { handleHook } from '@/commands/hook';
+import { handleDatabase } from '@/commands/database';
+import { handleContract } from '@/commands/contract';
 
 const NAMESPACES = ['scaffolding', 'spec', 'version', 'hook', 'database', 'contract'] as const;
 type Namespace = (typeof NAMESPACES)[number];

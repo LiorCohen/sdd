@@ -5,8 +5,8 @@
  * Reads JSON input from stdin and outputs JSON decision.
  */
 
-import type { CommandResult } from '../../lib/args.js';
-import type { HookInput, PreToolUseHookOutput } from '../../types/config.js';
+import type { CommandResult } from '@/lib/args';
+import type { HookInput, PreToolUseHookOutput } from '@/types/config';
 
 // Blocked patterns (security-sensitive)
 const BLOCKED_PATTERNS = [

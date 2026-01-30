@@ -13,7 +13,7 @@ import {
   joinPath,
   listDir,
   type TestProject,
-} from '../../../lib';
+} from '@/lib';
 
 const BACKUP_PROMPT = `Using the postgresql skill, create a backup script for the database.
 

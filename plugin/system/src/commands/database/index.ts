@@ -11,9 +11,9 @@
  *   psql          Open psql shell
  */
 
-import type { CommandResult, GlobalOptions } from '../../lib/args.js';
-import type { CommandSchema } from '../../lib/schema-validator.js';
-import { validateArgs, formatValidationErrors } from '../../lib/schema-validator.js';
+import type { CommandResult, GlobalOptions } from '@/lib/args';
+import type { CommandSchema } from '@/lib/schema-validator';
+import { validateArgs, formatValidationErrors } from '@/lib/schema-validator';
 
 const ACTIONS = ['setup', 'teardown', 'migrate', 'seed', 'reset', 'port-forward', 'psql'] as const;
 type Action = (typeof ACTIONS)[number];
@@ -72,31 +72,31 @@ export const handleDatabase = async (
 
   switch (validatedArgs.action) {
     case 'setup':
-      const { setup } = await import('./setup.js');
+      const { setup } = await import('./setup');
       return setup(validatedArgs.name, args.slice(1));
 
     case 'teardown':
-      const { teardown } = await import('./teardown.js');
+      const { teardown } = await import('./teardown');
       return teardown(validatedArgs.name, args.slice(1));
 
     case 'migrate':
-      const { migrate } = await import('./migrate.js');
+      const { migrate } = await import('./migrate');
       return migrate(validatedArgs.name, args.slice(1));
 
     case 'seed':
-      const { seed } = await import('./seed.js');
+      const { seed } = await import('./seed');
       return seed(validatedArgs.name, args.slice(1));
 
     case 'reset':
-      const { reset } = await import('./reset.js');
+      const { reset } = await import('./reset');
       return reset(validatedArgs.name, args.slice(1));
 
     case 'port-forward':
-      const { portForward } = await import('./port-forward.js');
+      const { portForward } = await import('./port-forward');
       return portForward(validatedArgs.name, args.slice(1));
 
     case 'psql':
-      const { psql } = await import('./psql.js');
+      const { psql } = await import('./psql');
       return psql(validatedArgs.name, args.slice(1));
 
     default:

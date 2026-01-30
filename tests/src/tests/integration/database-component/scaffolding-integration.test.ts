@@ -19,7 +19,7 @@ import {
   mkdir,
   writeFileAsync,
   runScaffolding,
-} from '../../../lib';
+} from '@/lib';
 
 const SCAFFOLDING_SCRIPT = joinPath(PLUGIN_DIR, 'system', 'src', 'commands', 'scaffolding', 'project.ts');
 

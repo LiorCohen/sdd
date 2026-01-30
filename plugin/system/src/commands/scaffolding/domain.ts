@@ -8,10 +8,10 @@
  */
 
 import * as path from 'node:path';
-import type { CommandResult } from '../../lib/args.js';
-import { parseNamedArgs } from '../../lib/args.js';
-import { exists, readText, writeText, ensureDir } from '../../lib/fs.js';
-import type { DomainConfig, UserPersona, PopulationResult } from '../../types/component.js';
+import type { CommandResult } from '@/lib/args';
+import { parseNamedArgs } from '@/lib/args';
+import { exists, readText, writeText, ensureDir } from '@/lib/fs';
+import type { DomainConfig, UserPersona, PopulationResult } from '@/types/component';
 
 /**
  * Convert a string to a slug (lowercase, hyphens).

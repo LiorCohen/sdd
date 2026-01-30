@@ -9,11 +9,11 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import type { CommandResult } from '../../lib/args.js';
-import { parseNamedArgs } from '../../lib/args.js';
-import { exists, readText, writeText, ensureDir, walkDir, copyFile } from '../../lib/fs.js';
-import type { ScaffoldingConfig, ComponentEntry, ScaffoldingResult } from '../../types/component.js';
-import { getSkillsDir } from '../../lib/config.js';
+import type { CommandResult } from '@/lib/args';
+import { parseNamedArgs } from '@/lib/args';
+import { exists, readText, writeText, ensureDir, walkDir, copyFile } from '@/lib/fs';
+import type { ScaffoldingConfig, ComponentEntry, ScaffoldingResult } from '@/types/component';
+import { getSkillsDir } from '@/lib/config';
 
 interface CreatedItems {
   readonly files: readonly string[];

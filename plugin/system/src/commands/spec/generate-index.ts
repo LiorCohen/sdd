@@ -6,11 +6,11 @@
  */
 
 import * as path from 'node:path';
-import type { CommandResult } from '../../lib/args.js';
-import { parseNamedArgs } from '../../lib/args.js';
-import { findSpecFiles, directoryExists } from '../../lib/spec-utils.js';
-import { writeText } from '../../lib/fs.js';
-import type { SpecEntry } from '../../types/spec.js';
+import type { CommandResult } from '@/lib/args';
+import { parseNamedArgs } from '@/lib/args';
+import { findSpecFiles, directoryExists } from '@/lib/spec-utils';
+import { writeText } from '@/lib/fs';
+import type { SpecEntry } from '@/types/spec';
 
 /**
  * Format a spec entry as a table row.
