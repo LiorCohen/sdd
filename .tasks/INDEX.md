@@ -12,7 +12,6 @@ Task details in [issues/](issues/) | Plans in [plans/](plans/)
 - [#14](issues/inbox/14.md): Unclear when to run type generation
 - [#15](issues/inbox/15.md): Planner is too rigid and template-driven
 - [#16](issues/inbox/16.md): Plan changes should cascade to dependent items
-- [#17](issues/inbox/17.md): Plans should follow TDD with test review first
 - [#20](issues/inbox/20.md): Plugin installation debugging skill + workflow fix
 - [#21](issues/inbox/21.md): Project sanity verification command
 - [#22](issues/inbox/22.md): Add critic agent to marketplace
@@ -44,6 +43,7 @@ Task details in [issues/](issues/) | Plans in [plans/](plans/)
 ## High Priority
 
 - [#11](issues/high/11.md): Missing deeper config integration
+- [#17](issues/high/17.md): Plans should follow TDD with test review first
 - [#59](issues/high/59.md): Audit and update all agents for compatibility
 
 ---
