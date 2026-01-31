@@ -29,6 +29,7 @@
 ## High Priority
 
 - [#64](1-inbox/64/): Refactor planning system architecture
+- [#65](1-inbox/65/): Move external spec handling from sdd-init to sdd-new-change
 - [#17](1-inbox/17/): Plans should follow TDD with test review first
 - [#59](1-inbox/59/): Audit and update all agents for compatibility
 - [#44](1-inbox/44/): Helm chart template + observability stack
@@ -37,7 +38,6 @@
 
 ## Medium Priority
 
-- [#65](1-inbox/65/): Move external spec handling from sdd-init to sdd-new-change
 - [#16](1-inbox/16/): Plan changes should cascade to dependent items
 - [#27](1-inbox/27/): JSON Schema for skills + validation skill
 - [#56](1-inbox/56/): Create architecture skill with meaningful guidance
