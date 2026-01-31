@@ -53,19 +53,17 @@ Specs include frontmatter metadata, acceptance criteria in Given/When/Then forma
 
 ### Specialized Agents
 
-Instead of one general-purpose AI, SDD uses 10 specialized agents:
+Instead of one general-purpose AI, SDD uses 8 specialized agents:
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
-| spec-writer | opus | Create and maintain specifications |
-| planner | opus | Break specs into implementation phases |
 | api-designer | sonnet | Design OpenAPI contracts |
 | backend-dev | sonnet | Node.js backend (CMDO architecture) |
 | frontend-dev | sonnet | React components (MVVM architecture) |
 | db-advisor | opus | Database performance review |
 | devops | sonnet | Kubernetes, Helm, Testkube |
 | ci-dev | sonnet | CI/CD pipelines |
-| tester | sonnet | Test automation |
+| tester | sonnet | Integration and E2E test automation |
 | reviewer | opus | Code review and spec compliance |
 
 ### Commands
@@ -78,6 +76,7 @@ Instead of one general-purpose AI, SDD uses 10 specialized agents:
 | `/sdd-implement-change [change-dir]` | Execute implementation plan |
 | `/sdd-verify-change [change-dir]` | Verify implementation matches spec |
 | `/sdd-config <operation>` | Manage configuration (generate, validate, diff) |
+| `/sdd-run <namespace> <action>` | Run sdd-system CLI operations |
 
 ---
 

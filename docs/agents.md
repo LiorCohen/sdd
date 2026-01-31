@@ -15,28 +15,10 @@ SDD uses specialized agents instead of one general-purpose AI. Each agent has:
 - Standards and patterns it follows
 
 You can invoke agents in two ways:
-1. **Via SDD commands** - Commands like `/sdd-implement-change` automatically orchestrate agents based on the task
-2. **Directly** - Ask Claude to use an agent (e.g., "Use the planner agent to review my spec")
+1. **Via SDD commands** - Commands like `/sdd-implement-change` automatically orchestrate agents based on the implementation plan
+2. **Directly** - Ask Claude to use an agent (e.g., "Use the backend-dev agent to implement this endpoint")
 
 ## The Agents
-
-### spec-writer
-
-Creates and maintains specifications.
-
-**When it's used:** During `/sdd-new-change` to write specs
-**What it does:** Writes clear specs with acceptance criteria in Given/When/Then format
-
----
-
-### planner
-
-Creates implementation plans from specs.
-
-**When it's used:** During `/sdd-new-change` to create plans
-**What it does:** Breaks specs into phased implementation steps, coordinates across components
-
----
 
 ### api-designer
 
@@ -116,10 +98,10 @@ Agents use different models based on their task complexity:
 
 | Role | Model | Agents |
 |------|-------|--------|
-| Strategic | Opus | spec-writer, planner, reviewer, db-advisor |
-| Implementation | Sonnet | backend-dev, frontend-dev, api-designer, tester, devops, ci-dev |
+| Strategic | Opus | reviewer, db-advisor |
+| Implementation | Sonnet | api-designer, backend-dev, frontend-dev, tester, devops, ci-dev |
 
-Strategic agents handle decisions that affect the whole project. Implementation agents execute defined tasks quickly.
+Strategic agents handle decisions that require deep analysis and affect the whole project. Implementation agents execute defined tasks quickly and efficiently.
 
 ## Next Steps
 

@@ -151,25 +151,41 @@ See [Configuration Guide](config-guide.md) for detailed usage.
 
 ## /sdd-run
 
-Run a server or webapp component with config.
+Run sdd-system CLI operations.
 
 ```
-/sdd-run <component> [--env <env>]
+/sdd-run <namespace> <action> [args] [options]
 ```
 
-**Arguments:**
-- `<component>` (required) - Component to run (e.g., `server-task-service`)
-- `--env` (optional) - Environment to use (default: `local`)
+**Namespaces:**
+- `scaffolding` - Project and domain scaffolding
+- `spec` - Spec validation, indexing, snapshots
+- `version` - Version bumping
+- `database` - Database component operations
+- `contract` - Contract component operations
 
-**What it does:**
-1. Generates merged config for the component
-2. Sets `SDD_CONFIG_PATH` environment variable
-3. Runs the component's dev script
+**Examples:**
+```bash
+# Validate all specs
+/sdd-run spec validate --all --specs-dir specs/
 
-**Example:**
+# Generate spec index
+/sdd-run spec index --specs-dir specs/
+
+# Bump patch version
+/sdd-run version bump patch
+
+# Deploy database
+/sdd-run database setup my-db
+
+# Generate types from OpenAPI
+/sdd-run contract generate-types my-api
 ```
-/sdd-run server-task-service --env local
-```
+
+**Global Options:**
+- `--json` - Output in JSON format
+- `--verbose` - Enable verbose logging
+- `--help` - Show help for namespace/action
 
 ---
 
