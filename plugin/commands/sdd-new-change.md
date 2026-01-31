@@ -1,21 +1,23 @@
 ---
 name: sdd-new-change
-description: Start a new change (feature, bugfix, refactor, or epic) by creating a spec and implementation plan.
+description: Start a new change (feature, bugfix, refactor, or epic) by creating a spec and implementation plan, or import from an external specification.
 ---
 
 # /sdd-new-change
 
-Start a new change with a typed specification and implementation plan.
+Start a new change with a typed specification and implementation plan, or create changes from an external specification.
 
 ## Usage
 
 ```
 /sdd-new-change --type <feature|bugfix|refactor|epic> --name <change-name>
+/sdd-new-change --spec <path-to-external-spec>
 ```
 
 **Arguments:**
-- `--type` (required): Type of change - `feature`, `bugfix`, `refactor`, or `epic`
-- `--name` (required): Name for the change (lowercase, hyphens allowed)
+- `--type` (required without `--spec`): Type of change - `feature`, `bugfix`, `refactor`, or `epic`
+- `--name` (required without `--spec`): Name for the change (lowercase, hyphens allowed)
+- `--spec` (alternative mode): Path to an external specification file to import
 
 **Examples:**
 ```bash
@@ -30,6 +32,9 @@ Start a new change with a typed specification and implementation plan.
 
 # Epic (multiple features)
 /sdd-new-change --type epic --name checkout-system
+
+# From external spec (single or multiple changes)
+/sdd-new-change --spec /path/to/external-spec.md
 ```
 
 ## Flow
@@ -43,27 +48,115 @@ Start a new change with a typed specification and implementation plan.
 1. **If no arguments provided**, display usage and exit:
    ```
    Usage: /sdd-new-change --type <feature|bugfix|refactor|epic> --name <change-name>
+          /sdd-new-change --spec <path-to-external-spec>
 
    Arguments:
-     --type <type>  Type of change: feature, bugfix, refactor, or epic (required)
-     --name <name>  Name for the change directory (required)
+     --type <type>  Type of change: feature, bugfix, refactor, or epic
+     --name <name>  Name for the change directory
+     --spec <path>  Path to external specification file
+
+   Note: Either provide --type and --name, OR provide --spec (not both)
 
    Examples:
      /sdd-new-change --type feature --name user-authentication
      /sdd-new-change --type bugfix --name fix-login-timeout
-     /sdd-new-change --type refactor --name extract-auth-layer
+     /sdd-new-change --spec /path/to/external-spec.md
    ```
-   **Do not proceed without both arguments.**
+   **Do not proceed without the required arguments.**
 
-2. **Validate `--type`:**
-   - Must be one of: `feature`, `bugfix`, `refactor`, `epic`
-   - If invalid, show error: "Invalid type '<type>'. Must be one of: feature, bugfix, refactor"
+2. **Determine mode:**
+   - If `--spec` is provided: Go to **External Spec Flow** (Step 1b)
+   - If `--type` and `--name` are provided: Continue with **Interactive Flow** (Step 2+)
+   - If neither: Show usage and exit
 
-3. **Validate `--name`:**
-   - Must be valid directory name (lowercase, hyphens allowed, no spaces)
+3. **For Interactive Flow - Validate arguments:**
+   - **Validate `--type`:** Must be one of: `feature`, `bugfix`, `refactor`, `epic`
+   - **Validate `--name`:** Must be valid directory name (lowercase, hyphens allowed, no spaces)
    - If invalid, show error and requirements
 
-**DO NOT proceed to Step 2 until both arguments are validated.**
+**DO NOT proceed to Step 2 until arguments are validated.**
+
+---
+
+### 1b. External Spec Flow (if --spec provided)
+
+**When `--spec` is provided, the command delegates to the external-spec-integration skill.**
+
+1. **Validate spec path:**
+   - Check that the path exists
+   - If path is a file: Use that file directly
+   - If path is a directory:
+     - Look for entry point: `README.md`, `SPEC.md`, `index.md`, `spec.md`
+     - If no entry point, collect all `.md` files
+
+2. **Extract outline** (chunked, no LLM needed):
+   ```
+   INVOKE spec-decomposition skill with:
+     mode: "outline"
+     spec_content: <file content or concatenated content>
+     spec_is_directory: <true if directory>
+     spec_files: <list of files if directory>
+   ```
+   Store: `spec_outline` (sections with line ranges and source file)
+
+3. **Check git branch** (same as Step 2 for interactive flow):
+   - If on `main`/`master`: Suggest creating a branch
+   - Branch naming: `feature/import-<spec-filename>` or similar
+
+4. **Get primary domain:**
+   - Read from `sdd-settings.yaml` if available
+   - Otherwise, ask the user: "Which domain should these changes belong to?"
+
+5. **Invoke external-spec-integration skill:**
+   ```yaml
+   spec_path: <absolute path to external spec>
+   spec_outline: <from step 2>
+   target_dir: <current project root>
+   primary_domain: <from sdd-settings.yaml or user>
+   ```
+
+   The skill:
+   - Archives external spec to `archive/`
+   - Presents outline to user for boundary level selection
+   - Analyzes sections and decomposes into changes
+   - Presents combined decomposition for user adjustment
+   - Creates change specifications in `changes/`
+   - Updates INDEX.md and glossary
+
+6. **Display results:**
+   ```
+   ═══════════════════════════════════════════════════════════════
+    EXTERNAL SPEC IMPORTED
+   ═══════════════════════════════════════════════════════════════
+
+   Original spec archived to: archive/<spec-filename>
+
+   CHANGES CREATED:
+
+     - changes/YYYY/MM/DD/<change-1>/SPEC.md
+     - changes/YYYY/MM/DD/<change-2>/SPEC.md
+     ...
+
+   NEXT STEPS:
+
+     1. Review the generated change specs
+     2. Run /sdd-implement-change to begin implementation
+   ```
+
+7. **Commit changes** using commit-standards format:
+   ```
+   Add <N> changes from external spec
+
+   - Archived external spec to archive/
+   - Created <N> change specs in changes/
+   - Updated INDEX.md with new entries
+
+   Co-Authored-By: SDD Plugin vX.Y.Z
+   ```
+
+**After External Spec Flow completes, the command is done. Do not proceed to Steps 2-6.**
+
+---
 
 ### 2. Check Git Branch
 
@@ -184,13 +277,14 @@ After user confirms the spec and plan are ready:
 
 ## Important Notes
 
-- **Both arguments required**: The command will ALWAYS require `--type` and `--name` before proceeding
+- **Two modes**: Interactive mode (`--type` + `--name`) or external spec mode (`--spec`)
 - **Branch check is mandatory**: After validating arguments, the command checks the current git branch
 - **Feature branches recommended**: Working on `main`/`master` is discouraged
 - **Suggested naming**: `<type>/<change-name>` follows common git workflow conventions (epics use `epic/<name>`)
 - **Epic flow**: For epics, after creating the parent spec/plan, child change directories are created under `changes/`
 - **Type-specific templates**: Each change type gets appropriate spec sections and plan phases
 - **User control**: Users can override the branch suggestion and proceed on main/master if they explicitly confirm
+- **External spec flow**: When using `--spec`, change names and types are derived from spec analysis
 
 ## Example Interactions
 
@@ -319,19 +413,69 @@ Agent: ✓ Created changes/2026/01/21/extract-validation-layer/PLAN.md
 Agent: ✓ Updated INDEX.md
 ```
 
-### Example 4: Missing arguments
+### Example 4: External spec import
+
+```
+User: /sdd-new-change --spec /path/to/payment-system-spec.md
+
+Agent: ✓ Found external spec: /path/to/payment-system-spec.md
+
+Agent: Extracting outline...
+Agent: Found 5 sections in the spec
+
+Agent: Checking current git branch...
+Agent: You are currently on the `main` branch.
+Agent: Would you like to create a branch first?
+       Suggested branch name: `feature/import-payment-system-spec`
+
+User: yes
+
+Agent: Creating branch `feature/import-payment-system-spec`...
+Agent: ✓ Now on branch `feature/import-payment-system-spec`
+
+Agent: Reading project settings...
+Agent: Primary domain: Payments
+
+Agent: [Invokes external-spec-integration skill...]
+Agent: [Skill presents decomposition for user adjustment...]
+
+Agent: ═══════════════════════════════════════════════════════════════
+        EXTERNAL SPEC IMPORTED
+       ═══════════════════════════════════════════════════════════════
+
+       Original spec archived to: archive/payment-system-spec.md
+
+       CHANGES CREATED:
+
+         - changes/2026/01/31/payment-gateway/SPEC.md
+         - changes/2026/01/31/invoice-generation/SPEC.md
+         - changes/2026/01/31/refund-processing/SPEC.md
+
+       NEXT STEPS:
+
+         1. Review the generated change specs
+         2. Run /sdd-implement-change to begin implementation
+
+Agent: ✓ Committed: "Add 3 changes from external spec"
+```
+
+### Example 5: Missing arguments
 
 ```
 User: /sdd-new-change
 
 Agent: Usage: /sdd-new-change --type <feature|bugfix|refactor|epic> --name <change-name>
+              /sdd-new-change --spec <path-to-external-spec>
 
 Arguments:
-  --type <type>  Type of change: feature, bugfix, refactor, or epic (required)
-  --name <name>  Name for the change directory (required)
+  --type <type>  Type of change: feature, bugfix, refactor, or epic
+  --name <name>  Name for the change directory
+  --spec <path>  Path to external specification file
+
+Note: Either provide --type and --name, OR provide --spec (not both)
 
 Examples:
   /sdd-new-change --type feature --name user-authentication
   /sdd-new-change --type bugfix --name fix-login-timeout
-  /sdd-new-change --type refactor --name extract-auth-layer
+  /sdd-new-change --spec /path/to/external-spec.md
 ```

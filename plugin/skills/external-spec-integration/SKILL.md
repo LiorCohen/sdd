@@ -22,7 +22,7 @@ Generated SPEC.md files must be completely self-sufficient. Implementation agent
 
 ## When to Use
 
-- During `/sdd-init --spec <path>` when external spec is provided
+- During `/sdd-new-change --spec <path>` when external spec is provided
 - For standalone spec import: `/sdd-import-spec <path>`
 
 ## Input
@@ -30,7 +30,7 @@ Generated SPEC.md files must be completely self-sufficient. Implementation agent
 | Parameter | Required | Description |
 |-----------|----------|-------------|
 | `spec_path` | Yes | Absolute path to the external specification file |
-| `spec_outline` | Yes | Pre-extracted outline from Phase 0 (sections with line ranges) |
+| `spec_outline` | Yes | Pre-extracted outline from sdd-new-change Step 1b (sections with line ranges) |
 | `target_dir` | Yes | Absolute path to the project directory |
 | `primary_domain` | Yes | Primary domain for the project |
 
@@ -80,7 +80,7 @@ shared_concepts_added: ["User", "Session", "Token"]
 
 ### Step 2: Present Outline to User
 
-The `spec_outline` is already extracted (passed from sdd-init Phase 0). Present it to the user for confirmation.
+The `spec_outline` is already extracted (passed from sdd-new-change Step 1b). Present it to the user for confirmation.
 
 **If `spec_outline.has_headers` is true:**
 
@@ -318,7 +318,7 @@ Continue until user accepts or cancels.
      acceptance_criteria: <extracted ACs>
      api_endpoints: <extracted endpoints>
      source_content: <full section content from Step 4>
-     external_source: ../../../external/<filename>  # Audit reference only
+     external_source: ../../../archive/<filename>  # Audit reference only
      decomposition_id: <uuid>
      prerequisites: <prerequisite change names>
      parent_epic: ../SPEC.md
@@ -340,7 +340,7 @@ INVOKE change-creation skill with:
   acceptance_criteria: <extracted ACs>
   api_endpoints: <extracted endpoints>
   source_content: <full section content from Step 4>
-  external_source: ../../external/<filename>  # Audit reference only
+  external_source: ../../archive/<filename>  # Audit reference only
   decomposition_id: <uuid> (if multi-change)
   prerequisites: <prerequisite change names> (if dependencies)
 ```
@@ -362,7 +362,7 @@ If either file is missing, report error and halt.
 
 | Source | Imported | Changes |
 |--------|----------|---------|
-| [<filename>](external/<filename>) | YYYY-MM-DD | change-1, change-2, ... |
+| [<filename>](archive/<filename>) | YYYY-MM-DD | change-1, change-2, ... |
 ```
 
 **Update domain glossary with shared concepts:**

@@ -10,7 +10,7 @@
 
 ## Ready
 
-- [#65](3-ready/65/): Move external spec handling from sdd-init to sdd-new-change
+(none)
 
 ---
 
@@ -22,7 +22,7 @@
 
 ## Reviewing
 
-(none)
+- [#65](5-reviewing/65/): Move external spec handling from sdd-init to sdd-new-change
 
 ---
 

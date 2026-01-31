@@ -34,8 +34,7 @@ specs/
 │   └── use-cases/        # Business use cases
 ├── architecture/
 │   └── overview.md       # Architecture overview (generated)
-├── changes/              # Change specifications
-└── external/             # External specs (if imported)
+└── changes/              # Change specifications
 ```
 
 ## Note on Config

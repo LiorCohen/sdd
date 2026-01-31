@@ -70,8 +70,9 @@ Instead of one general-purpose AI, SDD uses 10 specialized agents:
 
 | Command | Purpose |
 |---------|---------|
-| `/sdd-init --name [name] [--spec path]` | Initialize new project |
+| `/sdd-init --name [name]` | Initialize new project |
 | `/sdd-new-change --type [type] --name [name]` | Create change spec and plan |
+| `/sdd-new-change --spec [path]` | Import changes from external spec |
 | `/sdd-implement-change [change-dir]` | Execute implementation plan |
 | `/sdd-verify-change [change-dir]` | Verify implementation matches spec |
 | `/sdd-config <operation>` | Manage configuration (generate, validate, diff) |

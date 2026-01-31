@@ -1,29 +1,24 @@
 ---
 name: sdd-init
-description: Initialize a new project from the spec-driven template, optionally from an external spec.
+description: Initialize a new project from the spec-driven template.
 ---
 
 # /sdd-init
 
-Initialize a new spec-driven project, optionally from an existing external specification.
+Initialize a new spec-driven project.
 
 ## Usage
 
 ```
-/sdd-init --name <project-name> [--spec <path-to-external-spec>]
+/sdd-init --name <project-name>
 ```
 
 **Arguments:**
 - `--name <project-name>` (required): Name of the project directory to create
-- `--spec <path>` (optional): Path to an external specification file to use as the initial spec
 
 **Examples:**
 ```bash
-# Standard initialization
 /sdd-init --name my-app
-
-# Initialize from existing spec
-/sdd-init --name my-app --spec /path/to/existing-spec.md
 ```
 
 ## Workflow
@@ -45,9 +40,8 @@ This command orchestrates multiple skills to complete initialization:
 | 6.1   | `project-settings`          | Create sdd-settings.yaml |
 | 6.2   | `scaffolding`               | Create project structure |
 | 6.3   | `domain-population`         | Populate specs from discovery |
-| 7     | `external-spec-integration` | Process external spec (if provided) |
-| 8     | (inline)                    | Commit initial project files |
-| 9     | (inline)                    | Display completion report |
+| 7     | (inline)                    | Commit initial project files |
+| 8     | (inline)                    | Display completion report |
 
 ---
 
@@ -56,7 +50,7 @@ This command orchestrates multiple skills to complete initialization:
 **You MUST complete ALL phases before declaring initialization complete.** Use this checklist to track progress:
 
 ```
-[ ] Phase 0: Arguments parsed, spec outline extracted (if --spec)
+[ ] Phase 0: Arguments parsed
 [ ] Phase 1: Product discovery completed, results stored
 [ ] Phase 2: Component recommendation completed
 [ ] Phase 3: Configuration summary displayed
@@ -65,15 +59,13 @@ This command orchestrates multiple skills to complete initialization:
 [ ] Phase 6.1: sdd-settings.yaml created
 [ ] Phase 6.2: Project structure scaffolded
 [ ] Phase 6.3: Domain knowledge populated
-[ ] Phase 7: External spec integrated (if --spec provided)
-[ ] Phase 8: Initial commit created
-[ ] Phase 9: Completion report displayed
+[ ] Phase 7: Initial commit created
+[ ] Phase 8: Completion report displayed
 ```
 
 **DO NOT:**
-- Stop after Phase 4 (approval) without completing Phases 5-9
-- Skip Phase 7 when `--spec` was provided
-- Declare "initialization complete" until Phase 9 is finished
+- Stop after Phase 4 (approval) without completing Phases 5-8
+- Declare "initialization complete" until Phase 8 is finished
 - Ask the user "should I continue?" between phases - just proceed
 
 **If interrupted**, resume from the last incomplete phase. The user should never need to ask "is init done?" - you must complete all phases in a single flow.
@@ -84,49 +76,20 @@ This command orchestrates multiple skills to complete initialization:
 
 1. **If no arguments provided**, display usage and exit:
    ```
-   Usage: /sdd-init --name <project-name> [--spec <path>]
+   Usage: /sdd-init --name <project-name>
 
    Arguments:
      --name <project-name>  Name of the project directory to create (required)
-     --spec <path>          Path to external specification file (optional)
 
    Examples:
      /sdd-init --name my-app
-     /sdd-init --name my-app --spec /path/to/spec.md
    ```
-   **Do not proceed without at least `--name`.**
+   **Do not proceed without `--name`.**
 
 2. **Parse command arguments:**
    - Extract project name (required)
-   - Extract spec path (if provided)
 
-3. **If external spec is provided:**
-   - Validate path exists
-   - **Determine spec type:**
-     - **If path is a file:** Use that file directly
-     - **If path is a directory:**
-       1. Look for entry point file in order: `README.md`, `SPEC.md`, `index.md`, `spec.md`
-       2. If no entry point found, collect all `.md` files in the directory
-       3. Store: `spec_is_directory: true`, `spec_files: [list of .md files]`
-       4. Display: "Loaded spec directory: <path> ({N} markdown files found)"
-
-   - **Extract outline** (chunked, no LLM needed):
-     - For single file: Extract headers from that file
-     - For directory: Extract headers from all files, prefixed with filename
-     ```
-     INVOKE spec-decomposition skill with:
-       mode: "outline"
-       spec_content: <file content or concatenated content>
-       spec_is_directory: <true if directory>
-       spec_files: <list of files if directory>
-     ```
-   - Store: `spec_outline` (sections with line ranges and source file)
-   - Store: `spec_path` (absolute path to original spec file or directory)
-   - Display: "Loaded external spec from: <path> ({N} sections found)"
-
-   Note: The spec remains at its original location until Phase 7, when it's copied into the project.
-
-4. **Directory check:**
+3. **Directory check:**
    - Validate project name (lowercase, hyphens allowed)
    - Check if current directory basename matches project name
    - If match and empty: Ask "Initialize here? (yes/no)"
@@ -141,11 +104,7 @@ This command orchestrates multiple skills to complete initialization:
 
 ```yaml
 project_name: <from Phase 0>
-spec_outline: <if --spec provided, else null>
-spec_path: <if --spec provided, else null>
 ```
-
-Note: The skill will read only the intro section using the outline's line ranges.
 
 The skill conducts interactive discovery and returns:
 
@@ -329,30 +288,7 @@ domain_entities: <from Phase 1>
 
 ---
 
-### Phase 7: External Spec Integration (if --spec provided)
-
-**Only if external spec was provided via `--spec` argument.**
-
-**INVOKE the `external-spec-integration` skill** with:
-
-```yaml
-spec_path: <absolute path to external spec>
-spec_outline: <from Phase 0>
-target_dir: <absolute path to project>
-primary_domain: <from Phase 1>
-```
-
-The skill:
-1. Copies external spec to `archive/`
-2. Presents outline to user for boundary level selection
-3. Analyzes each section individually (using outline line ranges)
-4. Presents combined decomposition for user adjustment
-5. Creates change specifications in `changes/`
-6. Updates INDEX.md and glossary
-
----
-
-### Phase 8: Commit Initial Project Files
+### Phase 7: Commit Initial Project Files
 
 Stage and commit all created files using the commit-standards format:
 
@@ -367,8 +303,6 @@ Add <project-name>: Initialize spec-driven project
 - Created project structure with <N> components
 - Set up CMDO architecture (components/, specs/)
 - Configured for <primary-domain> domain
-[- Integrated external spec from <spec-path>] (if --spec provided)
-[- Created <N> change specs in changes/] (if --spec provided)
 
 Co-Authored-By: SDD Plugin vX.Y.Z
 ```
@@ -381,7 +315,7 @@ Note: Since this is project initialization (not a feature), no version bump or c
 
 ---
 
-### Phase 9: Completion Report
+### Phase 8: Completion Report
 
 1. List the created structure:
    ```bash
@@ -390,32 +324,6 @@ Note: Since this is project initialization (not a feature), no version bump or c
 
 2. Display completion message:
 
-**If external spec was provided:**
-```
-═══════════════════════════════════════════════════════════════
- PROJECT INITIALIZED: <project-name>
-═══════════════════════════════════════════════════════════════
-
-Location: <absolute-path-to-target-dir>
-Domain: <primary-domain>
-
-WHAT'S INCLUDED:
-
-  ✓ Full project structure (backend, frontend, contract)
-  ✓ CMDO architecture ready for your features
-  ✓ External spec archived in archive/ (audit only)
-
-CHANGES CREATED FROM EXTERNAL SPEC:
-
-  [List of changes created from external spec]
-
-NEXT STEPS:
-
-  1. Review the generated change specs in changes/
-  2. Run /sdd-implement-change to begin implementation
-```
-
-**If standard initialization (no external spec):**
 ```
 ═══════════════════════════════════════════════════════════════
  PROJECT INITIALIZED: <project-name>
@@ -441,10 +349,9 @@ NEXT STEP:
 ```
 
 **VERIFICATION:** Before displaying the completion report, confirm:
-- [ ] All phases 0-9 completed (check the Phase Tracking checklist)
-- [ ] Git commit was successful (Phase 8)
+- [ ] All phases 0-8 completed (check the Phase Tracking checklist)
+- [ ] Git commit was successful (Phase 7)
 - [ ] Tree structure displays correctly
-- [ ] If --spec was provided: changes were created and paths are correct
 
 ---
 
@@ -453,7 +360,6 @@ NEXT STEP:
 - This command ALWAYS asks for user approval before creating files
 - Users can customize which components to include
 - Product discovery enables pre-populated glossary, use-cases, and component recommendations
-- External spec support includes multi-change decomposition with user adjustment
 - All skills are invoked in sequence with proper data passing between phases
-- **When --spec is provided**: After init, guide user to review changes (not install dependencies)
-- **Completion means Phase 9**: Never declare "done" before the completion report is displayed
+- **Completion means Phase 8**: Never declare "done" before the completion report is displayed
+- **To import an external spec:** Use `/sdd-new-change --spec <path>` after initialization

@@ -1,14 +1,14 @@
 /**
- * Workflow Test: /sdd-init with external spec
+ * Workflow Test: /sdd-new-change --spec with external spec
  *
- * WHY: Verifies that sdd-init properly handles external specifications:
- * - Archives external spec to specs/external/ (audit only)
+ * WHY: Verifies that sdd-new-change properly handles external specifications:
+ * - Archives external spec to archive/ (audit only)
  * - Creates self-sufficient SPEC.md files with embedded content
  * - Creates PLAN.md alongside each SPEC.md
  * - Creates epic structure when 3+ changes identified
- * - Never references specs/external/ in generated specs
+ * - Never references archive/ in generated specs
  *
- * Token usage is recorded to tests/data/sdd-init-external.yaml for benchmarking.
+ * Token usage is recorded to tests/data/sdd-new-change-external.yaml for benchmarking.
  */
 
 import { describe, expect, it, beforeAll } from 'vitest';
@@ -17,7 +17,6 @@ import {
   runClaude,
   projectIsDir,
   projectIsFile,
-  projectFileContains,
   writeFileAsync,
   readFileAsync,
   joinPath,
@@ -91,41 +90,78 @@ Users should be able to view and update their profile.
 - POST /api/users/me/password
 `;
 
-const EXTERNAL_SPEC_PROMPT = `Run /sdd-init --name test-external-spec --spec ./external-spec.md
+const EXTERNAL_SPEC_PROMPT = `Run /sdd-new-change --spec ./external-spec.md
 
 AUTOMATED TEST MODE - SKIP ALL INTERACTIVE PHASES:
-- Skip Phase 0-1: Use project name "test-external-spec"
-- Skip Phase 1: Extract from external spec - Domain = "User Management"
-- Skip Phase 2-3: Use fullstack components (contract, server, webapp)
-- Skip Phase 4: Consider PRE-APPROVED
 - For external spec decomposition:
   - Accept default H2 boundary level
   - Accept the decomposition as-is (3 changes)
   - Accept epic structure when recommended (since 3+ changes)
-- Execute all phases including external spec integration
+- Use domain: "User Management"
 
 CRITICAL INSTRUCTIONS:
 1. DO NOT ask any questions - all input is provided above
 2. DO NOT wait for user approval - consider everything pre-approved
-3. Create subdirectory: ./test-external-spec/
-4. Work in CURRENT WORKING DIRECTORY only - no absolute paths
-5. Process the external spec completely
-6. Complete the entire workflow without stopping`;
+3. Work in CURRENT WORKING DIRECTORY only - no absolute paths
+4. Process the external spec completely
+5. Complete the entire workflow without stopping`;
 
 /**
  * WHY: External spec handling is critical for importing existing requirements.
  * If it doesn't work correctly, users can't effectively migrate to SDD.
  */
-describe('sdd-init with external spec', () => {
+describe('sdd-new-change with external spec', () => {
   let testProject: TestProject;
 
   beforeAll(async () => {
-    testProject = await createTestProject('sdd-init-external');
+    testProject = await createTestProject('sdd-new-change-external');
+
+    // Set up minimal SDD project structure (like sdd-new-change.test.ts does)
+    // This mimics an already-initialized SDD project
+    await writeFileAsync(
+      joinPath(testProject.path, 'sdd-settings.yaml'),
+      `plugin_version: "5.0.0"
+project:
+  name: test-external-spec
+  description: Test project for external spec import
+  domain: User Management
+  type: fullstack
+`
+    );
+
+    // Create required directories
+    const dirs = ['changes', 'archive', 'specs/domain'];
+    for (const dir of dirs) {
+      const { execSync } = await import('child_process');
+      execSync(`mkdir -p "${joinPath(testProject.path, dir)}"`, { encoding: 'utf-8' });
+    }
+
+    // Create INDEX.md
+    await writeFileAsync(
+      joinPath(testProject.path, 'INDEX.md'),
+      `# Changes Index
+
+## In Progress
+
+(none)
+
+## Complete
+
+(none)
+`
+    );
+
+    // Initialize git (sdd-new-change checks git branch)
+    const { execSync } = await import('child_process');
+    execSync('git init && git checkout -b feature/external-spec-test', {
+      cwd: testProject.path,
+      encoding: 'utf-8',
+    });
   });
 
   /**
-   * WHY: This test validates that sdd-init with --spec creates:
-   * 1. Archive of external spec in specs/external/
+   * WHY: This test validates that sdd-new-change with --spec creates:
+   * 1. Archive of external spec in archive/
    * 2. Self-sufficient SPEC.md files with embedded content
    * 3. PLAN.md files alongside each SPEC.md
    * 4. Epic structure for 3+ changes
@@ -140,9 +176,9 @@ describe('sdd-init with external spec', () => {
     );
     console.log('Created external spec file');
 
-    console.log('Running /sdd-init --spec...');
+    console.log('Running /sdd-new-change --spec...');
 
-    // sdd-init with external spec - needs extended timeout
+    // sdd-new-change with external spec - needs extended timeout
     const result = await runClaude(EXTERNAL_SPEC_PROMPT, testProject.path, 600);
 
     // Save output for debugging
@@ -150,37 +186,18 @@ describe('sdd-init with external spec', () => {
 
     console.log('\nVerifying project structure...\n');
 
-    // sdd-init creates a subdirectory with the project name
-    const projectSubdir = joinPath(testProject.path, 'test-external-spec');
-    let project: TestProject;
-
-    const stat = await statAsync(projectSubdir);
-    if (stat?.isDirectory()) {
-      console.log(`Project created in subdirectory: ${projectSubdir}`);
-      project = { path: projectSubdir, name: 'test-external-spec' };
-    } else {
-      console.log(`Using test directory directly: ${testProject.path}`);
-      project = testProject;
-    }
-
-    // Verify external spec is archived
-    expect(projectIsDir(project, 'specs', 'external')).toBe(true);
-    expect(projectIsFile(project, 'specs', 'external', 'external-spec.md')).toBe(true);
-    console.log('✓ External spec archived to specs/external/');
+    // Verify external spec is archived (archive/ not specs/external/)
+    expect(projectIsDir(testProject, 'archive')).toBe(true);
+    expect(projectIsFile(testProject, 'archive', 'external-spec.md')).toBe(true);
+    console.log('✓ External spec archived to archive/');
 
     // Verify changes directory exists
-    expect(projectIsDir(project, 'specs', 'changes')).toBe(true);
+    expect(projectIsDir(testProject, 'changes')).toBe(true);
 
     // Since we have 3+ changes, should create epic structure
-    // Look for epic directory pattern: specs/changes/YYYY/MM/DD/*-epic/ or similar
-    const changesDir = joinPath(project.path, 'specs', 'changes');
+    const changesDir = joinPath(testProject.path, 'changes');
     const changesDirStat = await statAsync(changesDir);
     expect(changesDirStat?.isDirectory()).toBe(true);
-
-    // Verify at least one SPEC.md and PLAN.md exist in the changes structure
-    // The exact path depends on date and naming, so we check for pattern
-    const specFiles: string[] = [];
-    const planFiles: string[] = [];
 
     // Helper to recursively find files
     const findFiles = async (dir: string, pattern: string): Promise<string[]> => {
@@ -211,8 +228,9 @@ describe('sdd-init with external spec', () => {
     console.log('✓ Each spec has a corresponding plan');
 
     // Verify specs are self-sufficient (contain embedded content, not just references)
-    if (foundSpecs.length > 0) {
-      const firstSpec = await readFileAsync(foundSpecs[0]);
+    const firstSpecPath = foundSpecs[0];
+    if (firstSpecPath) {
+      const firstSpec = await readFileAsync(firstSpecPath);
 
       // Should contain embedded content or original requirements section
       const hasContent =
@@ -225,17 +243,17 @@ describe('sdd-init with external spec', () => {
       // Should NOT contain instructions to read external spec
       const hasExternalReadInstructions =
         firstSpec.includes('see external spec') ||
-        firstSpec.includes('refer to specs/external') ||
-        (firstSpec.includes('specs/external') && !firstSpec.includes('Audit reference'));
+        firstSpec.includes('refer to archive/') ||
+        (firstSpec.includes('archive/') && !firstSpec.includes('Audit reference'));
       expect(hasExternalReadInstructions).toBe(false);
-      console.log('✓ Specs do not reference external spec for reading');
+      console.log('✓ Specs do not reference archive for reading');
     }
 
     // Record token usage benchmark
     const benchmark = await recordBenchmark(
-      'sdd-init-external',
+      'sdd-new-change-external',
       TEST_FILE,
-      'init-external-spec',
+      'new-change-external-spec',
       result.output
     );
     console.log(`\nToken usage recorded:`);

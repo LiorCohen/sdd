@@ -12,12 +12,11 @@ To update, invoke the docs-writer agent with your changes.
 Initialize a new SDD project.
 
 ```
-/sdd-init --name <project-name> [--spec <path>]
+/sdd-init --name <project-name>
 ```
 
 **Arguments:**
 - `--name` (required) - Your project name
-- `--spec` (optional) - Path to an external spec to import
 
 **What it does:**
 1. Runs interactive product discovery
@@ -34,25 +33,39 @@ Initialize a new SDD project.
 
 ## /sdd-new-change
 
-Start a new feature, bugfix, refactor, or epic.
+Start a new feature, bugfix, refactor, epic, or import from an external spec.
 
 ```
 /sdd-new-change --type <type> --name <name>
+/sdd-new-change --spec <path>
 ```
 
 **Arguments:**
-- `--type` (required) - One of: `feature`, `bugfix`, `refactor`, `epic`
-- `--name` (required) - Short identifier for the change
+- `--type` (required without `--spec`) - One of: `feature`, `bugfix`, `refactor`, `epic`
+- `--name` (required without `--spec`) - Short identifier for the change
+- `--spec` (alternative mode) - Path to external specification file
 
 **What it does:**
+
+*Interactive mode (`--type` and `--name`):*
 1. Collects information about the change
 2. Creates a spec (`SPEC.md`) with acceptance criteria
 3. Creates an implementation plan (`PLAN.md`)
 4. Places files in `changes/YYYY/MM/DD/<name>/`
 
-**Example:**
-```
+*External spec mode (`--spec`):*
+1. Analyzes the external spec for change decomposition
+2. Lets you adjust the breakdown (merge, rename, etc.)
+3. Creates self-sufficient change specs with embedded content
+4. Archives original spec to `archive/` for audit
+
+**Examples:**
+```bash
+# Interactive mode
 /sdd-new-change --type feature --name user-preferences
+
+# From external spec
+/sdd-new-change --spec /path/to/requirements.md
 ```
 
 ---
