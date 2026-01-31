@@ -2,6 +2,8 @@
 
 *Structure for AI-assisted development*
 
+![SDD Logo](docs/logo.svg)
+
 AI coding assistants are powerful but chaotic. You prompt, you get code, but then what? No documentation of decisions, no way to verify the code matches what you needed, and a codebase that's impossible to explain to teammates.
 
 SDD brings structure to AI-assisted development. Every change starts with a spec, gets broken into a plan, and ends with verified implementation. Specialized agents handle each concern instead of one AI doing everything poorly.

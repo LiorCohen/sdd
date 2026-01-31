@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <!-- Center gradient -->
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="#09090b"/>
+  
+  <g transform="translate(200, 150)">
+    
+    <!-- Center node - SDD branding -->
+    <polygon points="0,-30 26,-15 26,15 0,30 -26,15 -26,-15" fill="#1a1a2e" stroke="white" stroke-width="2"/>
+    <text x="0" y="6" text-anchor="middle" font-family="'Consolas', 'Monaco', 'Courier New', monospace" font-size="17.3" font-weight="700" fill="white" letter-spacing="1">SDD</text>
+    
+    <!-- Top-right hex - Purple (Spec Writer) -->
+    <g transform="translate(30, -50)">
+      <polygon points="0,-30 26,-15 26,15 0,30 -26,15 -26,-15" fill="#1a1a2e" stroke="#a855f7" stroke-width="2"/>
+      <rect x="-8" y="-10" width="12" height="16" rx="1" fill="none" stroke="#a855f7" stroke-width="1.5"/>
+      <line x1="-5" y1="-5" x2="1" y2="-5" stroke="#a855f7" stroke-width="1.5"/>
+      <line x1="-5" y1="0" x2="1" y2="0" stroke="#a855f7" stroke-width="1.5"/>
+      <path d="M4,-2 L10,4 L8,6 L2,0 Z" fill="#a855f7"/>
+    </g>
+    
+    <!-- Right hex - Orange (Planner) -->
+    <g transform="translate(57, 0)">
+      <polygon points="0,-30 26,-15 26,15 0,30 -26,15 -26,-15" fill="#1a1a2e" stroke="#f97316" stroke-width="2"/>
+      <rect x="-8" y="-10" width="16" height="18" rx="1" fill="none" stroke="#f97316" stroke-width="1.5"/>
+      <path d="M-5,-5 L-3,-3 L0,-7" fill="none" stroke="#f97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="3" y1="-5" x2="6" y2="-5" stroke="#f97316" stroke-width="1.5"/>
+      <path d="M-5,1 L-3,3 L0,-1" fill="none" stroke="#f97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="3" y1="1" x2="6" y2="1" stroke="#f97316" stroke-width="1.5"/>
+    </g>
+    
+    <!-- Bottom-right hex - Cyan (Backend Dev) -->
+    <g transform="translate(30, 50)">
+      <polygon points="0,-30 26,-15 26,15 0,30 -26,15 -26,-15" fill="#1a1a2e" stroke="#22d3ee" stroke-width="2"/>
+      <path d="M-6,-8 L-10,0 L-6,8" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6,-8 L10,0 L6,8" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    
+    <!-- Bottom-left hex - Green (Frontend Dev) -->
+    <g transform="translate(-30, 50)">
+      <polygon points="0,-30 26,-15 26,15 0,30 -26,15 -26,-15" fill="#1a1a2e" stroke="#10b981" stroke-width="2"/>
+      <rect x="-10" y="-8" width="20" height="14" rx="2" fill="none" stroke="#10b981" stroke-width="1.5"/>
+      <line x1="-10" y1="-3" x2="10" y2="-3" stroke="#10b981" stroke-width="1.5"/>
+      <circle cx="-7" cy="-5.5" r="1" fill="#10b981"/>
+      <circle cx="-4" cy="-5.5" r="1" fill="#10b981"/>
+    </g>
+    
+    <!-- Left hex - Rose (Database) -->
+    <g transform="translate(-57, 0)">
+      <polygon points="0,-30 26,-15 26,15 0,30 -26,15 -26,-15" fill="#1a1a2e" stroke="#f43f5e" stroke-width="2"/>
+      <ellipse cx="0" cy="-6" rx="8" ry="3" fill="none" stroke="#f43f5e" stroke-width="1.5"/>
+      <path d="M-8,-6 L-8,6 Q0,12 8,6 L8,-6" fill="none" stroke="#f43f5e" stroke-width="1.5"/>
+      <path d="M-8,0 Q0,6 8,0" fill="none" stroke="#f43f5e" stroke-width="1.5"/>
+    </g>
+    
+    <!-- Top-left hex - Blue (Reviewer) -->
+    <g transform="translate(-30, -50)">
+      <polygon points="0,-30 26,-15 26,15 0,30 -26,15 -26,-15" fill="#1a1a2e" stroke="#3b82f6" stroke-width="2"/>
+      <circle cx="-2" cy="-2" r="7" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+      <line x1="3" y1="3" x2="8" y2="8" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+      <path d="M-5,-2 L-3,0 L1,-4" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+</svg>
