@@ -126,7 +126,7 @@ describe('Project Scaffolding Config Removal', () => {
 
 /**
  * WHY: Project-settings must support config as a component type.
- * sdd-settings.yaml needs to track the config component.
+ * .sdd/sdd-settings.yaml needs to track the config component.
  */
 describe('Project Settings Config Support', () => {
   const SKILL_PATH = joinPath(SKILLS_DIR, 'project-settings', 'SKILL.md');
@@ -146,7 +146,7 @@ describe('Project Settings Config Support', () => {
 
   /**
    * WHY: The schema example should show config in components list.
-   * Users need to see where config goes in sdd-settings.yaml.
+   * Users need to see where config goes in .sdd/sdd-settings.yaml.
    */
   it('shows config in schema example', () => {
     const content = readFile(SKILL_PATH);

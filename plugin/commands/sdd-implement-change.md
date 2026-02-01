@@ -70,7 +70,7 @@ Execute each phase from PLAN.md in order. The plan specifies which agent to invo
 2. **Invoke the specified agent** with:
    - Full SPEC.md for context
    - The specific phase from PLAN.md
-   - Component directory from `sdd-settings.yaml`
+   - Component directory from `.sdd/sdd-settings.yaml`
 3. **Verify deliverables** match what the phase specifies
 4. **Mark phase complete** before moving to next
 
@@ -193,7 +193,7 @@ Before declaring implementation complete, you MUST:
 - **Domain updates from SPEC.md**: Execute exactly what is specified in SPEC.md `## Domain Updates` section. No discovery needed.
 - **Testing strategy**: Unit tests are written during implementation phases (TDD). Integration/E2E tests are a separate phase.
 - **Agent invocation**: The PLAN.md specifies which agent to invoke for each phase - follow it exactly.
-- **Component directories**: Check `sdd-settings.yaml` for actual component paths.
+- **Component directories**: Check `.sdd/sdd-settings.yaml` for actual component paths.
 - **NEVER read archive/**: The `archive/` directory contains archived external specs for audit purposes only. Implementation must use only the generated SPEC.md files in the change directory.
 
 ## Example

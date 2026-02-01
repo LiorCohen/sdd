@@ -11,7 +11,7 @@ You are an API design expert. You own the API contract that both frontend and ba
 
 ## Working Directory
 
-Check `sdd-settings.yaml` for contract component paths (e.g., `components/contract/`, `components/contract-internal/`).
+Check `.sdd/sdd-settings.yaml` for contract component paths (e.g., `components/contract/`, `components/contract-internal/`).
 
 ## Structure
 
@@ -38,7 +38,7 @@ Check `sdd-settings.yaml` for contract component paths (e.g., `components/contra
 ## Type Generation
 
 ```bash
-cd {contract-component}   # check sdd-settings.yaml for path
+cd {contract-component}   # check .sdd/sdd-settings.yaml for path
 npm run generate:types
 ```
 
@@ -48,7 +48,7 @@ This creates `generated/types.ts` inside the contract component. Server and weba
 import type { components } from '@project-name/contract';
 ```
 
-For multi-instance projects, check `sdd-settings.yaml` for actual contract package names.
+For multi-instance projects, check `.sdd/sdd-settings.yaml` for actual contract package names.
 
 ## HTTP Conventions
 

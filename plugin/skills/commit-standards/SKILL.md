@@ -151,7 +151,7 @@ The detailed description in the commit message should be **identical** to the ch
 
 ### Project Version Location
 
-The project version is stored in `sdd-settings.yaml`:
+The project version is stored in `.sdd/sdd-settings.yaml`:
 
 ```yaml
 version: 1.2.0
@@ -259,7 +259,7 @@ git log origin/main..HEAD --oneline
 Before committing, verify:
 
 ```
-[ ] Version in sdd-settings.yaml updated (if version bump needed)
+[ ] Version in .sdd/sdd-settings.yaml updated (if version bump needed)
 [ ] Changelog entry in changelog/vN.md
 [ ] Commit body matches changelog body
 [ ] All related files staged

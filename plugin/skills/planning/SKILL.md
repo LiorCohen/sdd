@@ -64,11 +64,11 @@ This approach ensures:
 
 ## Dynamic Phase Generation
 
-Plans are generated dynamically based on the project's `sdd-settings.yaml` configuration.
+Plans are generated dynamically based on the project's `.sdd/sdd-settings.yaml` configuration.
 
 ### Generation Algorithm
 
-1. **Read project components** from `sdd-settings.yaml`
+1. **Read project components** from `.sdd/sdd-settings.yaml`
 2. **Identify affected components** for this change (from SPEC.md)
 3. **Order by dependency graph:**
    ```
@@ -173,7 +173,7 @@ sdd_version: [X.Y.Z]
 
 ## Affected Components
 
-<!-- Generated from sdd-settings.yaml based on change scope -->
+<!-- Generated from .sdd/sdd-settings.yaml based on change scope -->
 - contract
 - server
 - webapp

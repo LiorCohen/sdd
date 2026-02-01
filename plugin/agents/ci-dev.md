@@ -52,7 +52,7 @@ jobs:
     steps:
       - name: Deploy to test namespace
         run: |
-          # Check sdd-settings.yaml for helm component path
+          # Check .sdd/sdd-settings.yaml for helm component path
           helm upgrade --install myapp-${{ github.sha }} ./components/helm-myapp \
             --namespace test-${{ github.sha }} \
             --create-namespace \

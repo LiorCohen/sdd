@@ -9,7 +9,7 @@ Creates database component structure for PostgreSQL-based projects.
 
 ## What It Creates
 
-The directory path depends on the component name as defined in `sdd-settings.yaml`: `components/{type}-{name}/` (when type and name differ). Database components support multiple instances (e.g., `database-app-db/`, `database-analytics-db/`).
+The directory path depends on the component name as defined in `.sdd/sdd-settings.yaml`: `components/{type}-{name}/` (when type and name differ). Database components support multiple instances (e.g., `database-app-db/`, `database-analytics-db/`).
 
 ```
 components/database[-<name>]/

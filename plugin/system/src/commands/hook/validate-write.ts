@@ -23,6 +23,7 @@ const BLOCKED_PATTERNS = [
 
 // Safe directories for SDD operations
 const SAFE_DIRS = [
+  '.sdd/',
   'changes/',
   'specs/',
   'components/',
@@ -38,7 +39,6 @@ const SAFE_FILES = [
   'CLAUDE.md',
   'package.json',
   '.gitignore',
-  'sdd-settings.yaml',
   'tsconfig.json',
   'vitest.config.ts',
   'jest.config.js',

@@ -20,7 +20,7 @@ Use the following skills for standards and patterns:
 
 Default: `components/webapp/src/`
 
-For multi-instance projects, check `sdd-settings.yaml` for the actual webapp component names (e.g., `webapp-admin/`, `webapp-public/`).
+For multi-instance projects, check `.sdd/sdd-settings.yaml` for the actual webapp component names (e.g., `webapp-admin/`, `webapp-public/`).
 
 ---
 

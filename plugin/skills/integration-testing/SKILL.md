@@ -6,7 +6,7 @@ description: Integration testing patterns - database setup/teardown, API testing
 
 # Integration Testing Skill
 
-> **Dynamic path:** All paths below use `components/<testing-component>/` as a placeholder. The actual directory depends on the testing component defined in `sdd-settings.yaml`: it is `components/{type}-{name}/` when the type and name differ (e.g., `components/testing-platform-tests/`), or `components/{type}/` when they match (e.g., `components/<testing-component>/`).
+> **Dynamic path:** All paths below use `components/<testing-component>/` as a placeholder. The actual directory depends on the testing component defined in `.sdd/sdd-settings.yaml`: it is `components/{type}-{name}/` when the type and name differ (e.g., `components/testing-platform-tests/`), or `components/{type}/` when they match (e.g., `components/<testing-component>/`).
 
 Tests that verify multiple components working together with real infrastructure. Integration tests run in Kubernetes via Testkube for environment parity.
 

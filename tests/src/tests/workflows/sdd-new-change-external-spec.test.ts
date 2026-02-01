@@ -118,8 +118,12 @@ describe('sdd-new-change with external spec', () => {
 
     // Set up minimal SDD project structure (like sdd-new-change.test.ts does)
     // This mimics an already-initialized SDD project
+    // Create .sdd directory first
+    const { execSync } = await import('child_process');
+    execSync(`mkdir -p "${joinPath(testProject.path, '.sdd')}"`, { encoding: 'utf-8' });
+
     await writeFileAsync(
-      joinPath(testProject.path, 'sdd-settings.yaml'),
+      joinPath(testProject.path, '.sdd', 'sdd-settings.yaml'),
       `plugin_version: "5.0.0"
 project:
   name: test-external-spec
@@ -132,7 +136,6 @@ project:
     // Create required directories
     const dirs = ['changes', 'archive', 'specs/domain'];
     for (const dir of dirs) {
-      const { execSync } = await import('child_process');
       execSync(`mkdir -p "${joinPath(testProject.path, dir)}"`, { encoding: 'utf-8' });
     }
 

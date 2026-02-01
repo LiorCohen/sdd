@@ -23,7 +23,7 @@ All environments use Kubernetes:
 
 ## Helm Chart Location
 
-Check `sdd-settings.yaml` for helm component names and paths (e.g., `components/helm/`, `components/helm-myapp/`).
+Check `.sdd/sdd-settings.yaml` for helm component names and paths (e.g., `components/helm/`, `components/helm-myapp/`).
 
 ```
 components/helm-{name}/
@@ -58,7 +58,7 @@ helm install testkube kubeshop/testkube --namespace testkube --create-namespace
 
 ### Test Definitions
 
-Check `sdd-settings.yaml` for testing component paths (e.g., `components/testing/`, `components/testing-api/`).
+Check `.sdd/sdd-settings.yaml` for testing component paths (e.g., `components/testing/`, `components/testing-api/`).
 
 ```yaml
 # {testing-component}/tests/integration/api-tests.yaml
@@ -79,13 +79,13 @@ spec:
 
 ## Multi-Component Support
 
-Projects may have multiple server and webapp instances (e.g., `server-api`, `server-worker`, `webapp-admin`). Check `sdd-settings.yaml` for actual component names. Each instance needs:
+Projects may have multiple server and webapp instances (e.g., `server-api`, `server-worker`, `webapp-admin`). Check `.sdd/sdd-settings.yaml` for actual component names. Each instance needs:
 - Its own Dockerfile
 - Its own deployment template in Helm
 
 ## Database Component
 
-Check `sdd-settings.yaml` for database component paths (e.g., `components/database/`, `components/database-analytics/`).
+Check `.sdd/sdd-settings.yaml` for database component paths (e.g., `components/database/`, `components/database-analytics/`).
 
 | Directory | Purpose |
 |-----------|---------|

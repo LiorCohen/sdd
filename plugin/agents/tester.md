@@ -28,14 +28,14 @@ Note: Unit tests are written by implementors (backend-dev, frontend-dev) using t
 | Integration | Tester (you) | `{testing-component}/tests/integration/` |
 | E2E | Tester (you) | `{testing-component}/tests/e2e/` |
 
-Check `sdd-settings.yaml` for testing component paths (e.g., `components/testing/`, `components/testing-api/`).
+Check `.sdd/sdd-settings.yaml` for testing component paths (e.g., `components/testing/`, `components/testing-api/`).
 
 ---
 
 ## Directory Structure
 
 ```
-{testing-component}/           # e.g., components/testing/ — check sdd-settings.yaml
+{testing-component}/           # e.g., components/testing/ — check .sdd/sdd-settings.yaml
 ├── tests/
 │   ├── component/            # React components with mocked API
 │   ├── integration/          # API with real database

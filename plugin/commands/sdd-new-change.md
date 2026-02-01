@@ -104,7 +104,7 @@ Start a new change with a typed specification and implementation plan, or create
    - Branch naming: `feature/import-<spec-filename>` or similar
 
 4. **Get primary domain:**
-   - Read from `sdd-settings.yaml` if available
+   - Read from `.sdd/sdd-settings.yaml` if available
    - Otherwise, ask the user: "Which domain should these changes belong to?"
 
 5. **Invoke external-spec-integration skill:**
@@ -112,7 +112,7 @@ Start a new change with a typed specification and implementation plan, or create
    spec_path: <absolute path to external spec>
    spec_outline: <from step 2>
    target_dir: <current project root>
-   primary_domain: <from sdd-settings.yaml or user>
+   primary_domain: <from .sdd/sdd-settings.yaml or user>
    ```
 
    The skill:
@@ -184,7 +184,7 @@ Prompt for additional details based on change type:
 - Issue reference (required)
 - Domain (e.g., "Identity", "Billing", "Core")
 - Brief description (1-2 sentences)
-- Affected components (from `sdd-settings.yaml` - e.g., contract, server, webapp)
+- Affected components (from `.sdd/sdd-settings.yaml` - e.g., contract, server, webapp)
 
 **Domain documentation prompts (for feature and epic types):**
 - "What new glossary terms does this change introduce?" (optional - can leave empty)
@@ -225,7 +225,7 @@ title: <change name formatted as title>
 description: <collected description>
 domain: <collected domain>
 issue: <collected issue reference>
-affected_components: <list of components from sdd-settings.yaml>
+affected_components: <list of components from .sdd/sdd-settings.yaml>
 
 # Domain documentation (for feature/epic types):
 glossary_terms: <collected terms, if any>

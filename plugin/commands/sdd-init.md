@@ -37,7 +37,7 @@ This command orchestrates multiple skills to complete initialization:
 | 3     | (inline)                    | Display configuration summary |
 | 4     | (inline)                    | Get user approval |
 | 5     | (inline)                    | Initialize git   |
-| 6.1   | `project-settings`          | Create sdd-settings.yaml |
+| 6.1   | `project-settings`          | Create .sdd/sdd-settings.yaml |
 | 6.2   | `scaffolding`               | Create project structure |
 | 6.3   | `domain-population`         | Populate specs from discovery |
 | 7     | (inline)                    | Commit initial project files |
@@ -56,7 +56,7 @@ This command orchestrates multiple skills to complete initialization:
 [ ] Phase 3: Configuration summary displayed
 [ ] Phase 4: User approval received
 [ ] Phase 5: Git repository initialized
-[ ] Phase 6.1: sdd-settings.yaml created
+[ ] Phase 6.1: .sdd/sdd-settings.yaml created
 [ ] Phase 6.2: Project structure scaffolded
 [ ] Phase 6.3: Domain knowledge populated
 [ ] Phase 7: Initial commit created
@@ -259,7 +259,7 @@ project_type: <from Phase 2>
 components: <from Phase 2>
 ```
 
-Creates `sdd-settings.yaml` in the project root.
+Creates `.sdd/sdd-settings.yaml` (creating the `.sdd/` directory if needed).
 
 #### Step 6.2: Scaffold Project Structure
 

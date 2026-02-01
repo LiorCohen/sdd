@@ -1,17 +1,32 @@
 ---
 name: project-settings
-description: Manage project settings in sdd-settings.yaml for persisting configuration choices and project state.
+description: Manage project settings in .sdd/sdd-settings.yaml for persisting configuration choices and project state.
 ---
 
 # Project Settings Skill
 
 ## Purpose
 
-Manage the `sdd-settings.yaml` file that stores project configuration and state. This file persists project choices and can be read/updated to maintain consistency across workflows.
+Manage the `.sdd/sdd-settings.yaml` file that stores project configuration and state. This file persists project choices and can be read/updated to maintain consistency across workflows.
 
 ## File Location
 
-Settings file: `sdd-settings.yaml` (project root, git-tracked)
+Settings file: `.sdd/sdd-settings.yaml` (git-tracked)
+
+The `.sdd/` directory contains all SDD metadata. Create this directory if it doesn't exist.
+
+## Migration from Legacy Location
+
+If `sdd-settings.yaml` exists at project root (legacy location):
+1. Create `.sdd/` directory
+2. Move `sdd-settings.yaml` to `.sdd/sdd-settings.yaml`
+3. Delete the root file
+4. Commit the change
+
+Quick migration command:
+```bash
+mkdir -p .sdd && mv sdd-settings.yaml .sdd/ && git add -A && git commit -m "Migrate sdd-settings.yaml to .sdd/"
+```
 
 ## Schema
 
@@ -93,13 +108,15 @@ Initialize a new settings file.
 
 **Workflow:**
 
-1. Check if `sdd-settings.yaml` already exists
+1. Create `.sdd/` directory if it doesn't exist: `mkdir -p .sdd`
+
+2. Check if `.sdd/sdd-settings.yaml` already exists
    - If exists: Warn and ask for confirmation to overwrite
    - If confirmed or doesn't exist: Continue
 
-2. Get current date in `YYYY-MM-DD` format
+3. Get current date in `YYYY-MM-DD` format
 
-3. Create settings object:
+4. Create settings object:
    ```yaml
    sdd:
      plugin_version: <plugin_version>
@@ -118,12 +135,12 @@ Initialize a new settings file.
      # ... for each component
    ```
 
-4. Write to `sdd-settings.yaml` with proper YAML formatting
+5. Write to `.sdd/sdd-settings.yaml` with proper YAML formatting
 
-5. Return:
+6. Return:
    ```yaml
    success: true
-   path: sdd-settings.yaml
+   path: .sdd/sdd-settings.yaml
    ```
 
 **Example - Standard Full-Stack:**
@@ -151,7 +168,7 @@ Input:
 
 Output:
   success: true
-  path: sdd-settings.yaml
+  path: .sdd/sdd-settings.yaml
 ```
 
 **Example - Multi-Component:**
@@ -193,7 +210,7 @@ Input:
 
 Output:
   success: true
-  path: sdd-settings.yaml
+  path: .sdd/sdd-settings.yaml
 ```
 
 ---
@@ -208,8 +225,10 @@ None (reads from standard location)
 
 **Workflow:**
 
-1. Check if `sdd-settings.yaml` exists
-   - If not: Return error with `exists: false`
+1. Check if `.sdd/sdd-settings.yaml` exists
+   - If not: Check legacy location `sdd-settings.yaml` at project root
+   - If legacy exists: Warn about deprecation, suggest migration, then read from legacy
+   - If neither exists: Return error with `exists: false`
 
 2. Read and parse YAML file
 
@@ -255,7 +274,7 @@ settings:
 
 ```yaml
 exists: false
-error: "sdd-settings.yaml not found."
+error: ".sdd/sdd-settings.yaml not found."
 ```
 
 ---
@@ -283,7 +302,7 @@ Merge partial updates into existing settings.
 
 3. Update `sdd.last_updated` to current date
 
-4. Write merged settings to `sdd-settings.yaml`
+4. Write merged settings to `.sdd/sdd-settings.yaml`
 
 5. Return updated settings
 

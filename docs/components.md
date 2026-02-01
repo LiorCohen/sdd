@@ -108,7 +108,7 @@ GitHub Actions workflows for continuous integration and deployment, including PR
 
 ## Multi-Instance Components
 
-All component types support multiple instances. Each component is listed in `sdd-settings.yaml` with a `type` and `name`. The directory is always `components/<name>/`. Examples:
+All component types support multiple instances. Each component is listed in `.sdd/sdd-settings.yaml` with a `type` and `name`. The directory is always `components/<name>/`. Examples:
 
 - `contract` and `contract-task-api` for separate API contracts
 - `server-api` and `server-worker` for separate API and background processing services
@@ -117,7 +117,7 @@ All component types support multiple instances. Each component is listed in `sdd
 
 ## Dependencies
 
-Components declare dependencies using the `depends_on` field in `sdd-settings.yaml`. This enables multi-contract architectures where each server or webapp specifies which contract it consumes.
+Components declare dependencies using the `depends_on` field in `.sdd/sdd-settings.yaml`. This enables multi-contract architectures where each server or webapp specifies which contract it consumes.
 
 | Component | Depends On |
 |-----------|------------|

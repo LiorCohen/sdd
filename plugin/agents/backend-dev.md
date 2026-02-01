@@ -20,11 +20,11 @@ Use the following skills for standards and patterns:
 
 Default: `components/server/src/`
 
-For multi-instance projects, check `sdd-settings.yaml` for the actual server component names (e.g., `server-api/`, `server-worker/`).
+For multi-instance projects, check `.sdd/sdd-settings.yaml` for the actual server component names (e.g., `server-api/`, `server-worker/`).
 
 ## Database Component
 
-Check `sdd-settings.yaml` for database component names and paths (e.g., `components/database/`, `components/database-analytics/`).
+Check `.sdd/sdd-settings.yaml` for database component names and paths (e.g., `components/database/`, `components/database-analytics/`).
 
 | Directory | Purpose |
 |-----------|---------|
@@ -49,7 +49,7 @@ type User = components['schemas']['User'];
 type CreateUserRequest = components['schemas']['CreateUserRequest'];
 ```
 
-Check `sdd-settings.yaml` for the actual contract package name (e.g., `@project/contract`, `@project/contract-public-api`).
+Check `.sdd/sdd-settings.yaml` for the actual contract package name (e.g., `@project/contract`, `@project/contract-public-api`).
 
 ---
 

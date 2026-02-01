@@ -50,7 +50,8 @@ my-app/
 │   ├── helm/                # Kubernetes Helm charts
 │   ├── testing/             # Test setup and definitions
 │   └── cicd/                # CI/CD workflows
-└── sdd-settings.yaml        # Project configuration
+└── .sdd/
+    └── sdd-settings.yaml    # Project configuration
 ```
 
 ## Step 3: Create Your First Change

@@ -6,7 +6,7 @@ description: End-to-end testing with Playwright - browser automation, visual reg
 
 # E2E Testing Skill
 
-> **Dynamic path:** All paths below use `components/<testing-component>/` as a placeholder. The actual directory depends on the testing component defined in `sdd-settings.yaml`: it is `components/{type}-{name}/` when the type and name differ (e.g., `components/testing-platform-tests/`), or `components/{type}/` when they match (e.g., `components/<testing-component>/`).
+> **Dynamic path:** All paths below use `components/<testing-component>/` as a placeholder. The actual directory depends on the testing component defined in `.sdd/sdd-settings.yaml`: it is `components/{type}-{name}/` when the type and name differ (e.g., `components/testing-platform-tests/`), or `components/{type}/` when they match (e.g., `components/<testing-component>/`).
 
 Full browser automation tests that verify complete user journeys. E2E tests run in Kubernetes via Testkube with Playwright.
 

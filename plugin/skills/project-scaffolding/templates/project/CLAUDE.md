@@ -2,7 +2,7 @@
 
 ## Tech Stack
 
-- **API Contract:** OpenAPI 3.x (path depends on contract component name in `sdd-settings.yaml`)
+- **API Contract:** OpenAPI 3.x (path depends on contract component name in `.sdd/sdd-settings.yaml`)
 - **Backend:** Node.js 20, TypeScript 5, Express (CMDO architecture)
 - **Frontend:** React 18, TypeScript 5, Vite (MVVM architecture)
 - **Database:** PostgreSQL 15
@@ -20,7 +20,7 @@
 | Helm | `components/{name}/` | Kubernetes deployment |
 | Testing | `components/{name}/` | Testkube test definitions |
 
-Note: Component directory names are determined by `{type, name}` in `sdd-settings.yaml`. The directory is `components/{type}/` when name equals type, or `components/{type}-{name}/` when they differ (e.g., `components/contract-task-api/`, `components/server-admin/`).
+Note: Component directory names are determined by `{type, name}` in `.sdd/sdd-settings.yaml`. The directory is `components/{type}/` when name equals type, or `components/{type}-{name}/` when they differ (e.g., `components/contract-task-api/`, `components/server-admin/`).
 
 ## Backend Architecture (CMDO)
 
@@ -48,7 +48,7 @@ Config → [All layers] → Dependencies
 | `specs/INDEX.md` | Registry of all specs |
 | `changes/` | Change specifications (features, bugfixes, refactors) |
 | `components/{contract-component}/openapi.yaml` | API contract (path depends on component name) |
-| `sdd-settings.yaml` | Project settings (components, domains) |
+| `.sdd/sdd-settings.yaml` | Project settings (components, domains) |
 
 ## Claude Code Commands
 

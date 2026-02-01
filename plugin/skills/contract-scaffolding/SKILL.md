@@ -13,7 +13,7 @@ This skill is called by the main `scaffolding` skill when creating a contract co
 
 ## What It Creates
 
-The directory path depends on the component name as defined in `sdd-settings.yaml`: `components/{type}-{name}/` (when type and name differ). For example, `components/contract/` or `components/contract-customer-api/`.
+The directory path depends on the component name as defined in `.sdd/sdd-settings.yaml`: `components/{type}-{name}/` (when type and name differ). For example, `components/contract/` or `components/contract-customer-api/`.
 
 ```
 components/contract[-<name>]/

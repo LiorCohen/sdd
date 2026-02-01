@@ -36,7 +36,7 @@ Implementation simply executes these specifications.
 ### Dynamic Phase Generation
 
 Plans are generated dynamically based on:
-1. Project components from `sdd-settings.yaml`
+1. Project components from `.sdd/sdd-settings.yaml`
 2. Which components are affected by the change
 3. Dependency order between components
 4. Contextual agent assignment
@@ -62,7 +62,7 @@ Plans are generated dynamically based on:
 | `decomposition_id` | No | UUID linking related changes |
 | `prerequisites` | No | List of prerequisite changes (for dependencies) |
 | `affected_files` | No | List of files affected (bugfix/refactor types) |
-| `affected_components` | No | List of component names from sdd-settings.yaml |
+| `affected_components` | No | List of component names from .sdd/sdd-settings.yaml |
 | `root_cause` | No | Root cause description (bugfix type only) |
 | `refactor_goals` | No | List of refactoring goals (refactor type only) |
 | `child_changes` | No | List of child change names (epic type only) |
@@ -98,7 +98,7 @@ Returns a result with:
 ### Step 3: Read Plugin Version and Settings
 
 1. Read SDD plugin version from `.claude-plugin/plugin.json`
-2. Read project components from `sdd-settings.yaml`
+2. Read project components from `.sdd/sdd-settings.yaml`
 3. Identify affected components (from input or infer from description)
 
 ### Step 4: Create Change Directory
@@ -773,7 +773,7 @@ Create `changes/YYYY/MM/DD/<name>/PLAN.md` using dynamic phase generation.
 
 #### Phase Generation Algorithm
 
-1. **Read project components** from `sdd-settings.yaml`
+1. **Read project components** from `.sdd/sdd-settings.yaml`
 2. **Filter to affected components** (from SPEC.md `affected_components`)
 3. **Order by dependency graph:**
    ```
@@ -823,7 +823,7 @@ Specification: [SPEC.md](./SPEC.md)
 
 ## Affected Components
 
-<!-- Generated from sdd-settings.yaml -->
+<!-- Generated from .sdd/sdd-settings.yaml -->
 - <component-1> (contract)
 - <component-2> (server)
 - <component-3> (webapp)
@@ -1293,5 +1293,5 @@ Output:
 - If change directory already exists: Warn and ask for confirmation to overwrite
 - If INDEX.md doesn't exist: Create it with basic structure
 - If plugin.json can't be read: Use "unknown" for sdd_version and warn
-- If sdd-settings.yaml can't be read: Use default component assumptions and warn
+- If .sdd/sdd-settings.yaml can't be read: Use default component assumptions and warn
 - If invalid type provided: Return error with valid options

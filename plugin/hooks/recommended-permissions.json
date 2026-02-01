@@ -6,6 +6,7 @@
 
   "permissions": {
     "allow": [
+      "Write(.sdd/**)",
       "Write(specs/**)",
       "Write(components/**)",
       "Write(config/**)",
@@ -14,8 +15,8 @@
       "Write(CLAUDE.md)",
       "Write(package.json)",
       "Write(.gitignore)",
-      "Write(sdd-settings.yaml)",
 
+      "Edit(.sdd/**)",
       "Edit(specs/**)",
       "Edit(components/**)",
       "Edit(config/**)",
@@ -24,7 +25,6 @@
       "Edit(CLAUDE.md)",
       "Edit(package.json)",
       "Edit(.gitignore)",
-      "Edit(sdd-settings.yaml)",
 
       "Bash(git init:*)",
       "Bash(git add:*)",
