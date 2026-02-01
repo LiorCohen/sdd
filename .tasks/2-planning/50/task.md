@@ -1,8 +1,8 @@
 ---
 id: 50
 title: Move sdd-settings.yaml to .sdd/ directory
-priority: inbox
-status: open
+priority: medium
+status: planning
 created: 2026-01-25
 depends_on: [35]
 ---

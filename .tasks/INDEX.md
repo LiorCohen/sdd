@@ -4,7 +4,7 @@
 
 ## Planning
 
-(none)
+- [#50](2-planning/50/): Move sdd-settings.yaml to .sdd/ directory
 
 ---
 
@@ -31,6 +31,7 @@
 - [#17](1-inbox/17/): Plans should follow TDD with test review first
 - [#59](1-inbox/59/): Audit and update all agents for compatibility
 - [#44](1-inbox/44/): Helm chart template + observability stack
+- [#47](1-inbox/47/): Local environment create/start/stop workflow
 
 ---
 
@@ -39,6 +40,8 @@
 - [#16](1-inbox/16/): Plan changes should cascade to dependent items
 - [#27](1-inbox/27/): JSON Schema for skills + validation skill
 - [#56](1-inbox/56/): Create architecture skill with meaningful guidance
+- [#66](1-inbox/66/): Single context-aware SDD command
+- [#63](1-inbox/63/): Consolidate overlapping skills
 
 ---
 
@@ -56,8 +59,6 @@
 
 ## Inbox (unprioritized)
 
-- [#66](1-inbox/66/): Single context-aware SDD command
-- [#63](1-inbox/63/): Consolidate overlapping skills
 - [#12](1-inbox/12/): User onboarding and process state tracking
 - [#14](1-inbox/14/): Unclear when to run type generation
 - [#20](1-inbox/20/): Plugin installation debugging skill + workflow fix
@@ -69,8 +70,6 @@
 - [#39](1-inbox/39/): Capture ad-hoc code changes and sync specs
 - [#40](1-inbox/40/): Fix sdd-new-change test - spec format mismatch
 - [#43](1-inbox/43/): CI/CD components and .github folder integration
-- [#47](1-inbox/47/): Local environment create/start/stop workflow
-- [#50](1-inbox/50/): Move sdd-settings.yaml to .sdd/ directory
 - [#52](1-inbox/52/): Clean up .gitkeep and placeholder content
 - [#54](1-inbox/54/): Missing postgresql-standards skill
 - [#57](1-inbox/57/): Add /sdd-settings command

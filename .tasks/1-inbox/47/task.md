@@ -1,7 +1,7 @@
 ---
 id: 47
 title: Local environment create/start/stop workflow
-priority: inbox
+priority: high
 status: open
 created: 2026-01-25
 ---

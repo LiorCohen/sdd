@@ -1,7 +1,7 @@
 ---
 id: 63
 title: Consolidate overlapping skills
-priority: inbox
+priority: medium
 status: open
 created: 2026-01-31
 depends_on: []

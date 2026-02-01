@@ -302,7 +302,7 @@ User: /tasks
 User: /tasks list
 ```
 
-**Action:** Read INDEX.md and display the index, grouped by section.
+**Action:** Read INDEX.md and display the index, grouped by section. Always show all tasks in each section with their full titles - never abbreviate or summarize the inbox or other sections. Skip empty sections and omit Completed, Rejected, and Consolidated sections (these are archival).
 
 ### View Single Task
 
